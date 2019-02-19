@@ -67,11 +67,6 @@ class Pet
  *   @Api\Response(
  *     code="200",
  *     schema=@Api\Reference(Pet::class)
- *     @Api\Header(
- *       name="token",
- *       description="Token description",
- *       @Api\Schema(type="string", format="uuid")
- *     )
  *   )
  * )
  */

@@ -2,7 +2,10 @@
 
 namespace Igni\OpenApi\Annotation;
 
+use Igni\OpenApi\Annotation\Server\Variable;
+
 /**
+ * Extended server annotation
  * @Annotation
  */
 class Server
@@ -15,7 +18,7 @@ class Server
      *
      * @var string
      */
-    public $url;
+    public $url = 'http://{host}:{port}/';
 
     /**
      * An optional string describing the host designated by the URL.
@@ -25,7 +28,24 @@ class Server
     public $description;
 
     /**
-     * @var
+     * @var Variable[]
      */
     public $variables;
+
+    /**
+     * @var string
+     */
+    public $port;
+
+    /**
+     * @var string
+     */
+    public $host;
+
+    /**
+     * @var string
+     */
+    public $id;
+
+    protected $_required = ['url', 'name'];
 }

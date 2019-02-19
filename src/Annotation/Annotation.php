@@ -7,7 +7,7 @@ namespace Igni\OpenApi\Annotation;
  */
 abstract class Annotation
 {
-    protected $_required = [];
+    abstract protected function getRequiredParameters() : array;
 
     public function toYaml() : string
     {

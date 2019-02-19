@@ -5,7 +5,7 @@ namespace Igni\OpenApi\Annotation;
 trait DataType
 {
     /**
-     * Property type, can be one of: integer, number, string, boolean. If none provided docblock will be read to retrieve possible map.
+     * Property type, can be one of: array, integer, number, string, boolean. If none provided docblock will be read to retrieve possible map.
      * @var string
      * @see https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.2.md#data-types
      */

@@ -24,6 +24,11 @@ class Response extends Annotation
      */
     public $schema;
 
+    /**
+     * @var array
+     */
+    public $links = [];
+
     protected function getRequiredParameters(): array
     {
         return ['description', 'schema'];

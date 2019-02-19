@@ -31,42 +31,85 @@ class Application
 {
 }
 
+
+/**
+ * @Api\Schema(
+ *   title="Tag object",
+ *   description="Pet description"
+ * )
+ */
+class Tag
+{
+    /**
+     * @Api\Property(readOnly=true)
+     */
+    public $id;
+    /**
+     * @Api\Property(required=true)
+     */
+    public $name;
+}
+
 /**
  * @Api\Schema(
  *   title="Pet object",
  *   description="Pet description",
- *   required={'name', 'id'}
  * )
  */
 class Pet
 {
-    /**
-     * @Api\Property()
-     */
-    public $name;
-
     /**
      * @Api\Property(format="uuid", readOnly=true)
      */
     public $id;
 
     /**
-     * @Api\Property()
+     * @Api\Property(required=true)
      */
-    public $tag;
+    public $name;
+
+    /**
+     * @Api\Property(type="array", items=@Api\Reference(Tag::class))
+     */
+    public $tags;
 }
+
 
 /**
  * @Api\PathItem\GetRoute(
- *   route="/pet/{id}",
- *   description="Retrieves a pet with an Id",
+ *   route="/tag/{id}",
+ *   description="Retrieves tag with given id",
  *   @Api\PathItem\PathParameter(
  *     name="id",
  *     allow="number"
  *   ),
  *   @Api\Response(
  *     code="200",
- *     schema=@Api\Reference(Pet::class)
+ *     schema=@Api\Reference(Tag::class)
+ *   )
+ * )
+ */
+function getTag()
+{
+
+}
+
+/**
+ * @Api\PathItem\GetRoute(
+ *   route="/pet/{id}",
+ *   description="Retrieves pet with given id",
+ *   @Api\PathItem\PathParameter(
+ *     name="id",
+ *     allow="number"
+ *   ),
+ *   @Api\Response(
+ *     code="200",
+ *     schema=@Api\Reference(Pet::class),
+ *     @Api\Link(
+ *       name="tag",
+ *       operationId="getTag",
+ *       @Api\PathItem\PathParameter(name="id", expression="$response.body#/tags")
+ *     )
  *   )
  * )
  */

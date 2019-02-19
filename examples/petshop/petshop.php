@@ -11,6 +11,7 @@ require_once 'config/default.php';
 /**
  * This application can be run in development mode by typing in terminal:
  * open-api serve --server=development
+ * open-api mock
  *
  * @Api\Application(
  *   version="1.0.0",
@@ -29,6 +30,7 @@ require_once 'config/default.php';
  */
 class Application
 {
+
 }
 
 
@@ -96,12 +98,16 @@ function getTag()
 
 /**
  * @Api\PathItem\GetRoute(
- *   route="/pet/{id}",
+ *   route="/pets/{id}/twojastara/z/toba/{nie}/gada",
  *   description="Retrieves pet with given id",
  *   @Api\PathItem\PathParameter(
  *     name="id",
- *     allow="number"
+ *     type="number"
  *   ),
+ *   @Api\PathItem\PathParameter(
+ *      name="nie",
+ *      type="string"
+ *   )
  *   @Api\Response(
  *     code="200",
  *     schema=@Api\Reference(Pet::class),
@@ -113,7 +119,7 @@ function getTag()
  *   )
  * )
  */
-function getPet(ServerRequestInterface $request): ResponseInterface
+function getPet(ServerRequestInterface $request)
 {
     return new Response(200, new Pet($request->getAttribute('id')));
 }

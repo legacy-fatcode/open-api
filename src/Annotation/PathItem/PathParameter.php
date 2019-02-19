@@ -11,5 +11,5 @@ use Igni\OpenApi\Annotation\Parameter;
 class PathParameter extends Parameter
 {
     public $in = 'path';
-    public $allow;
+    public $type;
 }

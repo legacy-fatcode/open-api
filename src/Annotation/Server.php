@@ -8,7 +8,7 @@ use Igni\OpenApi\Annotation\Server\Variable;
  * Extended server annotation
  * @Annotation
  */
-class Server
+class Server extends Annotation
 {
     /**
      * A URL to the target host. This URL supports Server Variables and MAY be relative,
@@ -47,5 +47,20 @@ class Server
      */
     public $id;
 
-    protected $_required = ['url', 'name'];
+    protected function getRequiredParameters() : array
+    {
+        return ['url', 'name'];
+    }
+
+    protected function getParametersType() : array
+    {
+        return [
+            'url' => self::TYPE_STRING,
+            'description' => self::TYPE_STRING,
+            'variables' => [Variable::class],
+            'port' => self::TYPE_STRING,
+            'host' => self::TYPE_STRING,
+            'id' => self::TYPE_STRING,
+        ];
+    }
 }

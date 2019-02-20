@@ -7,7 +7,17 @@ namespace Igni\OpenApi\Annotation;
  */
 abstract class Annotation
 {
+    protected const TYPE_STRING = 'string';
+    protected const TYPE_BOOL = 'boolean';
+    protected const TYPE_INTEGER = 'integer';
+    protected const TYPE_NUMBER = 'number';
+    protected const TYPE_OBJECT = 'object';
+    protected const TYPE_CLASS = 'class';
+    protected const TYPE_SCHEME = 'scheme';
+
+
     abstract protected function getRequiredParameters() : array;
+    abstract protected function getParametersType() : array;
 
     public function toYaml() : string
     {
@@ -19,40 +29,11 @@ abstract class Annotation
 
     }
 
-    private function validateDefaultTypes(string $type, $value): bool
+    public function validate() : bool
     {
-        switch ($type) {
-            case 'string':
-                return is_string($value);
-            case 'boolean':
-                return is_bool($value);
-            case 'integer':
-                return is_int($value);
-            case 'number':
-                return is_numeric($value);
-            case 'object':
-                return is_object($value);
-            case 'array':
-                return $this->validateArrayType($value);
-            case 'scheme':
-                return in_array($value, ['http', 'https', 'ws', 'wss'], true);
-            default:
-
+        $validateTypes = $this->getParametersType();
+        foreach ($validateTypes as $name => $type) {
+            
         }
-    }
-
-    private function validateArrayType($value): bool
-    {
-        if (is_array($value) === false) {
-            return false;
-        }
-        $count = 0;
-        foreach ($value as $i => $item) {
-            if ($count !== $i) {
-                return false;
-            }
-            $count++;
-        }
-        return true;
     }
 }

@@ -60,9 +60,34 @@ class Application extends Annotation
      */
     public $security;
 
-    protected function getRequiredParameters() : array
+    protected function getAttributesSchema() : array
     {
-        return ['title', 'version', 'servers'];
+        return [
+            'title' => [
+                'required' => true,
+                'type' => self::TYPE_STRING,
+            ],
+            'description' => [
+                'type' => self::TYPE_STRING,
+            ],
+            'termsOfService' => [
+                'type' => self::TYPE_STRING,
+            ],
+            'contact' => [
+                'type' => Contact::class,
+            ],
+            'license' => [
+                'type' => License::class,
+            ],
+            'version' => [
+                'required' => true,
+                'type' => self::TYPE_STRING,
+            ],
+            'servers' => [
+                'required' => true,
+                'type' => [Server::class],
+            ],
+        ];
     }
 }
 

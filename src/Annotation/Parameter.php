@@ -54,8 +54,18 @@ class Parameter extends Annotation
 
     public $examples;
 
-    protected function getRequiredParameters() : array
+    protected function getAttributesSchema() : array
     {
-        return ['name', 'in', 'required'];
+        return [
+            'name' => [
+
+            ],
+            'in' => [
+
+            ],
+            'required' => [
+
+            ]
+        ];
     }
 }

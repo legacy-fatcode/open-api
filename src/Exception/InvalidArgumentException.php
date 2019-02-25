@@ -2,6 +2,9 @@
 
 namespace Igni\OpenApi\Exception;
 
-interface InvalidArgumentException
+/**
+ * Exception thrown if an argument is not of the expected type.
+ */
+interface InvalidArgumentException extends LogicException
 {
 }

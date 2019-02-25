@@ -4,9 +4,9 @@ namespace IgniTest\OpenApi\Annotation;
 
 use PHPUnit\Framework\TestCase;
 
-class AnnotationTest extends TestCase
+class AnnotationReaderTest extends TestCase
 {
-    public function testValidate()
+    public function testReadFromClass() : void
     {
 
     }

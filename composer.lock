@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "2849d07106b3d64f628eb1f9ed038b25",
+    "content-hash": "7b09f0dda8957b84f37e1e6ca8e6bc54",
     "packages": [
         {
             "name": "doctrine/annotations",
@@ -127,6 +127,52 @@
                 "parser"
             ],
             "time": "2014-09-09T13:34:57+00:00"
+        },
+        {
+            "name": "igniphp/validation",
+            "version": "2.1.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/igniphp/validation.git",
+                "reference": "3a59524c590afd0954837efadd28485b76ec4d0f"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/igniphp/validation/zipball/3a59524c590afd0954837efadd28485b76ec4d0f",
+                "reference": "3a59524c590afd0954837efadd28485b76ec4d0f",
+                "shasum": ""
+            },
+            "require": {
+                "php": "^7.1.0"
+            },
+            "require-dev": {
+                "mockery/mockery": "^0.9.4",
+                "phpunit/phpunit": "~5.7"
+            },
+            "suggest": {
+                "bcmath": "For long numbers validation"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Igni\\Validation\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Dawid <krac> Kraczkowski",
+                    "email": "dawid.kraczkowski@gmail.com"
+                }
+            ],
+            "keywords": [
+                "php",
+                "validation"
+            ],
+            "time": "2019-02-17T09:49:25+00:00"
         },
         {
             "name": "psr/http-message",

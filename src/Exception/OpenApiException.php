@@ -2,6 +2,9 @@
 
 namespace Igni\OpenApi\Exception;
 
+/**
+ * Generic Exception class for openapi package
+ */
 interface OpenApiException
 {
 }

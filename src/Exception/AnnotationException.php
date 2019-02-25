@@ -3,22 +3,18 @@
 namespace Igni\OpenApi\Exception;
 
 use Igni\OpenApi\Annotation\Annotation;
+use LogicException;
 use Throwable;
 
-final class AnnotationException
+abstract class AnnotationException extends LogicException
 {
-    private function __construct()
-    {
-        // Intentionally left blank.
-    }
-
     public static function forMissingProperty(Annotation $annotation, string $propertyName) : Throwable
     {
         $message = "Property {$propertyName} is required and thus must be set in annotation " . get_class($annotation);
 
         return new class($message)
-            extends \InvalidArgumentException
-            implements InvalidArgumentException, OpenApiException {
+            extends AnnotationException
+            implements UndefinedIndexException {
         };
     }
 
@@ -27,8 +23,8 @@ final class AnnotationException
         $message = "Invalid value passed for property {$propertyName} in annotation " . get_class($annotation);
 
         return new class($message)
-            extends \InvalidArgumentException
-            implements InvalidArgumentException, OpenApiException {
+            extends AnnotationException
+            implements InvalidArgumentException {
         };
     }
 
@@ -37,8 +33,18 @@ final class AnnotationException
         $message = "Invalid property type {$propertyType} in annotation " . get_class($annotation);
 
         return new class($message)
-            extends \InvalidArgumentException
-            implements InvalidArgumentException, OpenApiException {
+            extends AnnotationException
+            implements UnexpectedValueException {
+        };
+    }
+
+    public static function forMissingPropertyType(Annotation $annotation, string $propertyName) : Throwable
+    {
+        $message = "Property {$propertyName} has undefined type in annotation " . get_class($annotation);
+
+        return new class($message)
+            extends AnnotationException
+            implements UndefinedIndexException {
         };
     }
 }

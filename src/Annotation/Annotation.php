@@ -9,6 +9,8 @@ use Igni\OpenApi\Exception\AnnotationException;
  */
 abstract class Annotation
 {
+    protected const TYPE_MIXED = 'mixed';
+    protected const TYPE_HASH = 'hash';
     protected const TYPE_STRING = 'string';
     protected const TYPE_BOOL = 'boolean';
     protected const TYPE_INTEGER = 'integer';
@@ -30,15 +32,17 @@ abstract class Annotation
 
     public function validate() : void
     {
-        $required = $this->getRequiredParameters();
-        $validateTypes = $this->getParametersType();
-        foreach ($validateTypes as $name => $type) {
+        foreach ($this->getAttributesSchema() as $name => $schema) {
+            if (!isset($schema['type'])) {
+                throw AnnotationException::forMissingPropertyType($this, $name);
+            }
+
             $set = isset($this->{$name}) && $this->{$name} !== null;
-            if (in_array($name, $required) && !$set) {
+            if (isset($schema['required']) && $schema['required'] && !$set) {
                 throw AnnotationException::forMissingProperty($this, $name);
             }
 
-            if ($set && !$this->validateType($type, $this->{$name})) {
+            if ($set && !$this->validateType($schema['type'], $this->{$name})) {
                 throw AnnotationException::forInvalidPropertyValue($this, $name);
             }
         }
@@ -60,6 +64,10 @@ abstract class Annotation
             case $type === self::TYPE_CLASS:
                 return class_exists($value);
             case is_array($type):
+                // Hash {index
+                if (count($type) === 2) {
+
+                }
                 foreach ($value as $item) {
                     if (!$this->validateType($type[0], $item)) {
                         return false;

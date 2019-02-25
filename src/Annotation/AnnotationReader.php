@@ -2,14 +2,19 @@
 
 namespace Igni\OpenApi\Annotation;
 
+use Doctrine\Common\Annotations\Annotation\Target;
 use Doctrine\Common\Annotations\AnnotationRegistry;
 use Doctrine\Common\Annotations\DocParser;
+use ReflectionClass;
+use ReflectionMethod;
+use ReflectionFunction;
 
 AnnotationRegistry::registerLoader('class_exists');
 
-class AnnotationParser
+class AnnotationReader
 {
     private $parser;
+    private $reader;
     private $namespaces = [
         'Api' => 'Igni\\OpenApi\\Annotation',
     ];
@@ -25,8 +30,12 @@ class AnnotationParser
         $this->namespaces[$name] = $ns;
     }
 
-    public function fromComment(string $docBlock) : array
+    public function readFromClass(ReflectionClass $class) : array
     {
+        $this->parser->setImports($this->namespaces);
+        $this->parser->setTarget(Target::TARGET_CLASS);
+        $parsed = $this->parser->parse($class->getDocComment());
 
+        return $parsed;
     }
 }

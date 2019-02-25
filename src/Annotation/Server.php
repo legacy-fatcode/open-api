@@ -47,20 +47,29 @@ class Server extends Annotation
      */
     public $id;
 
-    protected function getRequiredParameters() : array
-    {
-        return ['url', 'name'];
-    }
-
-    protected function getParametersType() : array
+    protected function getAttributesSchema() : array
     {
         return [
-            'url' => self::TYPE_STRING,
-            'description' => self::TYPE_STRING,
-            'variables' => [Variable::class],
-            'port' => self::TYPE_STRING,
-            'host' => self::TYPE_STRING,
-            'id' => self::TYPE_STRING,
+            'url' => [
+                'type' => self::TYPE_STRING,
+                'required' => true,
+            ],
+            'description' => [
+                'type' => self::TYPE_STRING
+            ],
+            'variables' => [
+                'type' => [self::TYPE_HASH, Variable::class]
+            ],
+            'port' => [
+                'type' => self::TYPE_STRING
+            ],
+            'host' => [
+                'type' => self::TYPE_STRING
+            ],
+            'id' => [
+                'type' => self::TYPE_STRING,
+                'required' => true,
+            ],
         ];
     }
 }

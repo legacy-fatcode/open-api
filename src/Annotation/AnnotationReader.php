@@ -9,20 +9,23 @@ use ReflectionClass;
 use ReflectionMethod;
 use ReflectionFunction;
 
-AnnotationRegistry::registerLoader('class_exists');
+AnnotationRegistry::registerLoader(function(string $className) {
+    $args = func_get_args();
+    return true;
+});
 
 class AnnotationReader
 {
     private $parser;
-    private $reader;
     private $namespaces = [
         'Api' => 'Igni\\OpenApi\\Annotation',
     ];
 
     public function __construct()
     {
+        $this->reader = new \Doctrine\Common\Annotations\AnnotationReader();
         $this->parser = new DocParser();
-        $this->parser->setIgnoreNotImportedAnnotations(true);
+        //$this->parser->setIgnoreNotImportedAnnotations(true);
     }
 
     public function addNamespace(string $name, string $ns) : void
@@ -34,7 +37,8 @@ class AnnotationReader
     {
         $this->parser->setImports($this->namespaces);
         $this->parser->setTarget(Target::TARGET_CLASS);
-        $parsed = $this->parser->parse($class->getDocComment());
+        $doc = $class->getDocComment();
+        $parsed = $this->parser->parse($doc);
 
         return $parsed;
     }

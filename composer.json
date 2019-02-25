@@ -30,7 +30,7 @@
   },
   "autoload-dev": {
     "psr-4": {
-      "IgniTest\\": "tests/"
+      "IgniTest\\OpenApi\\": "tests/"
     }
   }
 }

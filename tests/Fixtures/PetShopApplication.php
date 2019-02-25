@@ -2,12 +2,15 @@
 
 namespace IgniTest\OpenApi\Fixtures;
 
-use Igni\OpenApi\Annotation\Application;
+use Igni\OpenApi\Annotation;
 
 /**
- * @Application(
+ * @Annotation\Application(
  *     title="Pet shop api",
  *     version="1.0.0",
+ *     servers={
+ *       @Api\Server(host="localhost", port="80", id="development")
+ *     }
  * )
  */
 class PetShopApplication

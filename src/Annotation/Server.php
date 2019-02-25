@@ -28,7 +28,7 @@ class Server extends Annotation
     public $description;
 
     /**
-     * @var Variable[]
+     * @var Variable[string]
      */
     public $variables;
 
@@ -47,6 +47,11 @@ class Server extends Annotation
      */
     public $id;
 
+    public function getUrl() : string
+    {
+        return $this->url;
+    }
+
     protected function getAttributesSchema() : array
     {
         return [
@@ -58,7 +63,7 @@ class Server extends Annotation
                 'type' => self::TYPE_STRING
             ],
             'variables' => [
-                'type' => [self::TYPE_HASH, Variable::class]
+                'type' => [self::TYPE_STRING, Variable::class]
             ],
             'port' => [
                 'type' => self::TYPE_STRING

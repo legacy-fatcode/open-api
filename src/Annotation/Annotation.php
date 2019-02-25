@@ -10,7 +10,6 @@ use Igni\OpenApi\Exception\AnnotationException;
 abstract class Annotation
 {
     protected const TYPE_MIXED = 'mixed';
-    protected const TYPE_HASH = 'hash';
     protected const TYPE_STRING = 'string';
     protected const TYPE_BOOL = 'boolean';
     protected const TYPE_INTEGER = 'integer';
@@ -48,6 +47,17 @@ abstract class Annotation
         }
     }
 
+    protected function interpolateString(string $string) : string
+    {
+        return preg_replace_callback(
+            '/\\{([^\\}]+)\\}/',
+            function(array $match) {
+
+            },
+            $string
+        );
+    }
+
     private function validateType($type, $value) : bool
     {
         switch (true) {
@@ -63,18 +73,23 @@ abstract class Annotation
                 return is_object($value);
             case $type === self::TYPE_CLASS:
                 return class_exists($value);
-            case is_array($type):
-                // Hash {index
-                if (count($type) === 2) {
-
+            // Validate hash
+            case is_array($type) && count($type) === 2:
+                foreach ($value as $key => $item) {
+                    if (!$this->validateType($type[0], $key) || !$this->validateType($type[1], $item)) {
+                        return false;
+                    }
                 }
+                return true;
+            // Validate list
+            case is_array($type) && count($type) === 1:
                 foreach ($value as $item) {
                     if (!$this->validateType($type[0], $item)) {
                         return false;
                     }
                 }
                 return true;
-            case class_exists($type):
+            case is_string($type) && class_exists($type):
                 return $value instanceof $type;
             default:
                 throw AnnotationException::forInvalidPropertyType($this, $type);

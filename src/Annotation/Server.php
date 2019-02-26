@@ -2,6 +2,7 @@
 
 namespace Igni\OpenApi\Annotation;
 
+use Doctrine\Common\Annotations\Annotation\Required;
 use Igni\OpenApi\Annotation\Server\Variable;
 
 /**
@@ -43,6 +44,7 @@ class Server extends Annotation
     public $host;
 
     /**
+     * @Required
      * @var string
      */
     public $id;
@@ -50,31 +52,5 @@ class Server extends Annotation
     public function getUrl() : string
     {
         return $this->url;
-    }
-
-    protected function getAttributesSchema() : array
-    {
-        return [
-            'url' => [
-                'type' => self::TYPE_STRING,
-                'required' => true,
-            ],
-            'description' => [
-                'type' => self::TYPE_STRING
-            ],
-            'variables' => [
-                'type' => [self::TYPE_STRING, Variable::class]
-            ],
-            'port' => [
-                'type' => self::TYPE_STRING
-            ],
-            'host' => [
-                'type' => self::TYPE_STRING
-            ],
-            'id' => [
-                'type' => self::TYPE_STRING,
-                'required' => true,
-            ],
-        ];
     }
 }

@@ -4,41 +4,29 @@ namespace Igni\OpenApi\Annotation;
 
 use Doctrine\Common\Annotations\Annotation\Target;
 use Doctrine\Common\Annotations\AnnotationRegistry;
+use Doctrine\Common\Annotations\CachedReader;
 use Doctrine\Common\Annotations\DocParser;
 use ReflectionClass;
 use ReflectionMethod;
 use ReflectionFunction;
+use Doctrine\Common\Annotations\SimpleAnnotationReader;
 
-AnnotationRegistry::registerLoader(function(string $className) {
-    $args = func_get_args();
-    return true;
-});
+AnnotationRegistry::registerLoader('class_exists');
 
 class AnnotationReader
 {
-    private $parser;
-    private $namespaces = [
-        'Api' => 'Igni\\OpenApi\\Annotation',
-    ];
+    private $reader;
 
     public function __construct()
     {
-        $this->reader = new \Doctrine\Common\Annotations\AnnotationReader();
-        $this->parser = new DocParser();
-        //$this->parser->setIgnoreNotImportedAnnotations(true);
-    }
-
-    public function addNamespace(string $name, string $ns) : void
-    {
-        $this->namespaces[$name] = $ns;
+        $this->reader = new CachedReader(
+            new \Doctrine\Common\Annotations\AnnotationReader(),
+        );
     }
 
     public function readFromClass(ReflectionClass $class) : array
     {
-        $this->parser->setImports($this->namespaces);
-        $this->parser->setTarget(Target::TARGET_CLASS);
-        $doc = $class->getDocComment();
-        $parsed = $this->parser->parse($doc);
+        $parsed = $this->reader->getClassAnnotations($class);
 
         return $parsed;
     }

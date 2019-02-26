@@ -2,17 +2,21 @@
 
 namespace Igni\OpenApi\Annotation;
 
+use Doctrine\Common\Annotations\Annotation\Required;
+use Doctrine\Common\Annotations\Annotation\Target;
 use Igni\OpenApi\Annotation\Info\Contact;
 use Igni\OpenApi\Annotation\Info\License;
 use Igni\OpenApi\Annotation\SecurityScheme\SecurityScheme;
 
 /**
  * @Annotation
+ * @Target("CLASS")
  */
 class Application extends Annotation
 {
     /**
      * The title of the application.
+     * @Required
      * @var string
      */
     public $title;
@@ -44,11 +48,13 @@ class Application extends Annotation
     /**
      * The version of the OpenAPI application.
      * @var string
+     * @Required
      */
     public $version;
 
     /**
-     * @var Server[]
+     * @var \Igni\OpenApi\Annotation\Server[]
+     * @Required
      */
     public $servers;
 
@@ -59,35 +65,5 @@ class Application extends Annotation
      * @var SecurityScheme
      */
     public $security;
-
-    protected function getAttributesSchema() : array
-    {
-        return [
-            'title' => [
-                'required' => true,
-                'type' => self::TYPE_STRING,
-            ],
-            'description' => [
-                'type' => self::TYPE_STRING,
-            ],
-            'termsOfService' => [
-                'type' => self::TYPE_STRING,
-            ],
-            'contact' => [
-                'type' => Contact::class,
-            ],
-            'license' => [
-                'type' => License::class,
-            ],
-            'version' => [
-                'required' => true,
-                'type' => self::TYPE_STRING,
-            ],
-            'servers' => [
-                'required' => true,
-                'type' => [Server::class],
-            ],
-        ];
-    }
 }
 

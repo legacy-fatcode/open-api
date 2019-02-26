@@ -19,9 +19,7 @@ class AnnotationReader
 
     public function __construct()
     {
-        $this->reader = new CachedReader(
-            new \Doctrine\Common\Annotations\AnnotationReader(),
-        );
+        $this->reader = new \Doctrine\Common\Annotations\AnnotationReader();
     }
 
     public function readFromClass(ReflectionClass $class) : array

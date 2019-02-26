@@ -2,13 +2,14 @@
 
 namespace Igni\OpenApi\Annotation;
 
+use Doctrine\Common\Annotations\Annotation\Required;
 use Doctrine\Common\Annotations\Annotation\Target;
 
 /**
  * @Annotation
- * @Target(Target::TARGET_ANNOTATION)
+ * @Target("ANNOTATION")
  */
-final class Header extends Parameter
+class Content extends Annotation
 {
-    public $in = 'header';
+
 }

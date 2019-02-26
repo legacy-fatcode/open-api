@@ -2,11 +2,14 @@
 
 namespace Igni\OpenApi\Annotation;
 
+use Doctrine\Common\Annotations\Annotation\Enum;
+
 trait DataType
 {
     /**
      * Property type, can be one of: array, integer, number, string, boolean. If none provided docblock will be read to retrieve possible map.
      * @var string
+     * @Enum(value={"integer", "number", "string", "boolean", "object"})
      * @see https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.2.md#data-types
      */
     public $type = 'string';
@@ -63,13 +66,13 @@ trait DataType
     public $pattern;
 
     /**
-     *
+     * Determines whether property is read only.
      * @var bool
      */
     public $readOnly;
 
     /**
-     *
+     * Determines whether property is write only.
      * @var bool
      */
     public $writeOnly;
@@ -105,7 +108,7 @@ trait DataType
     public $uniqueItems;
 
     /**
-     * @var Reference|Schema
+     * @var \Igni\OpenApi\Annotation\Reference|\Igni\OpenApi\Annotation\Schema
      */
     public $items;
 }

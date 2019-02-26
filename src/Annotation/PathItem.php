@@ -2,8 +2,11 @@
 
 namespace Igni\OpenApi\Annotation;
 
+use Doctrine\Common\Annotations\Annotation\Target;
+
 /**
  * @Annotation
+ * @Target(Target::TARGET_ANNOTATION)
  */
 class PathItem extends Annotation
 {
@@ -21,28 +24,60 @@ class PathItem extends Annotation
 
     /**
      * A definition of a GET operation on this path.
-     * @var
+     * @var \Igni\OpenApi\Annotation\PathItem\Operation
      */
     public $get;
 
+    /**
+     * A definition of a POST operation on this path.
+     * @var \Igni\OpenApi\Annotation\PathItem\Operation
+     */
     public $post;
 
+    /**
+     * A definition of a PUT operation on this path.
+     * @var \Igni\OpenApi\Annotation\PathItem\Operation
+     */
     public $put;
 
+    /**
+     * A definition of a DELETE operation on this path.
+     * @var \Igni\OpenApi\Annotation\PathItem\Operation
+     */
     public $delete;
 
+    /**
+     * A definition of an OPTIONS operation on this path.
+     * @var \Igni\OpenApi\Annotation\PathItem\Operation
+     */
     public $options;
 
+    /**
+     * A definition of a HEAD operation on this path.
+     * @var \Igni\OpenApi\Annotation\PathItem\Operation
+     */
     public $head;
 
-    public $path;
+    /**
+     * A definition of a PATCH operation on this path.
+     * @var \Igni\OpenApi\Annotation\PathItem\Operation
+     */
+    public $patch;
 
+    /**
+     * A definition of a TRACE operation on this path.
+     * @var \Igni\OpenApi\Annotation\PathItem\Operation
+     */
     public $trace;
 
+    /**
+     * @var \Igni\OpenApi\Annotation\Parameter[]
+     */
     public $parameters = [];
 
-    protected function getRequiredParameters(): array
-    {
-        return [];
-    }
+    /**
+     * An alternative server array to service all operations in this path.
+     * @var \Igni\OpenApi\Annotation\Reference[]
+     */
+    public $servers = [];
 }

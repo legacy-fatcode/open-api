@@ -4,15 +4,12 @@ namespace Igni\OpenApi\Annotation;
 
 use Doctrine\Common\Annotations\Annotation\Required;
 use Doctrine\Common\Annotations\Annotation\Target;
-use Igni\OpenApi\Annotation\Info\Contact;
-use Igni\OpenApi\Annotation\Info\License;
-use Igni\OpenApi\Annotation\SecurityScheme\SecurityScheme;
 
 /**
  * @Annotation
  * @Target("CLASS")
  */
-class Application extends Annotation
+final class Application extends Annotation
 {
     /**
      * The title of the application.
@@ -35,13 +32,13 @@ class Application extends Annotation
 
     /**
      * The contact information for the exposed API.
-     * @var Contact
+     * @var \Igni\OpenApi\Annotation\Info\Contact
      */
     public $contact;
 
     /**
      * The license information for the exposed API.
-     * @var License
+     * @var \Igni\OpenApi\Annotation\Info\License
      */
     public $license;
 
@@ -62,7 +59,7 @@ class Application extends Annotation
      * A declaration of which security mechanisms can be used across the API. The list of values includes alternative
      * security requirement objects that can be used. Only one of the security requirement objects need to be satisfied
      * to authorize a request. Individual operations can override this definition.
-     * @var SecurityScheme
+     * @var \Igni\OpenApi\Annotation\SecurityScheme\SecurityScheme
      */
     public $security;
 }

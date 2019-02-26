@@ -6,14 +6,13 @@ use Doctrine\Common\Annotations\Annotation\Required;
 
 /**
  * @Annotation
- * @see https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.2.md#responseObject
+ * @see https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.2.md#request-body-object
  */
-class Response extends Annotation
+class Request extends Annotation
 {
     /**
-     * A brief description of the response object. CommonMark syntax MAY be used for rich text representation.
+     * A brief description of the request body. This could contain examples of use. CommonMark syntax MAY be used for rich text representation.
      * @var string
-     * @Required
      */
     public $description;
 

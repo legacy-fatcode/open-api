@@ -1,5 +1,8 @@
 <?php declare(strict_types=1);
 
+/**
+ * Some docblock
+ */
 namespace PetShop;
 
 use Igni\OpenApi\Annotation as Api;
@@ -7,6 +10,8 @@ use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
 require_once 'config/default.php';
+
+
 
 /**
  * This application can be run in development mode by typing in terminal:
@@ -122,4 +127,5 @@ function getTag()
 function getPet(ServerRequestInterface $request)
 {
     return new Response(200, new Pet($request->getAttribute('id')));
+}
 }

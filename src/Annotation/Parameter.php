@@ -2,14 +2,20 @@
 
 namespace Igni\OpenApi\Annotation;
 
+use Doctrine\Common\Annotations\Annotation\Enum;
+use Doctrine\Common\Annotations\Annotation\Required;
+use Doctrine\Common\Annotations\Annotation\Target;
+
 /**
  * @Annotation
+ * @Target(Target::TARGET_ANNOTATION)
  * @see https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.2.md#parameterObject
  */
 class Parameter extends Annotation
 {
     /**
      * The name of the parameter. Parameter names are case sensitive.
+     * @Required
      * @var string
      */
     public $name;
@@ -42,30 +48,17 @@ class Parameter extends Annotation
 
     /**
      * The location of the parameter. Possible values are "query", "header", "path" or "cookie".
+     * @Enum(value={"query", "header", "path", "cookie"})
+     * @Required
      * @var string
      */
     public $in;
 
     /**
      * The schema defining the type used for the parameter.
-     * @var Schema|Reference
+     * @var \Igni\OpenApi\Annotation\Schema|\Igni\OpenApi\Annotation\Reference
      */
     public $schema;
 
     public $examples;
-
-    protected function getAttributesSchema() : array
-    {
-        return [
-            'name' => [
-
-            ],
-            'in' => [
-
-            ],
-            'required' => [
-
-            ]
-        ];
-    }
 }

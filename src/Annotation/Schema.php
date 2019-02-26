@@ -29,12 +29,7 @@ class Schema extends Annotation
     public $required = [];
 
     /**
-     * @var Property[]
+     * @var \Igni\OpenApi\Annotation\Property[]
      */
     public $properties;
-
-    protected function getRequiredParameters(): array
-    {
-        return [];
-    }
 }

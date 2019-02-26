@@ -2,9 +2,8 @@
 
 namespace Igni\OpenApi\Annotation\PathItem;
 
+use Doctrine\Common\Annotations\Annotation\Required;
 use Igni\OpenApi\Annotation\Annotation;
-use Igni\OpenApi\Annotation\Parameter;
-use Igni\OpenApi\Annotation\Response;
 
 /**
  * @Annotation
@@ -40,7 +39,7 @@ class Operation extends Annotation
 
     /**
      * A list of parameters that are applicable for this operation.
-     * @var Parameter[]
+     * @var \Igni\OpenApi\Annotation\Parameter[]
      */
     public $parameters;
 
@@ -52,7 +51,8 @@ class Operation extends Annotation
 
     /**
      * The list of possible responses as they are returned from executing this operation.
-     * @var Response[]
+     * @var \Igni\OpenApi\Annotation\Response[]
+     * @Required
      */
     public $responses;
 
@@ -63,12 +63,7 @@ class Operation extends Annotation
     public $deprecated = false;
 
     /**
-     * @var
+     * @var \Igni\OpenApi\Annotation\SecurityScheme\SecurityRequirement
      */
     public $security;
-
-    protected function getRequiredParameters(): array
-    {
-        return ['responses'];
-    }
 }

@@ -2,8 +2,6 @@
 
 namespace Igni\OpenApi\Annotation;
 
-use Igni\OpenApi\Exception\AnnotationException;
-
 /**
  * Base annotation class
  */
@@ -17,6 +15,11 @@ abstract class Annotation
     public function toJson() : string
     {
 
+    }
+
+    public function validate() : void
+    {
+        // By default all annotations are valid.
     }
 
     protected function interpolateString(string $string) : string

@@ -2,6 +2,8 @@
 
 namespace Igni\OpenApi\Annotation;
 
+use Doctrine\Common\Annotations\Annotation\Required;
+
 /**
  * @Annotation
  * @see https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.2.md#schemaObject
@@ -13,6 +15,7 @@ class Property extends Annotation
     /**
      * The name of the parameter. Parameter names are case sensitive. If none provided, annotated field name will get assigned.
      * @var string
+     * @Required
      */
     public $name;
 
@@ -28,9 +31,4 @@ class Property extends Annotation
      * @var bool
      */
     public $required = true;
-
-    protected function getRequiredParameters() : array
-    {
-        return ['name', 'required', 'type'];
-    }
 }

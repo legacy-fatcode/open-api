@@ -2,8 +2,11 @@
 
 namespace Igni\OpenApi\Annotation;
 
+use Doctrine\Common\Annotations\Annotation\Target;
+
 /**
  * @Annotation
+ * @Target(Target::TARGET_ANNOTATION)
  */
 class Link extends Parameter
 {
@@ -20,7 +23,7 @@ class Link extends Parameter
     public $operationId;
 
     /**
-     * @var Parameter[]
+     * @var \Igni\OpenApi\Annotation\Parameter[]
      */
     public $parameters;
 

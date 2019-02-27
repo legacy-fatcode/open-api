@@ -126,6 +126,5 @@ function getTag()
  */
 function getPet(ServerRequestInterface $request)
 {
-    return new Response(200, new Pet($request->getAttribute('id')));
-}
+
 }

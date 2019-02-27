@@ -5,7 +5,11 @@ namespace Igni\OpenApi\Annotation;
 use Doctrine\Common\Annotations\Annotation\Target;
 use Doctrine\Common\Annotations\AnnotationRegistry;
 use Doctrine\Common\Annotations\DocParser;
-use Doctrine\Common\Annotations\PhpParser;
+use PhpParser\Error;
+use PhpParser\Node;
+use PhpParser\NodeTraverser;
+use PhpParser\NodeVisitorAbstract;
+use PhpParser\ParserFactory;
 use ReflectionClass;
 use ReflectionFunction;
 use ReflectionMethod;
@@ -15,7 +19,7 @@ AnnotationRegistry::registerLoader('class_exists');
 
 /**
  * Class AnnotationReader
- * This class is partially rewritten doctrine annotation reader class:
+ *
  * @see \Doctrine\Common\Annotations\AnnotationReader
  */
 class AnnotationReader
@@ -26,11 +30,13 @@ class AnnotationReader
 
     private $imports = [];
 
+    private $fileImports = [];
+
     public function __construct()
     {
         $this->parser = new DocParser();
         $this->parser->setIgnoreNotImportedAnnotations(true);
-        $this->phpParser = new PhpParser();
+        $this->phpParser = (new ParserFactory())->create(ParserFactory::PREFER_PHP7);
     }
 
     public function readFromClass(ReflectionClass $class) : array
@@ -40,7 +46,6 @@ class AnnotationReader
 
         return $this->parser->parse($class->getDocComment(), 'class ' . $class->getName());
     }
-
 
     public function readFromProperty(ReflectionProperty $property) : array
     {
@@ -63,6 +68,14 @@ class AnnotationReader
         return $this->parser->parse($method->getDocComment(), $context);
     }
 
+    public function readFromComment(string $comment, string $filename = null) : array
+    {
+        $context = "comment in {$filename}";
+        $this->parser->setImports($this->getFileImports($filename));
+
+        return $this->parser->parse($comment, $context);
+    }
+
     public function readFromFunction(ReflectionFunction $function) : array
     {
         $context = 'function ' . $function->getName() . '()';
@@ -74,7 +87,7 @@ class AnnotationReader
 
     private function getFunctionImports(ReflectionFunction $function) : array
     {
-
+        return $this->getFileImports($function->getFileName());
     }
 
     private function getClassImports(ReflectionClass $class) : array
@@ -85,8 +98,7 @@ class AnnotationReader
         }
 
         $this->imports[$name] = array_merge(
-            $this->phpParser->parseClass($class),
-            ['__NAMESPACE__' => $class->getNamespaceName()]
+            $this->getFileImports($class->getFileName())
         );
 
         return $this->imports[$name];
@@ -104,7 +116,7 @@ class AnnotationReader
 
         foreach ($class->getTraits() as $trait) {
             if ($trait->hasMethod($method->getName()) && $trait->getFileName() === $method->getFileName()) {
-                $traitImports = array_merge($traitImports, $this->phpParser->parseClass($trait));
+                $traitImports = array_merge($traitImports, $this->getFileImports($trait->getFileName()));
             }
         }
 
@@ -123,10 +135,52 @@ class AnnotationReader
 
         foreach ($class->getTraits() as $trait) {
             if ($trait->hasProperty($property->getName())) {
-                $traitImports = array_merge($traitImports, $this->phpParser->parseClass($trait));
+                $traitImports = array_merge($traitImports, $this->getFileImports($trait->getFileName()));
             }
         }
 
         return array_merge($classImports, $traitImports);
+    }
+
+    /**
+     * @param $filename
+     * @return array
+     * @todo: Optimize this to token_get_all function.
+     */
+    private function getFileImports($filename) : array
+    {
+        if (isset($this->fileImports[$filename])) {
+            return $this->fileImports[$filename];
+        }
+
+        if (empty($filename) || !is_file($filename) || !is_readable($filename)) {
+            return $this->fileImports[$filename] = [];
+        }
+
+        $useStatements = [];
+        $traverser = new NodeTraverser();
+        $traverser->addVisitor(new class($useStatements) extends NodeVisitorAbstract {
+            private $useStatements;
+
+            public function __construct(&$useStatements)
+            {
+                $this->useStatements = &$useStatements;
+            }
+
+            public function enterNode(Node $node) {
+                if ($node instanceof Node\Stmt\UseUse) {
+                    $this->useStatements[strtolower((string) $node->getAlias())] = (string) $node->name;
+                }
+            }
+        });
+
+        try {
+            $ast = $this->phpParser->parse(file_get_contents($filename));
+            $traverser->traverse($ast);
+        } catch (Error $exception) {
+            return $this->fileImports[$filename] = [];
+        }
+
+        return $this->fileImports[$filename] = $useStatements;
     }
 }

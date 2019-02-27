@@ -2,10 +2,12 @@
 
 namespace Igni\OpenApi\Annotation\Info;
 
+use Doctrine\Common\Annotations\Annotation\Target;
 use Igni\OpenApi\Annotation\Annotation;
 
 /**
  * @Annotation
+ * @Target("ANNOTATION")
  */
 class License extends Annotation
 {

@@ -3,11 +3,13 @@
 namespace Igni\OpenApi\Annotation\PathItem;
 
 use Doctrine\Common\Annotations\Annotation\Required;
+use Doctrine\Common\Annotations\Annotation\Target;
 use Igni\OpenApi\Annotation\Annotation;
 
 /**
  * @Annotation
  * @see https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.2.md#operationObject
+ * @Target("ALL")
  */
 class Operation extends Annotation
 {

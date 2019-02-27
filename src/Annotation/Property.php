@@ -3,9 +3,11 @@
 namespace Igni\OpenApi\Annotation;
 
 use Doctrine\Common\Annotations\Annotation\Required;
+use Doctrine\Common\Annotations\Annotation\Target;
 
 /**
  * @Annotation
+ * @Target(Target::TARGET_PROPERTY | Target::TARGET_ANNOTATION)
  * @see https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.2.md#schemaObject
  */
 class Property extends Annotation

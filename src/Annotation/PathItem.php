@@ -6,7 +6,7 @@ use Doctrine\Common\Annotations\Annotation\Target;
 
 /**
  * @Annotation
- * @Target(Target::TARGET_ANNOTATION)
+ * @Target(Target::TARGET_CLASS | Target::TARGET_METHOD)
  */
 class PathItem extends Annotation
 {

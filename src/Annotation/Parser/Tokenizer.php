@@ -2,30 +2,42 @@
 
 namespace Igni\OpenApi\Annotation\Parser;
 
+use Igni\OpenApi\Exception\TokenizerException;
+
 class Tokenizer
 {
-    private $current;
+    private const S_NONE = 0;
+    private const S_STRING = 1;
+    private const S_INTEGER = 2;
+    private const S_FLOAT = 3;
+    private const S_IDENTIFIER = 4;
+    private const S_DOCBLOCK = 5;
+    private const S_END = 100;
+
+    private $state = self::S_NONE;
     private $stream;
     private $cursor = 0;
-    private $index = 0;
     private $length;
-    private $tokens;
+    private $tokens = [];
 
     public function __construct(string $docBlockComment)
     {
         $this->stream = $docBlockComment;
         $this->length = mb_strlen($this->stream);
-        $this->current = new Token(0, Token::T_NONE, '');
     }
 
-    public function tokenize() : void
+    /**
+     * @return array
+     */
+    public function tokenize() : array
     {
         $line = 0;
-        $lineBuffer = '';
-        while ($this->cursor < $this->length) {
-            $char = $this->stream[$this->cursor++];
+        $buffer = '';
 
-            $lineBuffer .= $char;
+        while ($this->cursor < $this->length) {
+            $token = null;
+            $char = $this->stream[$this->cursor];
+            $buffer .= $char;
 
             $prevChar = null;
             if ($this->cursor - 1 >= 0) {
@@ -38,24 +50,157 @@ class Tokenizer
             }
 
             switch (true) {
-                case $char === '/' && $this->current()->getType() === Token::T_NONE && $nextChar === '*':
-                    $token = new Token($this->cursor, Token::T_DOCBLOCK_START, '/*');
-                    $this->cursor ++;
+                case $char === '/' && $this->state === self::S_NONE && $nextChar === '*':
+                    $this->tokens[] = new Token($this->cursor, Token::T_DOCBLOCK_START, '/*');
+                    $this->cursor++;
+                    $buffer = '';
                     break;
-                case $char === '*' && preg_match('//?\s*\**\s*/', $lineBuffer):
-                    $token = new Token($this->cursor, Token::T_ASTERISK, $char);
-                    break;
-                case $char === "\n":
-                    $line++;
-                    $lineBuffer = '';
-                    break;
-                case $char === '{':
-                    $token = new Token($this->cursor, Token::T_ASTERISK, $char);
-                    break;
-            }
 
-            $this->tokens[] = $token;
+                case $char === '*' && $this->state === self::S_NONE:
+                    if ($nextChar == '/') {
+                        $this->tokens[] = new Token($this->cursor, Token::T_DOCBLOCK_END, '*/');
+                        $buffer = '';
+                        break 2;
+                    }
+                    $this->tokens[] = new Token($this->cursor, Token::T_ASTERISK, $char);
+                    $buffer = '';
+                    break;
+
+                case $char === "\n":
+                    if ($this->state === self::S_DOCBLOCK) {
+                        $this->tokens[] = new Token($this->cursor - strlen($buffer), Token::T_DOCBLOCK, $buffer);
+                        $this->state = self::S_NONE;
+                        $buffer = '';
+                    }
+                    $line++;
+                    break;
+
+                case $char === '"' && $this->state === self::S_NONE:
+                    $this->state = self::S_STRING;
+                    $buffer = '';
+                    break;
+
+                case $char === '"' && $this->state === self::S_STRING:
+                    if ($prevChar === '\\') {
+                        break;
+                    }
+                    $this->tokens[] = new Token($this->cursor - strlen($buffer) + 1, Token::T_STRING, stripslashes(substr($buffer, 0, -1)));
+                    $buffer = '';
+                    $this->state = self::S_NONE;
+                    break;
+
+                case $char === ':' && $this->state !== self::S_STRING:
+                    if ($this->state === self::S_IDENTIFIER) {
+                        $this->tokens = new Token($this->cursor - strlen($buffer), Token::T_IDENTIFIER, $buffer);
+                    }
+
+                    $this->tokens[] = new Token($this->cursor, Token::T_COLON, $char);
+                    $buffer = '';
+                    break;
+
+                // When dots appears on integer it becomes double
+                case $char === "." && $this->state === self::S_INTEGER:
+                    $this->state = self::S_FLOAT;
+                    break;
+
+                // When dot appears on number state or identifier state we are dealing with docblock stuff
+                case $char === "." && in_array($this->state, [self::S_FLOAT, self::S_IDENTIFIER], true):
+                    $this->state = self::S_DOCBLOCK;
+                    break;
+
+
+                case ctype_space($char):
+                    if (in_array($this->state, [self::S_NONE, self::S_DOCBLOCK, self::S_STRING], true)) {
+                        break; // Ignore whitespaces in docblock empty state and string
+                    }
+
+                    $this->handleInterrupt($buffer);
+                    break;
+
+                case ctype_digit($char) && $this->state === self::S_NONE:
+                    $this->state = self::S_INTEGER;
+                    break;
+
+                case ctype_alpha($char) && $this->state === self::S_NONE:
+                    $this->state = self::S_IDENTIFIER;
+                    break;
+
+                case $char === '@' && $this->state === self::S_NONE:
+                    $this->tokens[] = new Token($this->cursor, Token::T_AT, $char);
+                    $buffer = '';
+                    break;
+
+                case $char === '(' && $this->state === self::S_NONE:
+                    $this->tokens[] = new Token($this->cursor, Token::T_OPEN_PARENTHESIS, $char);
+                    $buffer = '';
+                    break;
+
+                case $char === ')' && $this->state === self::S_NONE:
+                    $this->tokens[] = new Token($this->cursor, Token::T_CLOSE_PARENTHESIS, $char);
+                    $buffer = '';
+                    break;
+
+                case $char === '{' && $this->state === self::S_NONE:
+                    $this->tokens[] = new Token($this->cursor, Token::T_OPEN_CURLY_BRACES, $char);
+                    $buffer = '';
+                    break;
+
+                case $char === '}' && $this->state === self::S_NONE:
+                    $this->tokens[] = new Token($this->cursor, Token::T_CLOSE_CURLY_BRACES, $char);
+                    $buffer = '';
+                    break;
+
+
+            }
+            $this->cursor++;
         }
+
+        $this->handleInterrupt($buffer);
+        $this->state = self::S_END;
+
+        return $this->tokens;
+    }
+
+    private function handleInterrupt(string &$buffer) : void
+    {
+        switch ($this->state) {
+            case self::S_INTEGER:
+                $this->tokens[] = new Token(
+                    $this->cursor - strlen($buffer) + 1,
+                    Token::T_INTEGER,
+                    (int) $buffer
+                );
+                $buffer = '';
+                break;
+            case self::S_FLOAT:
+                $this->tokens[] = new Token(
+                    $this->cursor - strlen($buffer) + 1,
+                    Token::T_FLOAT,
+                    (float) $buffer
+                );
+                $buffer = '';
+                break;
+            case self::S_IDENTIFIER:
+                $this->tokens[] = new Token(
+                    $this->cursor - strlen($buffer) + 1,
+                    Token::T_IDENTIFIER,
+                    $buffer
+                );
+                $buffer = '';
+                break;
+        }
+
+        $this->state = self::S_NONE;
+    }
+
+    public function first(): Token
+    {
+        return reset($this->tokens);
+    }
+
+    public function last() : Token
+    {
+        return end($this->tokens);
     }
 
     /**
@@ -64,33 +209,27 @@ class Tokenizer
      */
     public function current() : Token
     {
-        return $this->current;
+        return current($this->tokens);
     }
 
     public function next() : Token
     {
-        $this->index++;
-        return $this->tokens[$this->index];
+        return next($this->tokens);
     }
 
     public function seek(int $type) : Token
     {
-        while ($this->current()->getType() !== $type) {
-            $this->next();
+        while (next($this->tokens)) {
+            if ($this->current()->getType() === $type) {
+                return $this->current();
+            }
         }
 
-        return $this->current();
+        throw TokenizerException::forOutOfBonds();
     }
 
     public function previous() : Token
     {
-        if ($this->index === 0) {
-
-        }
-    }
-
-    public function reset() : void
-    {
-        $this->index = 0;
+        prev($this->tokens);
     }
 }

@@ -7,9 +7,9 @@ use Throwable;
 
 abstract class TokenizerException extends LogicException
 {
-    public static function forOutOfBonds(int $index) : Throwable
+    public static function forOutOfBonds() : Throwable
     {
-        return new class extends TokenizerException {
+        return new class extends TokenizerException implements OutOfBondsException {
 
         };
     }

@@ -43,12 +43,12 @@ function getTag(ServerRequestInterface $request)
  * @Api\PathItem\Get(
  *   route="/pets/{id}",
  *   description="Retrieves pet with given id",
- *   parameters={
+ *   parameters=[
  *     @Api\PathItem\PathParameter(
  *       name="id",
  *       type="number"
  *     ),
- *   },
+ *   ],
  *   @Api\Response(
  *     code="200",
  *     schema=@Api\Reference(Pet::class),

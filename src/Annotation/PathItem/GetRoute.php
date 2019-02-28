@@ -9,7 +9,7 @@ use Igni\OpenApi\Annotation\Annotation;
  * @Annotation
  * @Target("ALL")
  */
-class GetRoute extends Operation
+class Get extends Operation
 {
     public $route;
 }

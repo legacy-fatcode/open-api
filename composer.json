@@ -15,7 +15,7 @@
   ],
   "require": {
     "php": ">=7.1.0",
-    "doctrine/annotations": ">=1.6",
+    "ext-mbstring" : "*",
     "psr/http-message": ">=1.0",
     "igniphp/validation": ">=2.1",
     "nikic/php-parser": "^4.2"

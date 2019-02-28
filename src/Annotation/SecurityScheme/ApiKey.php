@@ -6,6 +6,7 @@ use Igni\OpenApi\Annotation\Annotation;
 
 /**
  * @Annotation
+ * @Target("ANNOTATION")
  */
 class ApiKey extends SecurityScheme
 {

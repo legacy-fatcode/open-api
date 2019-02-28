@@ -20,7 +20,7 @@ class PetShopApplication
 }
 
 /**
- * @Api\PathItem\GetRoute(
+ * @Api\PathItem\Get(
  *   route="/tag/{id}",
  *   description="Retrieves tag with given id",
  *   @Api\PathItem\PathParameter(
@@ -40,17 +40,15 @@ function getTag(ServerRequestInterface $request)
 }
 
 /**
- * @Api\PathItem\GetRoute(
- *   route="/pets/{id}/twojastara/z/toba/{nie}/gada",
+ * @Api\PathItem\Get(
+ *   route="/pets/{id}",
  *   description="Retrieves pet with given id",
- *   @Api\PathItem\PathParameter(
- *     name="id",
- *     type="number"
- *   ),
- *   @Api\PathItem\PathParameter(
- *      name="nie",
- *      type="string"
- *   )
+ *   parameters={
+ *     @Api\PathItem\PathParameter(
+ *       name="id",
+ *       type="number"
+ *     ),
+ *   },
  *   @Api\Response(
  *     code="200",
  *     schema=@Api\Reference(Pet::class),
@@ -59,6 +57,10 @@ function getTag(ServerRequestInterface $request)
  *       operationId="getTag",
  *       @Api\PathItem\PathParameter(name="id", expression="$response.body#/tags")
  *     )
+ *   ),
+ *   @Api\SecurityScheme\ApiKey(
+ *     in="header",
+ *     name="ApiToken"
  *   )
  * )
  * @param ServerRequestInterface $request

@@ -9,6 +9,7 @@ class Tokenizer
     private $cursor = 0;
     private $index = 0;
     private $length;
+    private $tokens;
 
     public function __construct(string $docBlockComment)
     {
@@ -19,7 +20,42 @@ class Tokenizer
 
     public function tokenize() : void
     {
+        $line = 0;
+        $lineBuffer = '';
+        while ($this->cursor < $this->length) {
+            $char = $this->stream[$this->cursor++];
 
+            $lineBuffer .= $char;
+
+            $prevChar = null;
+            if ($this->cursor - 1 >= 0) {
+                $prevChar = $this->stream[$this->cursor - 1];
+            }
+
+            $nextChar = null;
+            if ($this->cursor + 1 < $this->length) {
+                $nextChar = $this->stream[$this->cursor + 1];
+            }
+
+            switch (true) {
+                case $char === '/' && $this->current()->getType() === Token::T_NONE && $nextChar === '*':
+                    $token = new Token($this->cursor, Token::T_DOCBLOCK_START, '/*');
+                    $this->cursor ++;
+                    break;
+                case $char === '*' && preg_match('//?\s*\**\s*/', $lineBuffer):
+                    $token = new Token($this->cursor, Token::T_ASTERISK, $char);
+                    break;
+                case $char === "\n":
+                    $line++;
+                    $lineBuffer = '';
+                    break;
+                case $char === '{':
+                    $token = new Token($this->cursor, Token::T_ASTERISK, $char);
+                    break;
+            }
+
+            $this->tokens[] = $token;
+        }
     }
 
     /**
@@ -33,13 +69,8 @@ class Tokenizer
 
     public function next() : Token
     {
-        $char = $this->stream[$this->cursor];
-        switch (true) {
-            case $char === '/' && $this->current()->getType() === Token::T_NONE:
-                break;
-        }
-
         $this->index++;
+        return $this->tokens[$this->index];
     }
 
     public function seek(int $type) : Token

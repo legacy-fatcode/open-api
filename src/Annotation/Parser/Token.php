@@ -22,10 +22,11 @@ class Token
     public const T_COMMA = 17;
     public const T_COLON = 18;
     public const T_NAMESPACE_SEPARATOR = 19;
+    public const T_ASTERISK = 20;
 
-    public const T_DOCBLOCK_START = 20;
-    public const T_DOCBLOCK_END = 21;
-    public const T_DOCBLOCK_LINE_FEED = 22;
+    public const T_DOCBLOCK_START = 100;
+    public const T_DOCBLOCK_END = 101;
+    public const T_DOCBLOCK_LINE_FEED = 102;
 
     private $type;
     private $value;

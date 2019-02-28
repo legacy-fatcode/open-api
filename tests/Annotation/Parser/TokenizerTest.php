@@ -28,16 +28,27 @@ final class TokenizerTest extends TestCase
         self::assertSame('Test string with escaped" and unescaped', $token->getValue());
     }
 
-    public function testTokenizeIdentifier() : void
+    /**
+     * @param string $stream
+     * @param string $expected
+     * @dataProvider provideIdentifiers
+     */
+    public function testTokenizeIdentifier(string $stream, string $expected) : void
     {
-        $tokenizer = new Tokenizer('SomeIdentifier12');
+        $tokenizer = new Tokenizer($stream);
         $tokens = $tokenizer->tokenize();
+
+        $token = $tokenizer->first();
+
+        self::assertCount(1, $tokens);
+        self::assertSame(Token::T_IDENTIFIER, $token->getType());
+        self::assertSame($expected, $token->getValue());
     }
 
     /**
      * @param string $stream
      * @param int $expected
-     * @dataProvider provideIntegerExamples
+     * @dataProvider provideIntegers
      */
     public function testTokenizeInteger(string $stream, int $expected) : void
     {
@@ -52,8 +63,30 @@ final class TokenizerTest extends TestCase
 
     /**
      * @param string $stream
+     * @param bool $bool
+     * @dataProvider provideBooleans
+     */
+    public function testTokenizeBool(string $stream, bool $bool) : void
+    {
+        $tokenizer = new Tokenizer($stream);
+        $tokens = $tokenizer->tokenize();
+        $token = $tokenizer->first();
+
+        self::assertCount(1, $tokens);
+        if ($bool) {
+            self::assertSame(Token::T_TRUE, $token->getType());
+            self::assertTrue($token->getValue());
+        } else {
+            self::assertSame(Token::T_FALSE, $token->getType());
+            self::assertFalse($token->getValue());
+        }
+
+    }
+
+    /**
+     * @param string $stream
      * @param float $expected
-     * @dataProvider provideFloatExamples
+     * @dataProvider provideFloats
      */
     public function testTokenizeFloats(string $stream, float $expected) : void
     {
@@ -66,7 +99,18 @@ final class TokenizerTest extends TestCase
         self::assertSame($expected, $token->getValue());
     }
 
-    public function provideIntegerExamples() : array
+    public function provideBooleans() : array
+    {
+        return [
+            ['true', true],
+            ['false', false],
+            [' true', true],
+            [' false ', false],
+            ['true ', true]
+        ];
+    }
+
+    public function provideIntegers() : array
     {
         return [
             ['12', 12],
@@ -76,13 +120,22 @@ final class TokenizerTest extends TestCase
         ];
     }
 
-    public function provideFloatExamples() : array
+    public function provideFloats() : array
     {
         return [
             ['12.21', 12.21],
             [' 12.21', 12.21],
             [' 12.21 ', 12.21],
             ['12.22 ', 12.22]
+        ];
+    }
+
+    public function provideIdentifiers() : array
+    {
+        return [
+            ['Identifier12 ', 'Identifier12'],
+            [' Identifier12 ', 'Identifier12'],
+            [' Identifier12', 'Identifier12'],
         ];
     }
 }

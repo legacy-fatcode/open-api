@@ -50,7 +50,7 @@ class Tokenizer
             }
 
             switch (true) {
-                case $char === '/' && $this->state === self::S_NONE && $nextChar === '*':
+                case $this->cursor === 0 && $char === '/' && $nextChar === '*':
                     $this->tokens[] = new Token($this->cursor, Token::T_DOCBLOCK_START, '/*');
                     $this->cursor++;
                     $buffer = '';
@@ -114,7 +114,7 @@ class Tokenizer
                         break; // Ignore whitespaces in docblock empty state and string
                     }
 
-                    $this->handleInterrupt($buffer);
+                    $this->handleInterrupt($buffer, true);
                     break;
 
                 case ctype_digit($char) && $this->state === self::S_NONE:
@@ -122,6 +122,7 @@ class Tokenizer
                     break;
 
                 case ctype_alpha($char) && $this->state === self::S_NONE:
+                    $buffer = $char;
                     $this->state = self::S_IDENTIFIER;
                     break;
 
@@ -155,37 +156,54 @@ class Tokenizer
             $this->cursor++;
         }
 
-        $this->handleInterrupt($buffer);
+        $this->handleInterrupt($buffer, false);
         $this->state = self::S_END;
 
         return $this->tokens;
     }
 
-    private function handleInterrupt(string &$buffer) : void
+    private function handleInterrupt(string &$buffer, bool $trim) : void
     {
+        $index = $this->cursor - strlen($buffer) + 1;
+        $value = $trim ? substr($buffer, 0, -1) : $buffer;
         switch ($this->state) {
             case self::S_INTEGER:
                 $this->tokens[] = new Token(
-                    $this->cursor - strlen($buffer) + 1,
+                    $index,
                     Token::T_INTEGER,
-                    (int) $buffer
+                    (int) $value
                 );
                 $buffer = '';
                 break;
             case self::S_FLOAT:
                 $this->tokens[] = new Token(
-                    $this->cursor - strlen($buffer) + 1,
+                    $index,
                     Token::T_FLOAT,
-                    (float) $buffer
+                    (float) $value
                 );
                 $buffer = '';
                 break;
             case self::S_IDENTIFIER:
-                $this->tokens[] = new Token(
-                    $this->cursor - strlen($buffer) + 1,
-                    Token::T_IDENTIFIER,
-                    $buffer
-                );
+
+                if (strtolower($value) === 'true') {
+                    $this->tokens[] = new Token(
+                        $index,
+                        Token::T_TRUE,
+                        true
+                    );
+                } elseif (strtolower($value) === 'false') {
+                    $this->tokens[] = new Token(
+                        $index,
+                        Token::T_FALSE,
+                        false
+                    );
+                } else {
+                    $this->tokens[] = new Token(
+                        $index,
+                        Token::T_IDENTIFIER,
+                        $value
+                    );
+                }
                 $buffer = '';
                 break;
         }

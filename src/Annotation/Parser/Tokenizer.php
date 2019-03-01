@@ -27,7 +27,7 @@ class Tokenizer
     }
 
     /**
-     * @return array
+     * @return Token[]
      */
     public function tokenize() : array
     {
@@ -91,7 +91,11 @@ class Tokenizer
 
                 case $char === ':' && $this->state !== self::S_STRING:
                     if ($this->state === self::S_IDENTIFIER) {
-                        $this->tokens = new Token($this->cursor - strlen($buffer), Token::T_IDENTIFIER, $buffer);
+                        $this->tokens[] = new Token(
+                            $this->cursor - strlen($buffer),
+                            Token::T_IDENTIFIER,
+                            substr($buffer, 0, -1)
+                        );
                     }
 
                     $this->tokens[] = new Token($this->cursor, Token::T_COLON, $char);
@@ -107,7 +111,6 @@ class Tokenizer
                 case $char === "." && in_array($this->state, [self::S_FLOAT, self::S_IDENTIFIER], true):
                     $this->state = self::S_DOCBLOCK;
                     break;
-
 
                 case ctype_space($char):
                     if (in_array($this->state, [self::S_NONE, self::S_DOCBLOCK, self::S_STRING], true)) {
@@ -131,14 +134,46 @@ class Tokenizer
                     $buffer = '';
                     break;
 
+                case $char === '@' && in_array($this->state, [self::S_IDENTIFIER, self::S_INTEGER, self::S_FLOAT]):
+                    $this->state = self::S_DOCBLOCK;
+                    break;
+
                 case $char === '(' && $this->state === self::S_NONE:
                     $this->tokens[] = new Token($this->cursor, Token::T_OPEN_PARENTHESIS, $char);
                     $buffer = '';
                     break;
 
+                case $char === '(' && $this->state === self::S_IDENTIFIER:
+                    $this->tokens[] = new Token(
+                        $this->cursor,
+                        Token::T_IDENTIFIER,
+                        substr($buffer, 0, -1)
+                    );
+                    $this->tokens[] = new Token($this->cursor, Token::T_OPEN_PARENTHESIS, $char);
+                    $buffer = '';
+                    break;
+
+                case $char === '(' && in_array($this->state, [self::S_FLOAT, self::S_INTEGER]):
+                    $this->state = self::S_DOCBLOCK;
+                    break;
+
                 case $char === ')' && $this->state === self::S_NONE:
                     $this->tokens[] = new Token($this->cursor, Token::T_CLOSE_PARENTHESIS, $char);
                     $buffer = '';
+                    break;
+
+                case $char === ')' && $this->state === self::S_IDENTIFIER:
+                    $this->tokens[] = new Token(
+                        $this->cursor,
+                        Token::T_IDENTIFIER,
+                        substr($buffer, 0, -1)
+                    );
+                    $this->tokens[] = new Token($this->cursor, Token::T_CLOSE_PARENTHESIS, $char);
+                    $buffer = '';
+                    break;
+
+                case $char === ')' && in_array($this->state, [self::S_FLOAT, self::S_INTEGER]):
+                    $this->state = self::S_DOCBLOCK;
                     break;
 
                 case $char === '{' && $this->state === self::S_NONE:
@@ -150,8 +185,6 @@ class Tokenizer
                     $this->tokens[] = new Token($this->cursor, Token::T_CLOSE_CURLY_BRACES, $char);
                     $buffer = '';
                     break;
-
-
             }
             $this->cursor++;
         }

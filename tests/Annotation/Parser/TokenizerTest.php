@@ -8,6 +8,25 @@ use PHPUnit\Framework\TestCase;
 
 final class TokenizerTest extends TestCase
 {
+    /**
+     * @param string $stream
+     * @param array $expected
+     * @dataProvider provideTokens
+     */
+    public function testTokenization(string $stream, array $expected) : void
+    {
+        $tokenizer = new Tokenizer($stream);
+        $tokens = $tokenizer->tokenize();
+        self::assertCount(count($expected), $tokens);
+
+        $i = 0;
+        foreach ($expected as $criteria) {
+            self::assertSame($criteria['value'], $tokens[$i]->getValue());
+            self::assertSame($criteria['type'], $tokens[$i]->getType());
+            $i++;
+        }
+    }
+
     public function testTokenizeEmptyDocBlock() : void
     {
         $tokenizer = new Tokenizer('/***/');
@@ -136,6 +155,30 @@ final class TokenizerTest extends TestCase
             ['Identifier12 ', 'Identifier12'],
             [' Identifier12 ', 'Identifier12'],
             [' Identifier12', 'Identifier12'],
+        ];
+    }
+
+    public function provideTokens(): array
+    {
+        return [
+            ['Identifier::class', [
+               [
+                   'value' => 'Identifier',
+                   'type' => Token::T_IDENTIFIER,
+               ],
+               [
+                   'value' => ':',
+                   'type' => Token::T_COLON,
+               ],
+               [
+                   'value' => ':',
+                   'type' => Token::T_COLON,
+               ],
+               [
+                   'value' => 'class',
+                   'type' => Token::T_IDENTIFIER,
+               ],
+            ]],
         ];
     }
 }

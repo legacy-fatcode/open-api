@@ -161,24 +161,216 @@ final class TokenizerTest extends TestCase
     public function provideTokens(): array
     {
         return [
-            ['Identifier::class', [
-               [
-                   'value' => 'Identifier',
-                   'type' => Token::T_IDENTIFIER,
-               ],
-               [
-                   'value' => ':',
-                   'type' => Token::T_COLON,
-               ],
-               [
-                   'value' => ':',
-                   'type' => Token::T_COLON,
-               ],
-               [
-                   'value' => 'class',
-                   'type' => Token::T_IDENTIFIER,
-               ],
-            ]],
+            [
+                'Identifier::class',
+                [
+                   [
+                       'value' => 'Identifier',
+                       'type' => Token::T_IDENTIFIER,
+                   ],
+                   [
+                       'value' => ':',
+                       'type' => Token::T_COLON,
+                   ],
+                   [
+                       'value' => ':',
+                       'type' => Token::T_COLON,
+                   ],
+                   [
+                       'value' => 'class',
+                       'type' => Token::T_IDENTIFIER,
+                   ],
+                ]
+            ],
+            [
+                '@Identifier()',
+                [
+                    [
+                        'value' => '@',
+                        'type' => Token::T_AT,
+                    ],
+                    [
+                        'value' => 'Identifier',
+                        'type' => Token::T_IDENTIFIER,
+                    ],
+                    [
+                        'value' => '(',
+                        'type' => Token::T_OPEN_PARENTHESIS,
+                    ],
+                    [
+                        'value' => ')',
+                        'type' => Token::T_CLOSE_PARENTHESIS,
+                    ],
+                ]
+            ],
+            [
+                '@Fully\Qualified\Namespace()',
+                [
+                    [
+                        'value' => '@',
+                        'type' => Token::T_AT,
+                    ],
+                    [
+                        'value' => 'Fully',
+                        'type' => Token::T_IDENTIFIER,
+                    ],
+                    [
+                        'value' => '\\',
+                        'type' => Token::T_NAMESPACE_SEPARATOR,
+                    ],
+                    [
+                        'value' => 'Qualified',
+                        'type' => Token::T_IDENTIFIER,
+                    ],
+                    [
+                        'value' => '\\',
+                        'type' => Token::T_NAMESPACE_SEPARATOR,
+                    ],
+                    [
+                        'value' => 'Namespace',
+                        'type' => Token::T_IDENTIFIER,
+                    ],
+                    [
+                        'value' => '(',
+                        'type' => Token::T_OPEN_PARENTHESIS,
+                    ],
+                    [
+                        'value' => ')',
+                        'type' => Token::T_CLOSE_PARENTHESIS,
+                    ],
+                ],
+            ],
+            [
+                "@Namespace()\n@Namespace2()",
+                [
+                    [
+                        'value' => '@',
+                        'type' => Token::T_AT,
+                    ],
+                    [
+                        'value' => 'Namespace',
+                        'type' => Token::T_IDENTIFIER,
+                    ],
+                    [
+                        'value' => '(',
+                        'type' => Token::T_OPEN_PARENTHESIS,
+                    ],
+                    [
+                        'value' => ')',
+                        'type' => Token::T_CLOSE_PARENTHESIS,
+                    ],
+                    [
+                        'value' => '@',
+                        'type' => Token::T_AT,
+                    ],
+                    [
+                        'value' => 'Namespace2',
+                        'type' => Token::T_IDENTIFIER,
+                    ],
+                    [
+                        'value' => '(',
+                        'type' => Token::T_OPEN_PARENTHESIS,
+                    ],
+                    [
+                        'value' => ')',
+                        'type' => Token::T_CLOSE_PARENTHESIS,
+                    ],
+                ],
+            ],
+            [
+                "@Namespace(12, true, false, 34.12)",
+                [
+                    [
+                        'value' => '@',
+                        'type' => Token::T_AT,
+                    ],
+                    [
+                        'value' => 'Namespace',
+                        'type' => Token::T_IDENTIFIER,
+                    ],
+                    [
+                        'value' => '(',
+                        'type' => Token::T_OPEN_PARENTHESIS,
+                    ],
+                    [
+                        'value' => 12,
+                        'type' => Token::T_INTEGER,
+                    ],
+                    [
+                        'value' => ',',
+                        'type' => Token::T_COMMA,
+                    ],
+                    [
+                        'value' => true,
+                        'type' => Token::T_TRUE,
+                    ],
+                    [
+                        'value' => ',',
+                        'type' => Token::T_COMMA,
+                    ],
+                    [
+                        'value' => false,
+                        'type' => Token::T_FALSE,
+                    ],
+                    [
+                        'value' => ',',
+                        'type' => Token::T_COMMA,
+                    ],
+                    [
+                        'value' => 34.12,
+                        'type' => Token::T_FLOAT,
+                    ],
+                    [
+                        'value' => ')',
+                        'type' => Token::T_CLOSE_PARENTHESIS,
+                    ],
+                ],
+            ],
+            [
+                "(20, 30.21, @Annotation, false)",
+                [
+                    [
+                        'value' => '(',
+                        'type' => Token::T_OPEN_PARENTHESIS,
+                    ],
+                    [
+                        'value' => 20,
+                        'type' => Token::T_INTEGER,
+                    ],
+                    [
+                        'value' => ',',
+                        'type' => Token::T_COMMA,
+                    ],
+                    [
+                        'value' => 30.21,
+                        'type' => Token::T_FLOAT,
+                    ],
+                    [
+                        'value' => ',',
+                        'type' => Token::T_COMMA,
+                    ],
+                    [
+                        'value' => '@',
+                        'type' => Token::T_AT,
+                    ],
+                    [
+                        'value' => 'Annotation',
+                        'type' => Token::T_IDENTIFIER,
+                    ],
+                    [
+                        'value' => ',',
+                        'type' => Token::T_COMMA,
+                    ],
+                    [
+                        'value' => false,
+                        'type' => Token::T_FALSE,
+                    ],
+                    [
+                        'value' => ')',
+                        'type' => Token::T_CLOSE_PARENTHESIS,
+                    ],
+                ],
+            ],
         ];
     }
 }

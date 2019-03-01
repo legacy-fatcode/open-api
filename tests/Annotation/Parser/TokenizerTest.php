@@ -162,6 +162,63 @@ final class TokenizerTest extends TestCase
     {
         return [
             [
+                '(key4 = "aaa", key5=[1, 2])',
+                [
+                    [
+                        'value' => '(',
+                        'type' => Token::T_OPEN_PARENTHESIS,
+                    ],
+                    [
+                        'value' => 'key4',
+                        'type' => Token::T_IDENTIFIER,
+                    ],
+                    [
+                        'value' => '=',
+                        'type' => Token::T_EQUALS,
+                    ],
+                    [
+                        'value' => 'aaa',
+                        'type' => Token::T_STRING,
+                    ],
+                    [
+                        'value' => ',',
+                        'type' => Token::T_COMMA,
+                    ],
+                    [
+                        'value' => 'key5',
+                        'type' => Token::T_IDENTIFIER,
+                    ],
+                    [
+                        'value' => '=',
+                        'type' => Token::T_EQUALS,
+                    ],
+                    [
+                        'value' => '[',
+                        'type' => Token::T_OPEN_BRACKET,
+                    ],
+                    [
+                        'value' => 1,
+                        'type' => Token::T_INTEGER,
+                    ],
+                    [
+                        'value' => ',',
+                        'type' => Token::T_COMMA,
+                    ],
+                    [
+                        'value' => 2,
+                        'type' => Token::T_INTEGER,
+                    ],
+                    [
+                        'value' => ']',
+                        'type' => Token::T_CLOSE_BRACKET,
+                    ],
+                    [
+                        'value' => ')',
+                        'type' => Token::T_CLOSE_PARENTHESIS,
+                    ],
+                ]
+            ],
+            [
                 'Identifier::class',
                 [
                    [
@@ -327,11 +384,11 @@ final class TokenizerTest extends TestCase
                 ],
             ],
             [
-                "(20, 30.21, @Annotation, false)",
+                "[20, 30.21, @Annotation, false]",
                 [
                     [
-                        'value' => '(',
-                        'type' => Token::T_OPEN_PARENTHESIS,
+                        'value' => '[',
+                        'type' => Token::T_OPEN_BRACKET,
                     ],
                     [
                         'value' => 20,
@@ -366,8 +423,106 @@ final class TokenizerTest extends TestCase
                         'type' => Token::T_FALSE,
                     ],
                     [
+                        'value' => ']',
+                        'type' => Token::T_CLOSE_BRACKET,
+                    ],
+                ],
+            ],
+            [
+                "@Annotation(null, 34.12, [true, false])",
+                [
+                    [
+                        'value' => '@',
+                        'type' => Token::T_AT,
+                    ],
+                    [
+                        'value' => 'Annotation',
+                        'type' => Token::T_IDENTIFIER,
+                    ],
+                    [
+                        'value' => '(',
+                        'type' => Token::T_OPEN_PARENTHESIS,
+                    ],
+                    [
+                        'value' => null,
+                        'type' => Token::T_NULL,
+                    ],
+                    [
+                        'value' => ',',
+                        'type' => Token::T_COMMA,
+                    ],
+                    [
+                        'value' => 34.12,
+                        'type' => Token::T_FLOAT,
+                    ],
+                    [
+                        'value' => ',',
+                        'type' => Token::T_COMMA,
+                    ],
+                    [
+                        'value' => '[',
+                        'type' => Token::T_OPEN_BRACKET
+                    ],
+                    [
+                        'value' => true,
+                        'type' => Token::T_TRUE,
+                    ],
+                    [
+                        'value' => ',',
+                        'type' => Token::T_COMMA,
+                    ],
+                    [
+                        'value' => false,
+                        'type' => Token::T_FALSE,
+                    ],
+                    [
+                        'value' => ']',
+                        'type' => Token::T_CLOSE_BRACKET,
+                    ],
+                    [
                         'value' => ')',
                         'type' => Token::T_CLOSE_PARENTHESIS,
+                    ],
+                ],
+            ],
+            [
+                "@Annotation\n * \n * [true, false]",
+                [
+                    [
+                        'value' => '@',
+                        'type' => Token::T_AT,
+                    ],
+                    [
+                        'value' => 'Annotation',
+                        'type' => Token::T_IDENTIFIER,
+                    ],
+                    [
+                        'value' => '*',
+                        'type' => Token::T_ASTERISK,
+                    ],
+                    [
+                        'value' => '*',
+                        'type' => Token::T_ASTERISK,
+                    ],
+                    [
+                        'value' => '[',
+                        'type' => Token::T_OPEN_BRACKET
+                    ],
+                    [
+                        'value' => true,
+                        'type' => Token::T_TRUE,
+                    ],
+                    [
+                        'value' => ',',
+                        'type' => Token::T_COMMA,
+                    ],
+                    [
+                        'value' => false,
+                        'type' => Token::T_FALSE,
+                    ],
+                    [
+                        'value' => ']',
+                        'type' => Token::T_CLOSE_BRACKET,
                     ],
                 ],
             ],

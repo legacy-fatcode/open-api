@@ -40,7 +40,7 @@ final class TokenizerTest extends TestCase
     {
         $tokenizer = new Tokenizer('"Test string with escaped\" and unescaped"');
         $tokens = $tokenizer->tokenize();
-        $token = $tokenizer->first();
+        $token = $tokens[0];
 
         self::assertCount(1, $tokens);
         self::assertSame(Token::T_STRING, $token->getType());
@@ -56,8 +56,7 @@ final class TokenizerTest extends TestCase
     {
         $tokenizer = new Tokenizer($stream);
         $tokens = $tokenizer->tokenize();
-
-        $token = $tokenizer->first();
+        $token = $tokens[0];
 
         self::assertCount(1, $tokens);
         self::assertSame(Token::T_IDENTIFIER, $token->getType());
@@ -73,7 +72,7 @@ final class TokenizerTest extends TestCase
     {
         $tokenizer = new Tokenizer($stream);
         $tokens = $tokenizer->tokenize();
-        $token = $tokenizer->first();
+        $token = $tokens[0];
 
         self::assertCount(1, $tokens);
         self::assertSame(Token::T_INTEGER, $token->getType());
@@ -89,7 +88,7 @@ final class TokenizerTest extends TestCase
     {
         $tokenizer = new Tokenizer($stream);
         $tokens = $tokenizer->tokenize();
-        $token = $tokenizer->first();
+        $token = $tokens[0];
 
         self::assertCount(1, $tokens);
         if ($bool) {
@@ -111,7 +110,7 @@ final class TokenizerTest extends TestCase
     {
         $tokenizer = new Tokenizer($stream);
         $tokens = $tokenizer->tokenize();
-        $token = $tokenizer->first();
+        $token = $tokens[0];
 
         self::assertCount(1, $tokens);
         self::assertSame(Token::T_FLOAT, $token->getType());

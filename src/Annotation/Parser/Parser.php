@@ -16,7 +16,12 @@ class Parser
 {
     private $fileImports;
     private $phpParser;
-    private $map = [
+
+    private $namespaces = [
+
+    ];
+
+    private $annotations = [
         'Annotation' => Annotation::class,
         'Enum' => Enum::class,
         'Required' => Required::class,
@@ -49,13 +54,15 @@ class Parser
         $this->phpParser = (new ParserFactory())->create(ParserFactory::PREFER_PHP7);
     }
 
-    public function parse(string $docBlock): void
+    public function parse(string $docBlock): array
     {
         $tokenizer = new Tokenizer($docBlock);
         $tokenizer->tokenize();
 
+        // Lets search for fist annotation occurrence in docblock
+        $token = $tokenizer->seek(Token::T_AT);
 
-
+        return [];
     }
 
     private function getFileImports(Context $context) : array

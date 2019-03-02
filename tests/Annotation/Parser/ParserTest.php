@@ -10,7 +10,7 @@ final class ParserTest extends TestCase
     public function testParseAnnotation() : void
     {
         $parser = new Parser();
-        $parser->parse('@Annotation');
+        $annotations = $parser->parse('@Annotation');
 
     }
 }

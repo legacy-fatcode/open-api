@@ -5,6 +5,6 @@ namespace Igni\OpenApi\Exception;
 /**
  * Exception thrown if index of an array that was undefined.
  */
-interface OutOfBondsException extends RuntimeException
+interface OutOfBoundsException extends RuntimeException
 {
 }

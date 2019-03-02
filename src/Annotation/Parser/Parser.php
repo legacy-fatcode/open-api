@@ -2,6 +2,10 @@
 
 namespace Igni\OpenApi\Annotation\Parser;
 
+use Igni\OpenApi\Annotation\Parser\MetaData\Annotation;
+use Igni\OpenApi\Annotation\Parser\MetaData\Enum;
+use Igni\OpenApi\Annotation\Parser\MetaData\Required;
+use Igni\OpenApi\Annotation\Parser\MetaData\Target;
 use PhpParser\Error;
 use PhpParser\Node;
 use PhpParser\NodeTraverser;
@@ -12,6 +16,33 @@ class Parser
 {
     private $fileImports;
     private $phpParser;
+    private $map = [
+        'Annotation' => Annotation::class,
+        'Enum' => Enum::class,
+        'Required' => Required::class,
+        'Target' => Target::class,
+    ];
+
+    private $metaData = [
+        Annotation::class => [
+            'target' => [Target::TARGET_CLASS],
+            'constructor' => false,
+            'properties' => [],
+        ],
+        Required::class => [
+            'target' => [Target::TARGET_PROPERTY],
+            'constructor' => false,
+            'properties' => [],
+        ],
+        Target::class => [
+            'constructor' => true,
+            'properties' => [],
+        ],
+        Enum::class => [
+            'constructor' => true,
+            'properties' => [],
+        ]
+    ];
 
     public function __construct()
     {
@@ -22,6 +53,9 @@ class Parser
     {
         $tokenizer = new Tokenizer($docBlock);
         $tokenizer->tokenize();
+
+
+
     }
 
     private function getFileImports(Context $context) : array

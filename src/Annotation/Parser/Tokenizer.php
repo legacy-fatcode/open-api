@@ -67,7 +67,7 @@ class Tokenizer
                     break;
 
                 case $char === "\n" && $this->state === self::S_DOCBLOCK:
-                    $this->tokens[] = new Token($this->cursor - strlen($buffer), Token::T_DOCBLOCK, $buffer);
+                    $this->tokens[] = new Token($this->cursor - strlen($buffer), Token::T_DOC, $buffer);
                     $this->state = self::S_NONE;
                     $buffer = '';
                     $line++;
@@ -243,6 +243,10 @@ class Tokenizer
                 case $char === '[' && $this->state === self::S_NONE:
                     $this->tokens[] = new Token($this->cursor, Token::T_OPEN_BRACKET, $char);
                     $buffer = '';
+                    break;
+
+                case $char === '[' && in_array($this->state, [self::S_FLOAT, self::S_INTEGER, self::S_IDENTIFIER]):
+                    $this->state = self::S_DOCBLOCK;
                     break;
 
                 case $char === ']' && $this->state === self::S_NONE:

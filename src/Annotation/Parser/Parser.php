@@ -14,6 +14,11 @@ use PhpParser\ParserFactory;
 
 class Parser
 {
+    private const S_ANNOTATION_NAME = 1;
+    private const S_ARRAY = 2;
+    private const S_ANNOTATION_BODY = 3;
+    private const S_PROPERTY = 4;
+
     private $fileImports;
     private $phpParser;
 
@@ -60,9 +65,26 @@ class Parser
         $tokenizer->tokenize();
 
         // Lets search for fist annotation occurrence in docblock
-        $token = $tokenizer->seek(Token::T_AT);
+        if (!$tokenizer->seek(Token::T_AT)) {
+            // No annotations in docblock.
+            return [];
+        }
 
-        return [];
+        $state = null;
+        $inArray = false;
+        $arrayDepth = 0;
+        $properties = [];
+
+        $current = [];
+        $name = [];
+
+        $annotations = [];
+        while ($tokenizer->valid()) {
+            $token = $tokenizer->current();
+
+        }
+
+        return $annotations;
     }
 
     private function getFileImports(Context $context) : array

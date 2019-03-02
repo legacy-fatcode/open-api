@@ -21,6 +21,7 @@ class Tokenizer implements Iterator
     private $state = self::S_NONE;
     private $cursor = 0;
 
+    /** @var Token[] */
     private $tokens = [];
     private $iteratorIndex = 0;
     private $iteratorLength = 0;
@@ -369,8 +370,10 @@ class Tokenizer implements Iterator
 
     public function seek(int $type) : bool
     {
-        for ($i = $this->iteratorIndex; $i < $this->iteratorLength; $i++) {
-
+        for ($this->iteratorIndex; $this->iteratorIndex < $this->iteratorLength; $this->iteratorIndex++) {
+            if ($this->current()->getType() === $type) {
+                return true;
+            }
         }
 
         return false;

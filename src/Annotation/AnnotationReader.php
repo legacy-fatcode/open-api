@@ -147,40 +147,5 @@ class AnnotationReader
      * @return array
      * @todo: Optimize this to token_get_all function.
      */
-    private function getFileImports($filename) : array
-    {
-        if (isset($this->fileImports[$filename])) {
-            return $this->fileImports[$filename];
-        }
 
-        if (empty($filename) || !is_file($filename) || !is_readable($filename)) {
-            return $this->fileImports[$filename] = [];
-        }
-
-        $useStatements = [];
-        $traverser = new NodeTraverser();
-        $traverser->addVisitor(new class($useStatements) extends NodeVisitorAbstract {
-            private $useStatements;
-
-            public function __construct(&$useStatements)
-            {
-                $this->useStatements = &$useStatements;
-            }
-
-            public function enterNode(Node $node) {
-                if ($node instanceof Node\Stmt\UseUse) {
-                    $this->useStatements[strtolower((string) $node->getAlias())] = (string) $node->name;
-                }
-            }
-        });
-
-        try {
-            $ast = $this->phpParser->parse(file_get_contents($filename));
-            $traverser->traverse($ast);
-        } catch (Error $exception) {
-            return $this->fileImports[$filename] = [];
-        }
-
-        return $this->fileImports[$filename] = $useStatements;
-    }
 }

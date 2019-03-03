@@ -6,6 +6,7 @@ use Igni\OpenApi\Annotation\Parser\MetaData\Annotation;
 use Igni\OpenApi\Annotation\Parser\MetaData\Enum;
 use Igni\OpenApi\Annotation\Parser\MetaData\Required;
 use Igni\OpenApi\Annotation\Parser\MetaData\Target;
+use Igni\OpenApi\Exception\ParserException;
 use PhpParser\Error;
 use PhpParser\Node;
 use PhpParser\NodeTraverser;
@@ -14,10 +15,9 @@ use PhpParser\ParserFactory;
 
 class Parser
 {
-    private const S_ANNOTATION_NAME = 1;
-    private const S_ARRAY = 2;
-    private const S_ANNOTATION_BODY = 3;
-    private const S_PROPERTY = 4;
+    private const S_ANNOTATION = 1;
+    private const S_ANNOTATION_ARGUMENTS = 2;
+    private const S_ARRAY = 5;
 
     private $fileImports;
     private $phpParser;
@@ -37,19 +37,23 @@ class Parser
         Annotation::class => [
             'target' => [Target::TARGET_CLASS],
             'constructor' => false,
+            'validate' => false,
             'properties' => [],
         ],
         Required::class => [
             'target' => [Target::TARGET_PROPERTY],
             'constructor' => false,
+            'validate' => false,
             'properties' => [],
         ],
         Target::class => [
             'constructor' => true,
+            'validate' => false,
             'properties' => [],
         ],
         Enum::class => [
             'constructor' => true,
+            'validate' => false,
             'properties' => [],
         ]
     ];
@@ -59,9 +63,13 @@ class Parser
         $this->phpParser = (new ParserFactory())->create(ParserFactory::PREFER_PHP7);
     }
 
-    public function parse(string $docBlock): array
+    /**
+     * @param DocBlock $docBlock
+     * @return array
+     */
+    public function parse(DocBlock $docBlock): array
     {
-        $tokenizer = new Tokenizer($docBlock);
+        $tokenizer = new Tokenizer((string) $docBlock);
         $tokenizer->tokenize();
 
         // Lets search for fist annotation occurrence in docblock
@@ -71,23 +79,80 @@ class Parser
         }
 
         $state = null;
-        $inArray = false;
-        $arrayDepth = 0;
-        $properties = [];
 
-        $current = [];
-        $name = [];
+        $propertiesStack = [];
+        $annotationsStack = [];
 
         $annotations = [];
         while ($tokenizer->valid()) {
             $token = $tokenizer->current();
+            switch ($token->getType()) {
+                case Token::T_AT:
+                    $tokenizer->next();
+                    $state = self::S_ANNOTATION;
+                    $annotationsStack[] = $this->catchAnnotationName($tokenizer, $docBlock);
+                    $propertiesStack[] = [];
+                    break;
+                case Token::T_OPEN_PARENTHESIS:
+                    break;
+                case Token::T_CLOSE_PARENTHESIS:
+                    break;
+                case Token::T_OPEN_BRACKET:
+                    break;
+                case Token::T_CLOSE_BRACKET:
+                    break;
+                case Token::T_COMMA:
+                    break;
+            }
+        }
 
+        if ($state === self::S_ANNOTATION) {
+            $annotations = $this->instantiateAnnotation($annotationsStack, $propertiesStack);
         }
 
         return $annotations;
     }
 
-    private function getFileImports(Context $context) : array
+    private function instantiateAnnotation(array &$annotationStack, array &$propertiesStack)
+    {
+        $annotation = array_pop($annotationStack);
+        $properties = array_pop($propertiesStack);
+
+        
+    }
+
+    private function catchAnnotationName(Tokenizer $tokenizer, DocBlock $context) : string
+    {
+        $name = '';
+        while ($tokenizer->valid()) {
+            $token = $tokenizer->current();
+            switch ($token->getType()) {
+                case Token::T_IDENTIFIER:
+                case Token::T_NAMESPACE_SEPARATOR:
+                    $name .= $token->getValue();
+                    break;
+
+                case Token::T_OPEN_PARENTHESIS:
+                case Token::T_ASTERISK:
+                case Token::T_AT:
+                    return $name;
+
+                default:
+                    throw ParserException::forUnexpectedToken($token, $context);
+                    break;
+            }
+            $tokenizer->next();
+        }
+
+        return $name;
+    }
+
+    private function gatherAnnotationMetaData(string $annotation) : void
+    {
+
+    }
+
+    private function getFileImports(DocBlock $context) : array
     {
         $filename = $context->getFilename();
         if (isset($this->fileImports[$filename])) {

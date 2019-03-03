@@ -55,4 +55,9 @@ class Token
     {
         return $this->index;
     }
+
+    public function __toString() : string
+    {
+        return (string) $this->value;
+    }
 }

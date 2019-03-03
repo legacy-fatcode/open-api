@@ -23,15 +23,45 @@ class Parser
     private $fileImports;
     private $phpParser;
 
-    private $ignored = [
-
-    ];
+    private $ignored = [];
 
     private $namespaces = [
 
     ];
 
-    private $annotations = [
+    private const DOCBLOCK_TAGS = [
+        'api',
+        'author',
+        'category',
+        'copyright',
+        'deprecated',
+        'example',
+        'filesource',
+        'global',
+        'ignore',
+        'internal',
+        'license',
+        'link',
+        'method',
+        'package',
+        'param',
+        'property',
+        'property-read',
+        'property-write',
+        'return',
+        'see',
+        'since',
+        'source',
+        'subpackage',
+        'throws',
+        'todo',
+        'uses',
+        'used-by',
+        'var',
+        'version',
+    ];
+
+    private const BUILT_IN = [
         'Annotation' => Annotation::class,
         'Enum' => Enum::class,
         'Required' => Required::class,
@@ -118,11 +148,18 @@ class Parser
                     break;
                 case Token::T_COMMA:
                     break;
+                case Token::T_EQUALS:
+                    break;
+                case Token::T_EOL:
+                    break;
             }
         }
 
         if ($state === self::S_ANNOTATION) {
-            $annotations = $this->instantiateAnnotation($annotationsStack, $propertiesStack);
+            $annotation = $this->instantiateAnnotation($annotationsStack, $propertiesStack);
+            if ($annotation !== null) {
+                $annotations[] = $annotation;
+            }
         }
 
         return $annotations;
@@ -130,10 +167,29 @@ class Parser
 
     private function instantiateAnnotation(array &$annotationStack, array &$propertiesStack)
     {
-        $annotation = array_pop($annotationStack);
+        $annotationName = array_pop($annotationStack);
         $properties = array_pop($propertiesStack);
 
+        if (in_array($annotationName, $this->ignored)) {
+            return null;
+        }
 
+        if (in_array($annotationName, self::BUILT_IN)) {
+            $annotationClass = self::BUILT_IN[$annotationName];
+        } elseif (class_exists($annotationName)) {
+            $annotationClass = $annotationName;
+        } else
+
+        $metaData = $this->getMetaData($annotationClass);
+    }
+
+    private function getMetaData(string $annotationClass) : array
+    {
+        if (isset($this->metaData[$annotationClass])) {
+            return $this->metaData[$annotationClass];
+        }
+
+        $this->metaData[$annotationClass] = $this->gatherAnnotationMetaData($annotationClass);
     }
 
     private function catchAnnotationName(Tokenizer $tokenizer, DocBlock $context) : string
@@ -150,6 +206,7 @@ class Parser
                 case Token::T_OPEN_PARENTHESIS:
                 case Token::T_ASTERISK:
                 case Token::T_AT:
+                case Token::T_EOL:
                     return $name;
 
                 default:
@@ -162,9 +219,11 @@ class Parser
         return $name;
     }
 
-    private function gatherAnnotationMetaData(string $annotation) : void
+    private function gatherAnnotationMetaData(string $annotation) : array
     {
+        return [
 
+        ];
     }
 
     private function getFileImports(DocBlock $context) : array

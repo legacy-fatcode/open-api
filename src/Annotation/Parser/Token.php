@@ -25,6 +25,7 @@ class Token
     public const T_NAMESPACE_SEPARATOR = 21;
     public const T_ASTERISK = 22;
     public const T_DOT = 23;
+    public const T_EOL = 24;
 
     public const T_DOCBLOCK_START = 100;
     public const T_DOCBLOCK_END = 101;

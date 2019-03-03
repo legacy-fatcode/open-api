@@ -316,6 +316,10 @@ final class TokenizerTest extends TestCase
                         'type' => Token::T_CLOSE_PARENTHESIS,
                     ],
                     [
+                        'value' => "\n",
+                        'type' => Token::T_EOL,
+                    ],
+                    [
                         'value' => '@',
                         'type' => Token::T_AT,
                     ],
@@ -496,8 +500,16 @@ final class TokenizerTest extends TestCase
                         'type' => Token::T_IDENTIFIER,
                     ],
                     [
+                        'value' => "\n",
+                        'type' => Token::T_EOL,
+                    ],
+                    [
                         'value' => '*',
                         'type' => Token::T_ASTERISK,
+                    ],
+                    [
+                        'value' => "\n",
+                        'type' => Token::T_EOL,
                     ],
                     [
                         'value' => '*',

@@ -19,8 +19,13 @@ class Parser
     private const S_ANNOTATION_ARGUMENTS = 2;
     private const S_ARRAY = 5;
 
+    private $ignoreNotImported = false;
     private $fileImports;
     private $phpParser;
+
+    private $ignored = [
+
+    ];
 
     private $namespaces = [
 
@@ -61,6 +66,16 @@ class Parser
     public function __construct()
     {
         $this->phpParser = (new ParserFactory())->create(ParserFactory::PREFER_PHP7);
+    }
+
+    public function addIgnore(string $name) : void
+    {
+        $this->ignored[] = $name;
+    }
+
+    public function ignoreNotImportedAnnotations(bool $ignore = true) : void
+    {
+        $this->ignoreNotImported = $ignore;
     }
 
     /**
@@ -118,7 +133,7 @@ class Parser
         $annotation = array_pop($annotationStack);
         $properties = array_pop($propertiesStack);
 
-        
+
     }
 
     private function catchAnnotationName(Tokenizer $tokenizer, DocBlock $context) : string

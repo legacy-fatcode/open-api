@@ -74,7 +74,12 @@ class Tokenizer implements Iterator
                     break;
 
                 case $char === "\n" && $this->state === self::S_DOCBLOCK:
-                    $this->tokens[] = new Token($this->cursor - strlen($buffer), Token::T_DOC, $buffer);
+                    $this->tokens[] = new Token(
+                        $this->cursor - strlen($buffer) + 1,
+                        Token::T_DOC,
+                        substr($buffer, 0, -1)
+                    );
+                    $this->tokens[] = new Token($this->cursor, Token::T_EOL, "\n");
                     $this->state = self::S_NEUTRAL;
                     $buffer = '';
                     $line++;
@@ -82,12 +87,14 @@ class Tokenizer implements Iterator
 
                 case $char === "\n" && $this->state === self::S_IDENTIFIER:
                     $this->addIdentifier(substr($buffer, 0, -1));
+                    $this->tokens[] = new Token($this->cursor, Token::T_EOL, "\n");
                     $this->state = self::S_NEUTRAL;
                     $buffer = '';
                     $line++;
                     break;
 
                 case $char === "\n":
+                    $this->tokens[] = new Token($this->cursor, Token::T_EOL, "\n");
                     $line++;
                     break;
 

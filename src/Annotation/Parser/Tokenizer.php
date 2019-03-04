@@ -386,6 +386,17 @@ class Tokenizer implements Iterator
         return false;
     }
 
+    public function seekAny(int ...$types): bool
+    {
+        for ($this->iteratorIndex; $this->iteratorIndex < $this->iteratorLength; $this->iteratorIndex++) {
+            if (in_array($this->current()->getType(), $types)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
     public function at(int $index) : Token
     {
         if (!isset($this->tokens[$index])) {

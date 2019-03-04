@@ -15,12 +15,14 @@ use PhpParser\ParserFactory;
 
 class Parser
 {
-    private const S_DOCBLOCK = 'doblock';
-    private const S_ANNOTATION = 'anno';
-    private const S_ANNOTATION_CONSTRUCTOR = 'anno_const';
-    private const S_PARAM_NAME = 'param_name';
-    private const S_PARAM_VALUE = 'param_value';
-    private const S_ARRAY = 'array';
+    private const VALUE_TOKENS = [
+        Token::T_NULL,
+        Token::T_STRING,
+        Token::T_FLOAT,
+        Token::T_INTEGER,
+        Token::T_TRUE,
+        Token::T_FALSE
+    ];
 
     private $ignoreNotImported = false;
     private $fileImports;
@@ -114,6 +116,7 @@ class Parser
     /**
      * @param DocBlock $docBlock
      * @return array
+     * @throws
      */
     public function parse(DocBlock $docBlock): array
     {
@@ -125,161 +128,109 @@ class Parser
             // No annotations in docblock.
             return [];
         }
+        $annotations = [];
 
-        $stateTree = [];
-        $currentState = self::S_DOCBLOCK;
-        $stateTree[] = $currentState;
+        while ($tokenizer->valid() && $tokenizer->seek(Token::T_AT)) {
 
-        $astTree = [];
-        $astNode = null;
-        $paramName = null;
-
-        while ($tokenizer->valid()) {
-            $token = $tokenizer->current();
-            $tokenizer->next();
-
-            switch ($token->getType()) {
-                case Token::T_AT:
-                    if ($currentState !== self::S_DOCBLOCK) {
-                        throw ParserException::forUnexpectedToken($token, $docBlock);
-                    }
-                    $currentState = self::S_ANNOTATION;
-                    $stateTree[] = $currentState;
-
-                    $astNode = [
-                        'annotation' => $this->catchAnnotationName($tokenizer, $docBlock),
-                        'properties' => [],
-                        'parameters' => [],
-                    ];
-                    $astTree[] = &$astNode;
-                    break;
-                case Token::T_OPEN_PARENTHESIS:
-                    if ($currentState !== self::S_ANNOTATION) {
-                        throw ParserException::forUnexpectedToken($token, $docBlock);
-                    }
-                    $currentState = self::S_ANNOTATION_CONSTRUCTOR;
-                    $stateTree[] = $currentState;
-                    break;
-                case Token::T_CLOSE_PARENTHESIS:
-                    if ($currentState === self::S_PARAM_VALUE) {
-                        array_pop($stateTree);
-                        $currentState = end($stateTree);
-                    }
-                    if ($currentState !== self::S_ANNOTATION_CONSTRUCTOR) {
-                        throw ParserException::forUnexpectedToken($token, $docBlock);
-                    }
-                    array_pop($stateTree);
-                    $currentState = end($stateTree);
-                    break;
-                case Token::T_OPEN_BRACKET:
-                    if ($currentState !== self::S_ANNOTATION_CONSTRUCTOR || $currentState !== self::S_ARRAY) {
-                        throw ParserException::forUnexpectedToken($token, $docBlock);
-                    }
-                    break;
-                case Token::T_CLOSE_BRACKET:
-                    if ($currentState !== self::S_ARRAY) {
-                        throw ParserException::forUnexpectedToken($token, $docBlock);
-                    }
-                    break;
-                case Token::T_IDENTIFIER:
-                    if  ($currentState !== self::S_ANNOTATION_CONSTRUCTOR) {
-                        throw ParserException::forUnexpectedToken($token, $docBlock);
-                    }
-                    $identifier = $this->catchConstOrParamName($tokenizer, $docBlock);
-
-                    break;
-                // Catch values
-                case Token::T_STRING:
-                case Token::T_FALSE:
-                case Token::T_TRUE:
-                case Token::T_INTEGER:
-                case Token::T_FLOAT:
-                case Token::T_NULL:
-                    if ($currentState !== self::S_ANNOTATION_CONSTRUCTOR) {
-                        throw ParserException::forUnexpectedToken($token, $docBlock);
-                    }
-                    $astNode['parameters'][] = $token->getValue();
-                    $currentState = self::S_PARAM_VALUE;
-                    $stateTree[] = $currentState;
-                    break;
-                case Token::T_COMMA:
-                    if ($currentState !== self::S_PARAM_VALUE) {
-                        throw ParserException::forUnexpectedToken($token, $docBlock);
-                    }
-                    array_pop($stateTree);
-                    $currentState = end($stateTree);
-                    break;
-                case Token::T_EQUALS:
-                    break;
-                case Token::T_EOL:
-                    break;
+            // Annotation must be preceded by an asterisk token, otherwise it should be ignored
+            if ($tokenizer->key() > 1 && $tokenizer->at($tokenizer->key() - 1)->getType() !== Token::T_ASTERISK) {
+                $tokenizer->next();
+                continue;
             }
+
+            $annotations[] = $this->parseAnnotation($tokenizer, $docBlock);
         }
 
-        return $astTree;
+        return $annotations;
     }
 
-    private function instantiateAnnotation(array &$annotationStack, array &$propertiesStack)
+    private function parseAnnotation(Tokenizer $tokenizer, DocBlock $context, $nested = false)
     {
-        $annotationName = array_pop($annotationStack);
-        $properties = array_pop($propertiesStack);
-
-        if (in_array($annotationName, $this->ignored)) {
-            return null;
-        }
-
-        if (in_array($annotationName, self::BUILT_IN)) {
-            $annotationClass = self::BUILT_IN[$annotationName];
-        } elseif (class_exists($annotationName)) {
-            $annotationClass = $annotationName;
-        } else {
-
-        }
-
-        $metaData = $this->getMetaData($annotationClass);
-    }
-
-    private function getMetaData(string $annotationClass) : array
-    {
-        if (isset($this->metaData[$annotationClass])) {
-            return $this->metaData[$annotationClass];
-        }
-
-        $this->metaData[$annotationClass] = $this->gatherAnnotationMetaData($annotationClass);
-    }
-
-    private function catchAnnotationName(Tokenizer $tokenizer, DocBlock $context) : string
-    {
-        $name = '';
-        while ($tokenizer->valid()) {
-            $token = $tokenizer->current();
-            switch ($token->getType()) {
-                case Token::T_IDENTIFIER:
-                case Token::T_NAMESPACE_SEPARATOR:
-                    $name .= $token->getValue();
-                    break;
-
-                case Token::T_OPEN_PARENTHESIS:
-                case Token::T_ASTERISK:
-                case Token::T_AT:
-                case Token::T_EOL:
-                    return $name;
-
-                default:
-                    throw ParserException::forUnexpectedToken($token, $context);
-                    break;
-            }
-            $tokenizer->next();
-        }
+        // Skip @
+        $tokenizer->next();
+        $name = $this->parseIdentifier($tokenizer, $context);
+        $arguments = $this->parseArguments($tokenizer, $context);
 
         return $name;
     }
 
-    private function gatherAnnotationMetaData(string $annotation) : array
+    private function parseIdentifier(Tokenizer $tokenizer, DocBlock $context)
     {
-        return [
+        $identifier = '';
 
-        ];
+        while ($tokenizer->valid() && in_array($tokenizer->current()->getType(), [Token::T_IDENTIFIER, Token::T_NAMESPACE_SEPARATOR], true)) {
+            $identifier .= $tokenizer->current()->getValue();
+            $tokenizer->next();
+        }
+
+        return $identifier;
+    }
+
+    private function parseArguments(Tokenizer $tokenizer, DocBlock $context) : array
+    {
+        $arguments = [];
+
+        if ($tokenizer->current()->getType() !== Token::T_OPEN_PARENTHESIS) {
+            return $arguments;
+        }
+
+        $this->expect(Token::T_OPEN_PARENTHESIS, $tokenizer, $context);
+        $tokenizer->next();
+
+        $this->parseArgument($tokenizer, $context, $arguments);
+
+        while ($tokenizer->current()->getType() === Token::T_COMMA) {
+            $this->parseArgument($tokenizer, $context, $arguments);
+        }
+
+        $this->expect(Token::T_CLOSE_PARENTHESIS, $tokenizer, $context);
+
+        return $arguments;
+    }
+
+    private function parseArgument(Tokenizer $tokenizer, DocBlock $context, array &$arguments) : void
+    {
+        $token = $tokenizer->current();
+
+        if ($token->getType() === Token::T_AT) {
+            $arguments[] = $this->parseAnnotation($tokenizer, $context, true);
+            return;
+        }
+
+        if (in_array($token->getType(), self::VALUE_TOKENS, true)) {
+            $arguments[] = $token->getValue();
+            return;
+        }
+
+        if ($token->getType() === Token::T_IDENTIFIER) {
+            $identifier = $this->parseIdentifier($tokenizer, $context);
+            $token = $tokenizer->current();
+            if ($token->getType() === Token::T_COLON) {
+                $this->catch(3, $tokenizer);
+            }
+        }
+    }
+
+    private function expect(int $expectedType, Tokenizer $tokenizer, DocBlock $context) : void
+    {
+        if ($expectedType !== $tokenizer->current()->getType()) {
+            throw ParserException::forUnexpectedToken($tokenizer->current(), $context);
+        }
+    }
+
+    private function catch(int $length, Tokenizer $tokenizer) : string
+    {
+        $value = '';
+        for (;$length > 0; $length--) {
+            $tokenizer->next();
+            if (!$tokenizer->valid()) {
+                return $value;
+            }
+
+            $value .= $tokenizer->current()->getValue();
+        }
+
+        return $value;
     }
 
     private function getFileImports(DocBlock $context) : array

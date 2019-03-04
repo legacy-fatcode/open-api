@@ -11,7 +11,7 @@ final class ParserTest extends TestCase
     public function testParseAnnotation() : void
     {
         $parser = new Parser();
-        $annotations = $parser->parse(new DocBlock('@Annotation'));
+        $annotations = $parser->parse(new DocBlock('@Annotation(param="aaa", 1, true, bool = false)'));
 
     }
 }

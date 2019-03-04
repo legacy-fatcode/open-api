@@ -15,11 +15,12 @@ use PhpParser\ParserFactory;
 
 class Parser
 {
-    private const S_DOCBLOCK = 0;
-    private const S_ANNOTATION = 1;
-    private const S_ANNOTATION_CONSTRUCTOR = 2;
-    private const S_PARAM = 3;
-    private const S_ARRAY = 4;
+    private const S_DOCBLOCK = 'doblock';
+    private const S_ANNOTATION = 'anno';
+    private const S_ANNOTATION_CONSTRUCTOR = 'anno_const';
+    private const S_PARAM_NAME = 'param_name';
+    private const S_PARAM_VALUE = 'param_value';
+    private const S_ARRAY = 'array';
 
     private $ignoreNotImported = false;
     private $fileImports;
@@ -127,47 +128,91 @@ class Parser
 
         $stateTree = [];
         $currentState = self::S_DOCBLOCK;
+        $stateTree[] = $currentState;
 
         $astTree = [];
         $astNode = null;
+        $paramName = null;
 
         while ($tokenizer->valid()) {
             $token = $tokenizer->current();
+            $tokenizer->next();
+
             switch ($token->getType()) {
                 case Token::T_AT:
-                    $tokenizer->next();
-                    $stateTree[] = $currentState;
+                    if ($currentState !== self::S_DOCBLOCK) {
+                        throw ParserException::forUnexpectedToken($token, $docBlock);
+                    }
                     $currentState = self::S_ANNOTATION;
+                    $stateTree[] = $currentState;
 
-                    $astTree[] = &$astNode = [
+                    $astNode = [
                         'annotation' => $this->catchAnnotationName($tokenizer, $docBlock),
                         'properties' => [],
+                        'parameters' => [],
                     ];
+                    $astTree[] = &$astNode;
                     break;
                 case Token::T_OPEN_PARENTHESIS:
                     if ($currentState !== self::S_ANNOTATION) {
-                        
+                        throw ParserException::forUnexpectedToken($token, $docBlock);
                     }
+                    $currentState = self::S_ANNOTATION_CONSTRUCTOR;
+                    $stateTree[] = $currentState;
                     break;
                 case Token::T_CLOSE_PARENTHESIS:
+                    if ($currentState === self::S_PARAM_VALUE) {
+                        array_pop($stateTree);
+                        $currentState = end($stateTree);
+                    }
+                    if ($currentState !== self::S_ANNOTATION_CONSTRUCTOR) {
+                        throw ParserException::forUnexpectedToken($token, $docBlock);
+                    }
+                    array_pop($stateTree);
+                    $currentState = end($stateTree);
                     break;
                 case Token::T_OPEN_BRACKET:
+                    if ($currentState !== self::S_ANNOTATION_CONSTRUCTOR || $currentState !== self::S_ARRAY) {
+                        throw ParserException::forUnexpectedToken($token, $docBlock);
+                    }
                     break;
                 case Token::T_CLOSE_BRACKET:
+                    if ($currentState !== self::S_ARRAY) {
+                        throw ParserException::forUnexpectedToken($token, $docBlock);
+                    }
+                    break;
+                case Token::T_IDENTIFIER:
+                    if  ($currentState !== self::S_ANNOTATION_CONSTRUCTOR) {
+                        throw ParserException::forUnexpectedToken($token, $docBlock);
+                    }
+                    $identifier = $this->catchConstOrParamName($tokenizer, $docBlock);
+
+                    break;
+                // Catch values
+                case Token::T_STRING:
+                case Token::T_FALSE:
+                case Token::T_TRUE:
+                case Token::T_INTEGER:
+                case Token::T_FLOAT:
+                case Token::T_NULL:
+                    if ($currentState !== self::S_ANNOTATION_CONSTRUCTOR) {
+                        throw ParserException::forUnexpectedToken($token, $docBlock);
+                    }
+                    $astNode['parameters'][] = $token->getValue();
+                    $currentState = self::S_PARAM_VALUE;
+                    $stateTree[] = $currentState;
                     break;
                 case Token::T_COMMA:
+                    if ($currentState !== self::S_PARAM_VALUE) {
+                        throw ParserException::forUnexpectedToken($token, $docBlock);
+                    }
+                    array_pop($stateTree);
+                    $currentState = end($stateTree);
                     break;
                 case Token::T_EQUALS:
                     break;
                 case Token::T_EOL:
                     break;
-            }
-        }
-
-        if ($state === self::S_ANNOTATION) {
-            $annotation = $this->instantiateAnnotation($annotationsStack, $propertiesStack);
-            if ($annotation !== null) {
-                $astTree[] = $annotation;
             }
         }
 

@@ -15,9 +15,11 @@ use PhpParser\ParserFactory;
 
 class Parser
 {
+    private const S_DOCBLOCK = 0;
     private const S_ANNOTATION = 1;
-    private const S_ANNOTATION_ARGUMENTS = 2;
-    private const S_ARRAY = 5;
+    private const S_ANNOTATION_CONSTRUCTOR = 2;
+    private const S_PARAM = 3;
+    private const S_ARRAY = 4;
 
     private $ignoreNotImported = false;
     private $fileImports;
@@ -123,22 +125,29 @@ class Parser
             return [];
         }
 
-        $state = null;
+        $stateTree = [];
+        $currentState = self::S_DOCBLOCK;
 
-        $propertiesStack = [];
-        $annotationsStack = [];
+        $astTree = [];
+        $astNode = null;
 
-        $annotations = [];
         while ($tokenizer->valid()) {
             $token = $tokenizer->current();
             switch ($token->getType()) {
                 case Token::T_AT:
                     $tokenizer->next();
-                    $state = self::S_ANNOTATION;
-                    $annotationsStack[] = $this->catchAnnotationName($tokenizer, $docBlock);
-                    $propertiesStack[] = [];
+                    $stateTree[] = $currentState;
+                    $currentState = self::S_ANNOTATION;
+
+                    $astTree[] = &$astNode = [
+                        'annotation' => $this->catchAnnotationName($tokenizer, $docBlock),
+                        'properties' => [],
+                    ];
                     break;
                 case Token::T_OPEN_PARENTHESIS:
+                    if ($currentState !== self::S_ANNOTATION) {
+                        
+                    }
                     break;
                 case Token::T_CLOSE_PARENTHESIS:
                     break;
@@ -158,11 +167,11 @@ class Parser
         if ($state === self::S_ANNOTATION) {
             $annotation = $this->instantiateAnnotation($annotationsStack, $propertiesStack);
             if ($annotation !== null) {
-                $annotations[] = $annotation;
+                $astTree[] = $annotation;
             }
         }
 
-        return $annotations;
+        return $astTree;
     }
 
     private function instantiateAnnotation(array &$annotationStack, array &$propertiesStack)
@@ -178,7 +187,9 @@ class Parser
             $annotationClass = self::BUILT_IN[$annotationName];
         } elseif (class_exists($annotationName)) {
             $annotationClass = $annotationName;
-        } else
+        } else {
+
+        }
 
         $metaData = $this->getMetaData($annotationClass);
     }

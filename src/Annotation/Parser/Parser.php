@@ -148,13 +148,13 @@ class Parser
     {
         // Skip @
         $tokenizer->next();
-        $name = $this->parseIdentifier($tokenizer, $context);
+        $name = $this->parseIdentifier($tokenizer);
         $arguments = $this->parseArguments($tokenizer, $context);
 
         return $name;
     }
 
-    private function parseIdentifier(Tokenizer $tokenizer, DocBlock $context)
+    private function parseIdentifier(Tokenizer $tokenizer)
     {
         $identifier = '';
 
@@ -180,6 +180,7 @@ class Parser
         $this->parseArgument($tokenizer, $context, $arguments);
 
         while ($tokenizer->current()->getType() === Token::T_COMMA) {
+            $tokenizer->next();
             $this->parseArgument($tokenizer, $context, $arguments);
         }
 
@@ -190,24 +191,72 @@ class Parser
 
     private function parseArgument(Tokenizer $tokenizer, DocBlock $context, array &$arguments) : void
     {
+        // key / value pair
+        if ($tokenizer->at($tokenizer->key() + 1)->getType() === Token::T_EQUALS) {
+            $key = $tokenizer->current()->getValue();
+            $this->skip(2, $tokenizer);
+            $arguments[$key] = $this->parseValue($tokenizer, $context);
+            return;
+        }
+
+        // Just value
+        $arguments[] = $this->parseValue($tokenizer, $context);
+    }
+
+    private function parseValue(Tokenizer $tokenizer, DocBlock $context)
+    {
         $token = $tokenizer->current();
 
+        // Resolve annotation
         if ($token->getType() === Token::T_AT) {
-            $arguments[] = $this->parseAnnotation($tokenizer, $context, true);
-            return;
+            return $this->parseAnnotation($tokenizer, $context, true);
         }
 
+        // Resolve primitives
         if (in_array($token->getType(), self::VALUE_TOKENS, true)) {
-            $arguments[] = $token->getValue();
-            return;
+            $value = $token->getValue();
+            $tokenizer->next();
+            return $value;
         }
 
-        if ($token->getType() === Token::T_IDENTIFIER) {
-            $identifier = $this->parseIdentifier($tokenizer, $context);
-            $token = $tokenizer->current();
-            if ($token->getType() === Token::T_COLON) {
-                $this->catch(3, $tokenizer);
+        // Identifier
+        $this->expect(Token::T_IDENTIFIER, $tokenizer, $context);
+        $identifier = $this->parseIdentifier($tokenizer);
+        $token = $tokenizer->current();
+
+        // Resolve ::class
+        if ($token->getType() === Token::T_COLON) {
+            if (strtolower($this->catch(2, $tokenizer)) !== ':class') {
+                $tokenizer->next();
+                return $this->resolveFullyQualifiedClassName($identifier, $context);
             }
+            throw ParserException::forUnexpectedToken($tokenizer->current(), $context);
+        }
+
+        // Resolve constant
+        if ($token->getType() === Token::T_COMMA || $token->getType() === Token::T_CLOSE_PARENTHESIS) {
+            if (defined($identifier)) {
+                $tokenizer->next();
+                return constant($identifier);
+            }
+            throw ParserException::forUnexpectedToken($token, $context);
+        }
+    }
+
+    private function resolveFullyQualifiedClassName(string $identifier, DocBlock $context) : ?string
+    {
+        if (class_exists($identifier)) {
+            return $identifier;
+        }
+
+        $identifier = explode('\\', $identifier);
+        $imports = $context->getImports();
+        if (isset($imports[$identifier[0]])) {
+            $identifier = $imports[$identifier[0]] . '\\' . implode('\\', array_slice($identifier, 1));
+        }
+
+        if (class_exists($identifier)) {
+            return $identifier;
         }
     }
 
@@ -215,6 +264,16 @@ class Parser
     {
         if ($expectedType !== $tokenizer->current()->getType()) {
             throw ParserException::forUnexpectedToken($tokenizer->current(), $context);
+        }
+    }
+
+    private function skip(int $length, Tokenizer $tokenizer) : void
+    {
+        for (;$length > 0; $length--) {
+            $tokenizer->next();
+            if (!$tokenizer->valid()) {
+                return;
+            }
         }
     }
 
@@ -231,43 +290,5 @@ class Parser
         }
 
         return $value;
-    }
-
-    private function getFileImports(DocBlock $context) : array
-    {
-        $filename = $context->getFilename();
-        if (isset($this->fileImports[$filename])) {
-            return $this->fileImports[$filename];
-        }
-
-        if (empty($filename) || !is_file($filename) || !is_readable($filename)) {
-            return $this->fileImports[$filename] = [];
-        }
-
-        $useStatements = [];
-        $traverser = new NodeTraverser();
-        $traverser->addVisitor(new class($useStatements) extends NodeVisitorAbstract {
-            private $useStatements;
-
-            public function __construct(&$useStatements)
-            {
-                $this->useStatements = &$useStatements;
-            }
-
-            public function enterNode(Node $node) {
-                if ($node instanceof Node\Stmt\UseUse) {
-                    $this->useStatements[strtolower((string) $node->getAlias())] = (string) $node->name;
-                }
-            }
-        });
-
-        try {
-            $ast = $this->phpParser->parse(file_get_contents($filename));
-            $traverser->traverse($ast);
-        } catch (Error $exception) {
-            return $this->fileImports[$filename] = [];
-        }
-
-        return $this->fileImports[$filename] = $useStatements;
     }
 }

@@ -20,16 +20,8 @@ class Parser
         Token::T_FALSE
     ];
 
-    private $ignoreNotImported = false;
-    private $phpParser;
-
-    private $ignored = [];
-
-    private $namespaces = [
-
-    ];
-
-    private const DOCBLOCK_TAGS = [
+    private const PHP_ANNOTATIONS = [
+        // PHP Documentator
         'api',
         'author',
         'category',
@@ -59,6 +51,22 @@ class Parser
         'used-by',
         'var',
         'version',
+
+        // PHP Unit
+        'codeCoverageIgnore',
+        'codeCoverageIgnoreEnd',
+        'codeCoverageIgnoreStart',
+
+        //PhpStorm
+        'noinspection',
+
+        //PhpCodeSniffer
+        'codingStandardsIgnoreStart',
+        'codingStandardsIgnoreEnd',
+
+        // PEAR
+        'package_version',
+
     ];
 
     private const BUILT_IN = [
@@ -68,10 +76,19 @@ class Parser
         'Target' => Target::class,
     ];
 
+    private $ignoreNotImported = false;
+    private $phpParser;
+    private $ignored = [];
     private $metaData = [
         Annotation::class => [
             'target' => [Target::TARGET_CLASS],
             'constructor' => false,
+            'validate' => false,
+            'properties' => [],
+        ],
+        Target::class => [
+            'target' => [Target::TARGET_CLASS],
+            'constructor' => true,
             'validate' => false,
             'properties' => [],
         ],
@@ -81,12 +98,8 @@ class Parser
             'validate' => false,
             'properties' => [],
         ],
-        Target::class => [
-            'constructor' => true,
-            'validate' => false,
-            'properties' => [],
-        ],
         Enum::class => [
+            'target' => [Target::TARGET_PROPERTY],
             'constructor' => true,
             'validate' => false,
             'properties' => [],
@@ -134,7 +147,11 @@ class Parser
             }
             // Skip @
             $tokenizer->next();
-            $annotations[] = $this->parseAnnotation($tokenizer, $docBlock);
+            $annotation = $this->parseAnnotation($tokenizer, $docBlock);
+            if ($annotation === null) {
+                continue;
+            }
+            $annotations[] = $annotation;
         }
 
         return $annotations;
@@ -143,7 +160,18 @@ class Parser
     private function parseAnnotation(Tokenizer $tokenizer, DocBlock $context, $nested = false)
     {
         $name = $this->parseIdentifier($tokenizer);
+
+        // Ignore one-line utility annotations
+        if (in_array($name, self::PHP_ANNOTATIONS, true)) {
+            return null;
+        }
+
         $arguments = $this->parseArguments($tokenizer, $context);
+
+        // Other ignored annotations have to be parsed before we ignore them.
+        if (in_array($name, $this->ignored, true)) {
+            return null;
+        }
 
         return $name;
     }

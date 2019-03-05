@@ -26,11 +26,6 @@ class Context
     private $symbol;
 
     /**
-     * @var string
-     */
-    private $doc;
-
-    /**
      * @var string[]
      */
     private $imports = [];

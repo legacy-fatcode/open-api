@@ -11,7 +11,7 @@ namespace Igni\OpenApi\Annotation\Parser\MetaData;
 class Enum
 {
     /**
-     * @var string[]
+     * @var mixed[]
      */
     public $value;
 }

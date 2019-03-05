@@ -4,12 +4,13 @@ namespace Igni\OpenApi\Annotation\Parser;
 
 use Igni\OpenApi\Annotation\Parser\MetaData\Annotation;
 use Igni\OpenApi\Annotation\Parser\MetaData\Enum;
+use Igni\OpenApi\Annotation\Parser\MetaData\NoValidate;
 use Igni\OpenApi\Annotation\Parser\MetaData\Required;
 use Igni\OpenApi\Annotation\Parser\MetaData\Target;
 use Igni\OpenApi\Exception\ParserException;
-use Igni\OpenApi\Exception\TokenizerException;
 use PhpParser\ParserFactory;
 use ReflectionClass;
+use ReflectionProperty;
 
 class Parser
 {
@@ -76,9 +77,13 @@ class Parser
         'Enum' => Enum::class,
         'Required' => Required::class,
         'Target' => Target::class,
+        'NoValidate' => NoValidate::class,
     ];
 
     private $ignoreNotImported = false;
+    /**
+     * @var \PhpParser\Parser
+     */
     private $phpParser;
     private $ignored = [];
     private $autoloadNamespaces = [];
@@ -91,12 +96,12 @@ class Parser
         ],
         Target::class => [
             'target' => [Target::TARGET_CLASS],
-            'constructor' => true,
-            'validate' => false,
+            'constructor' => false,
+            'validate' => true,
             'properties' => [
                 'value' => [
                     'required' => true,
-                    'type' => ['string'],
+                    'type' => ['mixed'],
                     'enum' => [
                         Target::TARGET_CLASS,
                         Target::TARGET_PROPERTY,
@@ -111,25 +116,36 @@ class Parser
         Required::class => [
             'target' => [Target::TARGET_PROPERTY],
             'constructor' => false,
-            'validate' => false,
+            'validate' => true,
             'properties' => [
                 'value' => [
                     'default' => true,
-                    'type' => 'bool',
+                    'type' => 'boolean',
                 ],
             ],
         ],
         Enum::class => [
             'target' => [Target::TARGET_PROPERTY],
-            'constructor' => true,
-            'validate' => false,
+            'constructor' => false,
+            'validate' => true,
             'properties' => [
                 'value' => [
-                    'type' => ['string'],
+                    'type' => 'mixed',
                     'required' => true,
                 ]
             ],
-        ]
+        ],
+        NoValidate::class => [
+            'target' => [Target::TARGET_CLASS],
+            'constructor' => false,
+            'validate' => true,
+            'properties' => [
+                'value' => [
+                    'type' => 'boolean',
+                    'default' => true,
+                ]
+            ],
+        ],
     ];
 
     public function __construct()
@@ -215,10 +231,10 @@ class Parser
             if ($this->ignoreNotImported) {
                 return null;
             }
-            throw TokenizerException::forUnknownAnnotationClass($identifier, $context);
+            throw ParserException::forUnknownAnnotationClass($identifier, $context);
         }
 
-        $metaData = $this->getAnnotationMetaData($annotationClass);
+        $metaData = $this->getAnnotationMetaData($annotationClass, $context);
 
         $target = $context->getTarget();
         if ($nested) {
@@ -380,26 +396,174 @@ class Parser
         return null;
     }
 
-    private function getAnnotationMetaData(string $annotationClass) : array
+    private function getAnnotationMetaData(string $annotationClass, Context $context) : array
     {
         if (isset($this->metaData[$annotationClass])) {
             return $this->metaData[$annotationClass];
         }
 
-        $reflection = new ReflectionClass($annotationClass);
-        $annotations = $this->parse($reflection->getDocComment(), Context::fromReflectionClass($reflection));
+        $class = new ReflectionClass($annotationClass);
+        $annotationContext = Context::fromReflectionClass($class);
+        $annotations = $this->parse($class->getDocComment(), $annotationContext);
 
         $foundAnnotationDeclaration = false;
         $target = null;
+        $validate = true;
         foreach ($annotations as $annotation) {
             switch (get_class($annotation)) {
                 case Annotation::class:
                     $foundAnnotationDeclaration = true;
                     break;
                 case Target::class:
-                    $target = $annotation->value;
+                    $schema = $this->metaData[Target::class]['properties']['value'];
+                    if (!$this->validateValue($schema, $annotation->value)) {
+                        throw ParserException::forPropertyValidationFailure($annotationContext, $schema, $annotation->value);
+                    }
+                    $target = $annotation->target;
+                    break;
+                case NoValidate::class:
+                    $validate = (bool) $annotation->value;
                     break;
             }
+        }
+
+        if (!$foundAnnotationDeclaration) {
+            throw ParserException::forUsingNonAnnotationClassAsAnnotation($annotationClass, $context);
+        }
+
+        $metaData = [
+            'constructor' => $class->getConstructor() !== null,
+            'target' => $target ? $target : [Target::TARGET_ALL],
+            'validate' => $validate ?: true,
+            'properties' => [],
+        ];
+
+        $properties = $class->getProperties(ReflectionProperty::IS_PUBLIC);
+
+        foreach ($properties as $property) {
+            $propertyContext = Context::fromReflectionProperty($property);
+            $docComment = $property->getDocComment();
+            $annotations = $this->parse($docComment, $annotationContext);
+            $required = false;
+            $enum = null;
+            foreach ($annotations as $annotation) {
+                switch (get_class($annotation)) {
+                    case Enum::class:
+                        $enum = $annotation->value;
+                        break;
+                    case Required::class:
+                        $required = (bool) $annotation->value;
+                        break;
+                }
+            }
+
+            $propertyMeta = [
+                'type' => $this->parseDeclaredType($docComment),
+                'required' => $required,
+            ];
+
+            if ($enum) {
+                $propertyMeta['enum'] = $enum;
+            }
+
+            $metaData['properties'][$property->getName()] = $propertyMeta;
+        }
+    }
+
+    private function parseDeclaredType(string $docComment)
+    {
+        preg_match('/\@var\s+?([^\[\n\*]+)(\[\s*?\])?/', $docComment, $matches);
+        $type = trim($matches[1]);
+        $isArray = isset($matches[2]);
+        switch (true) {
+            // @var annotation contains multiple viable types for the property so it is mixed, we dont care about it
+            case strstr($type, '|') !== false:
+                $type = 'mixed';
+                break;
+            // Primitive types
+            case in_array($type, ['float', 'double', 'bool', 'boolean', 'string', 'object', 'mixed', 'any']):
+                if ($isArray) {
+                    $type = [$type];
+                }
+                break;
+            // If class like that exists
+            case class_exists($type):
+                if ($isArray) {
+                    $type = [$type];
+                }
+                break;
+            // Fallback to mixed
+            default:
+                $type = 'mixed';
+                break;
+        }
+
+        return $type;
+    }
+
+    private function validateValue(array $schema, $value) : bool
+    {
+        if ($schema['required'] && $value === null) {
+            return false;
+        }
+
+        if ($value === null) {
+            return true;
+        }
+
+        if (isset($schema['enum']) && $schema['enum'] !== null) {
+            if (!is_array($value)) {
+                $value = [$value];
+            }
+            foreach ($value as $item) {
+                if (!in_array($item, $schema['enum'])) {
+                    return false;
+                }
+            }
+        }
+
+        if (!$this->validateType($value, $schema['type'])) {
+            return false;
+        }
+
+        return true;
+    }
+
+    private function validateType($type, $value) : bool
+    {
+        switch (true) {
+            case $type === 'mixed':
+            case $type === 'any':
+                return true;
+            case $type === 'string':
+                return is_string($value);
+            case $type === 'boolean':
+            case $type === 'bool':
+                return is_bool($value);
+            case $type === 'int':
+            case $type === 'integer':
+                return is_int($value);
+            case $type === 'double':
+            case $type === 'float':
+                return is_float($value);
+            case $type === 'object':
+                return is_object($value);
+            case is_array($type):
+                if (!is_array($value)) {
+                    return false;
+                }
+                foreach ($value as $item) {
+                    if (!$this->validateType(end($type), $item)) {
+                        return false;
+                    }
+                }
+                return true;
+            case class_exists($type):
+                return $value instanceof $type;
+
+            // Ignore unknown type annotation
+            default:
+                return true;
         }
     }
 

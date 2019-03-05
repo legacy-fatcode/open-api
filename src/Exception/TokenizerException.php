@@ -19,13 +19,4 @@ abstract class TokenizerException extends LogicException
         return new class("Cannot rewind tokenizer in current state.") extends TokenizerException implements RuntimeException {
         };
     }
-
-    public static function forUnknownAnnotationClass(string $name, Context $context) : Throwable
-    {
-        $message = "Could not find annotation class {$name} used in {$context}." .
-            "Please check your composer settings, or use Parser::registerNamespace.";
-
-        return new class($message) extends TokenizerException implements RuntimeException {
-        };
-    }
 }

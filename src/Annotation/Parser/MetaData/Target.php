@@ -10,12 +10,21 @@ namespace Igni\OpenApi\Annotation\Parser\MetaData;
  */
 class Target
 {
-    const TARGET_ALL = 'ALL';
-    const TARGET_CLASS = 'CLASS';
-    const TARGET_METHOD = 'METHOD';
-    const TARGET_FUNCTION = 'FUNCTION';
-    const TARGET_PROPERTY = 'PROPERTY';
-    const TARGET_ANNOTATION = 'ANNOTATION';
+    public const TARGET_ALL = 'ALL';
+    public const TARGET_CLASS = 'CLASS';
+    public const TARGET_METHOD = 'METHOD';
+    public const TARGET_FUNCTION = 'FUNCTION';
+    public const TARGET_PROPERTY = 'PROPERTY';
+    public const TARGET_ANNOTATION = 'ANNOTATION';
+
+    public const TARGETS = [
+        self::TARGET_ALL,
+        self::TARGET_CLASS,
+        self::TARGET_METHOD,
+        self::TARGET_FUNCTION,
+        self::TARGET_PROPERTY,
+        self::TARGET_ANNOTATION,
+    ];
 
     /**
      * @var string[]
@@ -29,4 +38,6 @@ class Target
      * )
      */
     public $value;
+
+
 }

@@ -31,9 +31,7 @@ final class TokenizerTest extends TestCase
     {
         $tokenizer = new Tokenizer('/***/');
         $tokens = $tokenizer->tokenize();
-        self::assertCount(3, $tokens);
-        self::assertSame(Token::T_DOCBLOCK_START, $tokenizer->first()->getType());
-        self::assertSame(Token::T_DOCBLOCK_END, $tokenizer->last()->getType());
+        self::assertCount(0, $tokens);
     }
 
     public function testTokenizeString() : void
@@ -504,16 +502,8 @@ final class TokenizerTest extends TestCase
                         'type' => Token::T_EOL,
                     ],
                     [
-                        'value' => '*',
-                        'type' => Token::T_ASTERISK,
-                    ],
-                    [
                         'value' => "\n",
                         'type' => Token::T_EOL,
-                    ],
-                    [
-                        'value' => '*',
-                        'type' => Token::T_ASTERISK,
                     ],
                     [
                         'value' => '[',

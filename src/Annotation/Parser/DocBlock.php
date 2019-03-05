@@ -151,7 +151,7 @@ class DocBlock
 
             public function enterNode(Node $node) {
                 if ($node instanceof Node\Stmt\UseUse) {
-                    $this->useStatements[strtolower((string) $node->getAlias())] = (string) $node->name;
+                    $this->useStatements[(string) $node->getAlias()] = (string) $node->name;
                 }
             }
         });

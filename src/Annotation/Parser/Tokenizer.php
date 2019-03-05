@@ -7,6 +7,14 @@ use Iterator;
 
 class Tokenizer implements Iterator
 {
+    private const IGNORED_TOKENS = [
+        Token::T_ASTERISK,
+        Token::T_DOC,
+        Token::T_DOCBLOCK_START,
+        Token::T_DOCBLOCK_END,
+        Token::T_DOT
+    ];
+
     private const S_NONE = -1;
     private const S_NEUTRAL = 0;
     private const S_STRING = 1;
@@ -20,7 +28,8 @@ class Tokenizer implements Iterator
     private $streamLength;
     private $state = self::S_NONE;
     private $cursor = 0;
-
+    /** @var Token[] */
+    private $allTokens = [];
     /** @var Token[] */
     private $tokens = [];
     private $iteratorIndex = 0;
@@ -304,9 +313,31 @@ class Tokenizer implements Iterator
 
         $this->handleInterrupt($buffer);
         $this->state = self::S_END;
+        $this->cleanUp();
 
         $this->iteratorLength = count($this->tokens);
         return $this->tokens;
+    }
+
+    /**
+     * @return Token[]
+     */
+    public function getAll() : array
+    {
+        return $this->allTokens;
+    }
+
+    private function cleanUp(): void
+    {
+        $this->allTokens = $this->tokens;
+        $tokens = [];
+        foreach ($this->tokens as $token) {
+            if (in_array($token->getType(), self::IGNORED_TOKENS)) {
+                continue;
+            }
+            $tokens[] = $token;
+        }
+        $this->tokens = $tokens;
     }
 
     private function handleInterrupt(string $buffer) : void

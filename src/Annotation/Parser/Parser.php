@@ -7,10 +7,6 @@ use Igni\OpenApi\Annotation\Parser\MetaData\Enum;
 use Igni\OpenApi\Annotation\Parser\MetaData\Required;
 use Igni\OpenApi\Annotation\Parser\MetaData\Target;
 use Igni\OpenApi\Exception\ParserException;
-use PhpParser\Error;
-use PhpParser\Node;
-use PhpParser\NodeTraverser;
-use PhpParser\NodeVisitorAbstract;
 use PhpParser\ParserFactory;
 
 class Parser
@@ -25,7 +21,6 @@ class Parser
     ];
 
     private $ignoreNotImported = false;
-    private $fileImports;
     private $phpParser;
 
     private $ignored = [];
@@ -137,7 +132,8 @@ class Parser
                 $tokenizer->next();
                 continue;
             }
-
+            // Skip @
+            $tokenizer->next();
             $annotations[] = $this->parseAnnotation($tokenizer, $docBlock);
         }
 
@@ -146,8 +142,6 @@ class Parser
 
     private function parseAnnotation(Tokenizer $tokenizer, DocBlock $context, $nested = false)
     {
-        // Skip @
-        $tokenizer->next();
         $name = $this->parseIdentifier($tokenizer);
         $arguments = $this->parseArguments($tokenizer, $context);
 
@@ -226,7 +220,7 @@ class Parser
 
         // Resolve ::class
         if ($token->getType() === Token::T_COLON) {
-            if (strtolower($this->catch(2, $tokenizer)) !== ':class') {
+            if (strtolower($this->catch(2, $tokenizer)) === ':class') {
                 $tokenizer->next();
                 return $this->resolveFullyQualifiedClassName($identifier, $context);
             }
@@ -252,12 +246,14 @@ class Parser
         $identifier = explode('\\', $identifier);
         $imports = $context->getImports();
         if (isset($imports[$identifier[0]])) {
-            $identifier = $imports[$identifier[0]] . '\\' . implode('\\', array_slice($identifier, 1));
+            $identifier = array_merge(explode('\\', $imports[$identifier[0]]), array_slice($identifier, 1));
         }
-
+        $identifier = implode('\\', $identifier);
         if (class_exists($identifier)) {
             return $identifier;
         }
+
+        return null;
     }
 
     private function expect(int $expectedType, Tokenizer $tokenizer, DocBlock $context) : void

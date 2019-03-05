@@ -127,8 +127,8 @@ class Parser
 
         while ($tokenizer->valid() && $tokenizer->seek(Token::T_AT)) {
 
-            // Annotation must be preceded by an asterisk token, otherwise it should be ignored
-            if ($tokenizer->key() > 1 && $tokenizer->at($tokenizer->key() - 1)->getType() !== Token::T_ASTERISK) {
+            // Annotation must be preceded by a new line token, otherwise it should be ignored
+            if ($tokenizer->key() > 1 && $tokenizer->at($tokenizer->key() - 1)->getType() !== Token::T_EOL) {
                 $tokenizer->next();
                 continue;
             }
@@ -152,7 +152,7 @@ class Parser
     {
         $identifier = '';
 
-        while ($tokenizer->valid() && in_array($tokenizer->current()->getType(), [Token::T_IDENTIFIER, Token::T_NAMESPACE_SEPARATOR], true)) {
+        while ($tokenizer->valid() && $this->matchAny($tokenizer, Token::T_IDENTIFIER, Token::T_NAMESPACE_SEPARATOR)) {
             $identifier .= $tokenizer->current()->getValue();
             $tokenizer->next();
         }
@@ -173,7 +173,7 @@ class Parser
 
         $this->parseArgument($tokenizer, $context, $arguments);
 
-        while ($tokenizer->current()->getType() === Token::T_COMMA) {
+        while ($this->match($tokenizer, Token::T_COMMA)) {
             $tokenizer->next();
             $this->parseArgument($tokenizer, $context, $arguments);
         }
@@ -183,8 +183,15 @@ class Parser
         return $arguments;
     }
 
+
     private function parseArgument(Tokenizer $tokenizer, DocBlock $context, array &$arguments) : void
     {
+        $this->ignoreEndOfLine($tokenizer);
+        // There was a comma with no value afterwards
+        if ($this->match($tokenizer, Token::T_CLOSE_PARENTHESIS)) {
+            return;
+        }
+
         // key / value pair
         if ($tokenizer->at($tokenizer->key() + 1)->getType() === Token::T_EQUALS) {
             $key = $tokenizer->current()->getValue();
@@ -195,6 +202,7 @@ class Parser
 
         // Just value
         $arguments[] = $this->parseValue($tokenizer, $context);
+        $this->ignoreEndOfLine($tokenizer);
     }
 
     private function parseValue(Tokenizer $tokenizer, DocBlock $context)
@@ -256,11 +264,31 @@ class Parser
         return null;
     }
 
+    private function match(Tokenizer $tokenizer, int $type) : bool
+    {
+        return $tokenizer->current()->getType() === $type;
+    }
+
+    private function matchAny(Tokenizer $tokenizer, int ...$types) : bool
+    {
+        return in_array($tokenizer->current()->getType(), $types, true);
+    }
+
     private function expect(int $expectedType, Tokenizer $tokenizer, DocBlock $context) : void
     {
         if ($expectedType !== $tokenizer->current()->getType()) {
             throw ParserException::forUnexpectedToken($tokenizer->current(), $context);
         }
+    }
+
+    private function ignoreEndOfLine(Tokenizer $tokenizer) : bool
+    {
+        if ($tokenizer->current()->getType() === Token::T_EOL) {
+            $this->skip(1, $tokenizer);
+            return true;
+        }
+
+        return false;
     }
 
     private function skip(int $length, Tokenizer $tokenizer) : void

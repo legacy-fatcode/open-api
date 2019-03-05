@@ -7,7 +7,9 @@ use Igni\OpenApi\Annotation\Parser\MetaData\Enum;
 use Igni\OpenApi\Annotation\Parser\MetaData\Required;
 use Igni\OpenApi\Annotation\Parser\MetaData\Target;
 use Igni\OpenApi\Exception\ParserException;
+use Igni\OpenApi\Exception\TokenizerException;
 use PhpParser\ParserFactory;
+use ReflectionClass;
 
 class Parser
 {
@@ -79,6 +81,7 @@ class Parser
     private $ignoreNotImported = false;
     private $phpParser;
     private $ignored = [];
+    private $autoloadNamespaces = [];
     private $metaData = [
         Annotation::class => [
             'target' => [Target::TARGET_CLASS],
@@ -90,25 +93,53 @@ class Parser
             'target' => [Target::TARGET_CLASS],
             'constructor' => true,
             'validate' => false,
-            'properties' => [],
+            'properties' => [
+                'value' => [
+                    'required' => true,
+                    'type' => ['string'],
+                    'enum' => [
+                        Target::TARGET_CLASS,
+                        Target::TARGET_PROPERTY,
+                        Target::TARGET_METHOD,
+                        Target::TARGET_FUNCTION,
+                        Target::TARGET_ANNOTATION,
+                        Target::TARGET_ALL
+                    ]
+                ]
+            ],
         ],
         Required::class => [
             'target' => [Target::TARGET_PROPERTY],
             'constructor' => false,
             'validate' => false,
-            'properties' => [],
+            'properties' => [
+                'value' => [
+                    'default' => true,
+                    'type' => 'bool',
+                ],
+            ],
         ],
         Enum::class => [
             'target' => [Target::TARGET_PROPERTY],
             'constructor' => true,
             'validate' => false,
-            'properties' => [],
+            'properties' => [
+                'value' => [
+                    'type' => ['string'],
+                    'required' => true,
+                ]
+            ],
         ]
     ];
 
     public function __construct()
     {
         $this->phpParser = (new ParserFactory())->create(ParserFactory::PREFER_PHP7);
+    }
+
+    public function registerNamespace(string $namespace, string $alias) : void
+    {
+        $this->autoloadNamespaces[$alias] = $namespace;
     }
 
     public function addIgnore(string $name) : void
@@ -122,13 +153,18 @@ class Parser
     }
 
     /**
-     * @param DocBlock $docBlock
+     * @param string $docBlock
+     * @param Context $context
      * @return array
      * @throws
      */
-    public function parse(DocBlock $docBlock): array
+    public function parse(string $docBlock, Context $context = null): array
     {
-        $tokenizer = new Tokenizer((string) $docBlock);
+        if ($context === null) {
+            $context = new Context(Target::TARGET_ALL, self::class . '::' . __METHOD__ . '()');
+        }
+
+        $tokenizer = new Tokenizer($docBlock);
         $tokenizer->tokenize();
 
         // Lets search for fist annotation occurrence in docblock
@@ -147,7 +183,7 @@ class Parser
             }
             // Skip @
             $tokenizer->next();
-            $annotation = $this->parseAnnotation($tokenizer, $docBlock);
+            $annotation = $this->parseAnnotation($tokenizer, $context);
             if ($annotation === null) {
                 continue;
             }
@@ -157,30 +193,78 @@ class Parser
         return $annotations;
     }
 
-    private function parseAnnotation(Tokenizer $tokenizer, DocBlock $context, $nested = false)
+    private function parseAnnotation(Tokenizer $tokenizer, Context $context, $nested = false)
     {
-        $name = $this->parseIdentifier($tokenizer);
+        $identifier = $this->parseIdentifier($tokenizer);
 
         // Ignore one-line utility annotations
-        if (in_array($name, self::PHP_ANNOTATIONS, true)) {
+        if (in_array($identifier, self::PHP_ANNOTATIONS, true)) {
             return null;
         }
 
         $arguments = $this->parseArguments($tokenizer, $context);
 
         // Other ignored annotations have to be parsed before we ignore them.
-        if (in_array($name, $this->ignored, true)) {
+        if (in_array($identifier, $this->ignored, true)) {
             return null;
         }
 
-        return $name;
+        $annotationClass = $this->resolveFullyQualifiedClassName($identifier, $context);
+
+        if (!class_exists($annotationClass)) {
+            if ($this->ignoreNotImported) {
+                return null;
+            }
+            throw TokenizerException::forUnknownAnnotationClass($identifier, $context);
+        }
+
+        $metaData = $this->getAnnotationMetaData($annotationClass);
+
+        $target = $context->getTarget();
+        if ($nested) {
+            $target = Target::TARGET_ANNOTATION;
+        }
+
+        if (isset($metaData['target']) && 
+            !in_array(Target::TARGET_ALL, $metaData['target'], true) &&
+            !in_array($target, $metaData['target'])
+        ) {
+
+        }
+
+        if (!$metaData['constructor']) {
+            $annotation = new $annotationClass();
+            $valueArgs = [];
+            foreach ($arguments as $key => $value) {
+                if (is_numeric($key)) {
+                    $valueArgs[] = $value;
+                    continue;
+                }
+                if (property_exists($annotation, $key)) {
+                    $annotationClass->{$key} = $value;
+                }
+            }
+            if (property_exists($annotation, 'value')) {
+                $annotationClass->value = $valueArgs;
+            }
+        } else {
+            $annotation = new $annotationClass($arguments);
+        }
+
+        return $annotation;
     }
 
     private function parseIdentifier(Tokenizer $tokenizer)
     {
         $identifier = '';
 
-        while ($tokenizer->valid() && $this->matchAny($tokenizer, Token::T_IDENTIFIER, Token::T_NAMESPACE_SEPARATOR)) {
+        $next = Token::T_IDENTIFIER;
+        while ($tokenizer->valid() && $this->match($tokenizer, $next)) {
+            if ($next === Token::T_IDENTIFIER) {
+                $next = Token::T_NAMESPACE_SEPARATOR;
+            } else {
+                $next = Token::T_IDENTIFIER;
+            }
             $identifier .= $tokenizer->current()->getValue();
             $tokenizer->next();
         }
@@ -188,7 +272,7 @@ class Parser
         return $identifier;
     }
 
-    private function parseArguments(Tokenizer $tokenizer, DocBlock $context) : array
+    private function parseArguments(Tokenizer $tokenizer, Context $context) : array
     {
         $arguments = [];
 
@@ -212,7 +296,7 @@ class Parser
     }
 
 
-    private function parseArgument(Tokenizer $tokenizer, DocBlock $context, array &$arguments) : void
+    private function parseArgument(Tokenizer $tokenizer, Context $context, array &$arguments) : void
     {
         $this->ignoreEndOfLine($tokenizer);
         // There was a comma with no value afterwards
@@ -233,7 +317,7 @@ class Parser
         $this->ignoreEndOfLine($tokenizer);
     }
 
-    private function parseValue(Tokenizer $tokenizer, DocBlock $context)
+    private function parseValue(Tokenizer $tokenizer, Context $context)
     {
         $token = $tokenizer->current();
 
@@ -273,14 +357,18 @@ class Parser
         }
     }
 
-    private function resolveFullyQualifiedClassName(string $identifier, DocBlock $context) : ?string
+    private function resolveFullyQualifiedClassName(string $identifier, Context $context) : ?string
     {
+        if (isset(self::BUILT_IN[$identifier])) {
+            return self::BUILT_IN[$identifier];
+        }
+
         if (class_exists($identifier)) {
             return $identifier;
         }
 
         $identifier = explode('\\', $identifier);
-        $imports = $context->getImports();
+        $imports = $context->getImports() + $this->autoloadNamespaces;
         if (isset($imports[$identifier[0]])) {
             $identifier = array_merge(explode('\\', $imports[$identifier[0]]), array_slice($identifier, 1));
         }
@@ -290,6 +378,29 @@ class Parser
         }
 
         return null;
+    }
+
+    private function getAnnotationMetaData(string $annotationClass) : array
+    {
+        if (isset($this->metaData[$annotationClass])) {
+            return $this->metaData[$annotationClass];
+        }
+
+        $reflection = new ReflectionClass($annotationClass);
+        $annotations = $this->parse($reflection->getDocComment(), Context::fromReflectionClass($reflection));
+
+        $foundAnnotationDeclaration = false;
+        $target = null;
+        foreach ($annotations as $annotation) {
+            switch (get_class($annotation)) {
+                case Annotation::class:
+                    $foundAnnotationDeclaration = true;
+                    break;
+                case Target::class:
+                    $target = $annotation->value;
+                    break;
+            }
+        }
     }
 
     private function match(Tokenizer $tokenizer, int $type) : bool
@@ -302,7 +413,7 @@ class Parser
         return in_array($tokenizer->current()->getType(), $types, true);
     }
 
-    private function expect(int $expectedType, Tokenizer $tokenizer, DocBlock $context) : void
+    private function expect(int $expectedType, Tokenizer $tokenizer, Context $context) : void
     {
         if ($expectedType !== $tokenizer->current()->getType()) {
             throw ParserException::forUnexpectedToken($tokenizer->current(), $context);

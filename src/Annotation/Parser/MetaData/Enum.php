@@ -2,7 +2,16 @@
 
 namespace Igni\OpenApi\Annotation\Parser\MetaData;
 
+/**
+ * Specifies available values for annotation's property.
+ *
+ * @Annotation
+ * @Target(Target::TARGET_PROPERTY)
+ */
 class Enum
 {
-
+    /**
+     * @var string[]
+     */
+    public $value;
 }

@@ -2,6 +2,7 @@
 
 namespace Igni\OpenApi\Annotation\Parser;
 
+use Igni\OpenApi\Annotation\Parser\MetaData\Target;
 use PhpParser\Error;
 use PhpParser\Node;
 use PhpParser\NodeTraverser;
@@ -12,7 +13,7 @@ use ReflectionMethod;
 use ReflectionClass;
 use ReflectionProperty;
 
-class DocBlock
+class Context
 {
     /**
      * @var string[]
@@ -34,9 +35,11 @@ class DocBlock
      */
     private $imports = [];
 
-    public function __construct(string $doc, string $symbol = '')
+    private $target;
+
+    public function __construct(string $target = Target::TARGET_ALL, string $symbol = '')
     {
-        $this->doc = $doc;
+        $this->target = $target;
         $this->symbol = $symbol;
     }
 
@@ -50,6 +53,11 @@ class DocBlock
         $this->imports[$alias] = $name;
     }
 
+    public function getTarget() : string
+    {
+        return $this->target;
+    }
+
     public function getImports() : array
     {
         return $this->imports;
@@ -57,13 +65,13 @@ class DocBlock
 
     public function __toString() : string
     {
-        return $this->doc;
+        return $this->symbol;
     }
 
     public static function fromReflectionClass(ReflectionClass $class) : self
     {
         $instance = new self(
-            $class->getDocComment(),
+            Target::TARGET_CLASS,
             $class->getName()
         );
 
@@ -79,7 +87,7 @@ class DocBlock
     public static function fromReflectionMethod(ReflectionMethod $method) : self
     {
         $instance = new self(
-            $method->getDocComment(),
+            Target::TARGET_METHOD,
             "{$method->getDeclaringClass()->getName()}::{$method->getName()}()"
         );
 
@@ -95,7 +103,7 @@ class DocBlock
     public static function fromReflectionProperty(ReflectionProperty $property) : self
     {
         $instance = new self(
-            $property->getDocComment(),
+            Target::TARGET_PROPERTY,
             "{$property->getDeclaringClass()->getName()}::\${$property->getName()}"
         );
 
@@ -111,7 +119,7 @@ class DocBlock
     public static function fromReflectionFunction(ReflectionFunction $function) : self
     {
         $instance = new self(
-            $function->getDocComment(),
+            Target::TARGET_FUNCTION,
             "{$function->getName()}()"
         );
 

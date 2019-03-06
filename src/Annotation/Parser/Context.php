@@ -2,7 +2,7 @@
 
 namespace Igni\OpenApi\Annotation\Parser;
 
-use Igni\OpenApi\Annotation\Parser\MetaData\Target;
+use Igni\OpenApi\Annotation\Parser\Annotation\Target;
 use PhpParser\Error;
 use PhpParser\Node;
 use PhpParser\NodeTraverser;

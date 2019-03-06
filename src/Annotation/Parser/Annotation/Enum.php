@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 
-namespace Igni\OpenApi\Annotation\Parser\MetaData;
+namespace Igni\OpenApi\Annotation\Parser\Annotation;
 
 /**
  * Specifies available values for annotation's property.

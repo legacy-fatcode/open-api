@@ -1,8 +1,12 @@
 <?php declare(strict_types=1);
 
-namespace Igni\OpenApi\Annotation\Parser\Annotation;
+namespace Igni\OpenApi\Annotation\Parser\Annotation\MetaData;
 
-use Igni\OpenApi\Annotation\Parser\Annotation\MetaData\Attribute;
+use Igni\OpenApi\Annotation\Parser\Annotation\Annotation;
+use Igni\OpenApi\Annotation\Parser\Annotation\Enum;
+use Igni\OpenApi\Annotation\Parser\Annotation\NoValidate;
+use Igni\OpenApi\Annotation\Parser\Annotation\Required;
+use Igni\OpenApi\Annotation\Parser\Annotation\Target;
 use Igni\OpenApi\Annotation\Parser\Context;
 use Igni\OpenApi\Annotation\Parser\Parser;
 use Igni\OpenApi\Exception\ParserException;
@@ -32,7 +36,7 @@ class MetaDataExtractor
 
         foreach ($annotations as $annotation) {
             switch (get_class($annotation)) {
-                case Annotation::class:
+                case Annotation ::class:
                     $metaData['is_annotation'] = true;
                     break;
                 case Target::class:

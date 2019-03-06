@@ -4,7 +4,7 @@ namespace Igni\OpenApi\Annotation\Parser;
 
 use Igni\OpenApi\Annotation\Parser\Annotation\Annotation;
 use Igni\OpenApi\Annotation\Parser\Annotation\Enum;
-use Igni\OpenApi\Annotation\Parser\Annotation\MetaDataExtractor;
+use Igni\OpenApi\Annotation\Parser\Annotation\MetaData\MetaDataExtractor;
 use Igni\OpenApi\Annotation\Parser\Annotation\NoValidate;
 use Igni\OpenApi\Annotation\Parser\Annotation\Required;
 use Igni\OpenApi\Annotation\Parser\Annotation\Target;
@@ -82,6 +82,7 @@ class Parser
     private $ignoreNotImported = false;
     private $ignored = [];
     private $autoloadNamespaces = [];
+    private $metaDataExtractor;
 
     private $metaData = [
         Annotation::class => [
@@ -115,8 +116,6 @@ class Parser
             'properties' => [],
         ],
     ];
-
-    private $metaDataExtractor;
 
     public function __construct()
     {
@@ -179,20 +178,6 @@ class Parser
         return $annotations;
     }
 
-    private function getMetaData(string $annotationClass, Context $context) : array
-    {
-        if (isset($this->metaData[$annotationClass])) {
-            return $this->metaData[$annotationClass];
-        }
-
-        $annotationReflection = new ReflectionClass($annotationClass);
-        if (strpos($annotationReflection->getDocComment(), '@Annotation') === false) {
-            throw ParserException::forUsingNonAnnotationClassAsAnnotation($annotationClass, $context);
-        }
-
-        return $this->metaData[$annotationClass] = $this->metaDataExtractor->extract($annotationReflection, $context);
-    }
-
     private function parseAnnotation(Tokenizer $tokenizer, Context $context, $nested = false)
     {
         $identifier = $this->parseIdentifier($tokenizer);
@@ -218,21 +203,19 @@ class Parser
             throw ParserException::forUnknownAnnotationClass($identifier, $context);
         }
 
-        $metaData = $this->getMetaData($annotationClass, $context);
-
         $target = $context->getTarget();
         if ($nested) {
             $target = Target::TARGET_ANNOTATION;
         }
+        $metaData = $this->getMetaData($annotationClass, $context);
 
-        if (isset($metaData['target']) && 
-            !in_array(Target::TARGET_ALL, $metaData['target'], true) &&
+        if (!in_array(Target::TARGET_ALL, $metaData['target'], true) &&
             !in_array($target, $metaData['target'])
         ) {
 
         }
 
-        if (!$metaData['constructor']) {
+        if (!$metaData['has_constructor']) {
             $annotation = new $annotationClass();
             $valueArgs = [];
             foreach ($arguments as $key => $value) {
@@ -355,6 +338,20 @@ class Parser
             }
             throw ParserException::forUnexpectedToken($token, $context);
         }
+    }
+
+    private function getMetaData(string $annotationClass, Context $context) : array
+    {
+        if (isset($this->metaData[$annotationClass])) {
+            return $this->metaData[$annotationClass];
+        }
+
+        $annotationReflection = new ReflectionClass($annotationClass);
+        if (strpos($annotationReflection->getDocComment(), '@Annotation') === false) {
+            throw ParserException::forUsingNonAnnotationClassAsAnnotation($annotationClass, $context);
+        }
+
+        return $this->metaData[$annotationClass] = $this->metaDataExtractor->extract($annotationReflection, $context);
     }
 
     private function resolveFullyQualifiedClassName(string $identifier, Context $context) : ?string

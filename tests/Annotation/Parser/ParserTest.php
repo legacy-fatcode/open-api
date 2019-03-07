@@ -2,11 +2,11 @@
 
 namespace IgniTest\OpenApi\Annotation\Parser;
 
-use ReflectionClass;
 use Igni\OpenApi\Annotation\Parser\Context;
 use Igni\OpenApi\Annotation\Parser\Parser;
 use IgniTest\OpenApi\Fixtures\PetSchema;
 use PHPUnit\Framework\TestCase;
+use ReflectionClass;
 
 final class ParserTest extends TestCase
 {

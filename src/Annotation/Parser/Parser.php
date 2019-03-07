@@ -13,15 +13,6 @@ use ReflectionClass;
 
 class Parser
 {
-    private const VALUE_TOKENS = [
-        Token::T_NULL,
-        Token::T_STRING,
-        Token::T_FLOAT,
-        Token::T_INTEGER,
-        Token::T_TRUE,
-        Token::T_FALSE
-    ];
-
     private const PHP_ANNOTATIONS = [
         // PHP Documentator
         'api',
@@ -202,17 +193,9 @@ class Parser
             throw ParserException::forUnknownAnnotationClass($identifier, $context);
         }
 
-        $target = $context->getTarget();
-        if ($nested) {
-            $target = Target::TARGET_ANNOTATION;
-        }
+
         $metaData = $this->getMetaData($annotationClass, $context);
 
-        if (!in_array(Target::TARGET_ALL, $metaData['target'], true) &&
-            !in_array($target, $metaData['target'])
-        ) {
-
-        }
 
         if (!$metaData['has_constructor']) {
             $annotation = new $annotationClass();
@@ -284,6 +267,7 @@ class Parser
     private function parseValue(Tokenizer $tokenizer, Context $context)
     {
         $token = $tokenizer->current();
+        $tokenizer->next();
 
         // Resolve annotation
         if ($token->getType() === Token::T_AT) {
@@ -291,34 +275,40 @@ class Parser
         }
 
         // Resolve primitives
-        if (in_array($token->getType(), self::VALUE_TOKENS, true)) {
-            $value = $token->getValue();
-            $tokenizer->next();
-            return $value;
+        switch ($token->getType()) {
+            case Token::T_STRING:
+                return $token->getValue();
+
+            case Token::T_INTEGER:
+                return (int) $token->getValue();
+
+            case Token::T_FLOAT:
+                return (float) $token->getValue();
+
+            case Token::T_NULL:
+                return null;
+
+            case Token::T_FALSE:
+                return false;
+
+            case Token::T_TRUE:
+                return true;
         }
 
-        // Identifier
-        $this->expect(Token::T_IDENTIFIER, $tokenizer, $context);
-        $identifier = $this->parseIdentifier($tokenizer);
-        $token = $tokenizer->current();
+        $constant = $token->getValue();
 
-        // Resolve ::class
-        if ($token->getType() === Token::T_COLON) {
-            if (strtolower($this->catch(2, $tokenizer)) === ':class') {
-                $tokenizer->next();
-                return $this->resolveFullyQualifiedClassName($identifier, $context);
+        // Class constant
+        if (strpos($constant, '::') !== false) {
+            $constant = explode('::', $constant);
+
+            $class = $this->resolveFullyQualifiedClassName($constant[0], $context);
+            if ($constant[1] === 'class') {
+                return $class;
             }
-            throw ParserException::forUnexpectedToken($tokenizer->current(), $context);
+            $constant = $class . '::' . $constant[1];
         }
 
-        // Resolve constant
-        if ($token->getType() === Token::T_COMMA || $token->getType() === Token::T_CLOSE_PARENTHESIS) {
-            if (defined($identifier)) {
-                $tokenizer->next();
-                return constant($identifier);
-            }
-            throw ParserException::forUnexpectedToken($token, $context);
-        }
+        return constant($constant);
     }
 
     private function getMetaData(string $annotationClass, Context $context) : array
@@ -343,6 +333,10 @@ class Parser
 
         if (class_exists($identifier)) {
             return $identifier;
+        }
+
+        if (class_exists($context->getNamespace() . '\\' . $identifier)) {
+            return $context->getNamespace() . '\\' . $identifier;
         }
 
         $identifier = explode('\\', $identifier);

@@ -56,7 +56,7 @@ class MetaDataExtractor
                     break;
             }
         }
-
+        return $metaData;
         $properties = $class->getProperties(ReflectionProperty::IS_PUBLIC);
 
         foreach ($properties as $property) {

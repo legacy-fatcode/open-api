@@ -8,10 +8,13 @@ use Igni\OpenApi\Annotation as Api;
  * @Api\Schema(
  *   title="Pet object",
  *   description="Pet description",
+ *   minimum=PetSchema::VERSION,
+ *   type=PetSchema::class,
  * )
  */
 class PetSchema
 {
+    const VERSION = 1;
     /**
      * @Api\Property(format="uuid", readOnly=true)
      */

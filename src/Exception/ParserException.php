@@ -12,7 +12,7 @@ abstract class ParserException extends LogicException
     public static function forUnexpectedToken(Token $token, Context $context) : Throwable
     {
         $context = $context->getSymbol() ?: (string) $context;
-        $message = "Unexpected `{$token}` in {$context} at index: {$token->getIndex()}.";
+        $message = "Unexpected `{$token}` in {$context} at index: {$token->getPosition()}.";
 
         return new class($message) extends ParserException implements UnexpectedValueException {
         };

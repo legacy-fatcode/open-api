@@ -13,10 +13,10 @@ final class TokenizerTest extends TestCase
      * @param array $expected
      * @dataProvider provideTokens
      */
-    public function testTokenization(string $stream, array $expected) : void
+    public function testGetTokens(string $stream, array $expected) : void
     {
         $tokenizer = new Tokenizer($stream);
-        $tokens = $tokenizer->tokenize();
+        $tokens = $tokenizer->getTokens();
         self::assertCount(count($expected), $tokens);
 
         $i = 0;
@@ -27,17 +27,24 @@ final class TokenizerTest extends TestCase
         }
     }
 
+    public function testCatchNewLinesTokens() : void
+    {
+        $tokenizer = new Tokenizer("/** \n */");
+        $tokens = $tokenizer->getTokens();
+        self::assertCount(3, $tokens);
+    }
+
     public function testTokenizeEmptyDocBlock() : void
     {
-        $tokenizer = new Tokenizer('/***/');
-        $tokens = $tokenizer->tokenize();
-        self::assertCount(0, $tokens);
+        $tokenizer = new Tokenizer('/** */');
+        $tokens = $tokenizer->getTokens();
+        self::assertCount(2, $tokens);
     }
 
     public function testTokenizeString() : void
     {
         $tokenizer = new Tokenizer('"Test string with escaped\" and unescaped"');
-        $tokens = $tokenizer->tokenize();
+        $tokens = $tokenizer->getTokens();
         $token = $tokens[0];
 
         self::assertCount(1, $tokens);
@@ -53,7 +60,7 @@ final class TokenizerTest extends TestCase
     public function testTokenizeIdentifier(string $stream, string $expected) : void
     {
         $tokenizer = new Tokenizer($stream);
-        $tokens = $tokenizer->tokenize();
+        $tokens = $tokenizer->getTokens();
         $token = $tokens[0];
 
         self::assertCount(1, $tokens);
@@ -63,13 +70,13 @@ final class TokenizerTest extends TestCase
 
     /**
      * @param string $stream
-     * @param int $expected
+     * @param string $expected
      * @dataProvider provideIntegers
      */
-    public function testTokenizeInteger(string $stream, int $expected) : void
+    public function testTokenizeInteger(string $stream, string $expected) : void
     {
         $tokenizer = new Tokenizer($stream);
-        $tokens = $tokenizer->tokenize();
+        $tokens = $tokenizer->getTokens();
         $token = $tokens[0];
 
         self::assertCount(1, $tokens);
@@ -79,35 +86,33 @@ final class TokenizerTest extends TestCase
 
     /**
      * @param string $stream
-     * @param bool $bool
+     * @param string $bool
      * @dataProvider provideBooleans
      */
-    public function testTokenizeBool(string $stream, bool $bool) : void
+    public function testTokenizeBool(string $stream, string $bool) : void
     {
         $tokenizer = new Tokenizer($stream);
-        $tokens = $tokenizer->tokenize();
+        $tokens = $tokenizer->getTokens();
         $token = $tokens[0];
 
         self::assertCount(1, $tokens);
-        if ($bool) {
-            self::assertSame(Token::T_TRUE, $token->getType());
-            self::assertTrue($token->getValue());
-        } else {
-            self::assertSame(Token::T_FALSE, $token->getType());
-            self::assertFalse($token->getValue());
-        }
 
+        if ($bool === 'false') {
+            self::assertSame(Token::T_FALSE, $token->getType());
+        } else {
+            self::assertSame(Token::T_TRUE, $token->getType());
+        }
     }
 
     /**
      * @param string $stream
-     * @param float $expected
+     * @param string $expected
      * @dataProvider provideFloats
      */
-    public function testTokenizeFloats(string $stream, float $expected) : void
+    public function testTokenizeFloats(string $stream, string $expected) : void
     {
         $tokenizer = new Tokenizer($stream);
-        $tokens = $tokenizer->tokenize();
+        $tokens = $tokenizer->getTokens();
         $token = $tokens[0];
 
         self::assertCount(1, $tokens);
@@ -118,31 +123,32 @@ final class TokenizerTest extends TestCase
     public function provideBooleans() : array
     {
         return [
-            ['true', true],
-            ['false', false],
-            [' true', true],
-            [' false ', false],
-            ['true ', true]
+            ['true', 'true'],
+            ['false', 'false'],
+            [' true', 'true'],
+            [' false ', 'false'],
+            ['TRUE ', 'true'],
+            ['FALSE ', 'false'],
         ];
     }
 
     public function provideIntegers() : array
     {
         return [
-            ['12', 12],
-            [' 12', 12],
-            [' 12 ', 12],
-            ['12 ', 12]
+            ['12', '12'],
+            [' 12', '12'],
+            [' 12 ', '12'],
+            ['12 ', '12']
         ];
     }
 
     public function provideFloats() : array
     {
         return [
-            ['12.21', 12.21],
-            [' 12.21', 12.21],
-            [' 12.21 ', 12.21],
-            ['12.22 ', 12.22]
+            ['12.21', '12.21'],
+            [' 12.21', '12.21'],
+            [' 12.21 ', '12.21'],
+            ['12.22 ', '12.22']
         ];
     }
 
@@ -194,7 +200,7 @@ final class TokenizerTest extends TestCase
                         'type' => Token::T_OPEN_BRACKET,
                     ],
                     [
-                        'value' => 1,
+                        'value' => '1',
                         'type' => Token::T_INTEGER,
                     ],
                     [
@@ -202,7 +208,7 @@ final class TokenizerTest extends TestCase
                         'type' => Token::T_COMMA,
                     ],
                     [
-                        'value' => 2,
+                        'value' => '2',
                         'type' => Token::T_INTEGER,
                     ],
                     [
@@ -219,22 +225,10 @@ final class TokenizerTest extends TestCase
                 'Identifier::class',
                 [
                    [
-                       'value' => 'Identifier',
+                       'value' => 'Identifier::class',
                        'type' => Token::T_IDENTIFIER,
                    ],
-                   [
-                       'value' => ':',
-                       'type' => Token::T_COLON,
-                   ],
-                   [
-                       'value' => ':',
-                       'type' => Token::T_COLON,
-                   ],
-                   [
-                       'value' => 'class',
-                       'type' => Token::T_IDENTIFIER,
-                   ],
-                ]
+                ],
             ],
             [
                 '@Identifier()',
@@ -258,30 +252,14 @@ final class TokenizerTest extends TestCase
                 ]
             ],
             [
-                '@Fully\Qualified\Namespace()',
+                '@\Fully\Qualified\Namespace()',
                 [
                     [
                         'value' => '@',
                         'type' => Token::T_AT,
                     ],
                     [
-                        'value' => 'Fully',
-                        'type' => Token::T_IDENTIFIER,
-                    ],
-                    [
-                        'value' => '\\',
-                        'type' => Token::T_NAMESPACE_SEPARATOR,
-                    ],
-                    [
-                        'value' => 'Qualified',
-                        'type' => Token::T_IDENTIFIER,
-                    ],
-                    [
-                        'value' => '\\',
-                        'type' => Token::T_NAMESPACE_SEPARATOR,
-                    ],
-                    [
-                        'value' => 'Namespace',
+                        'value' => '\Fully\Qualified\Namespace',
                         'type' => Token::T_IDENTIFIER,
                     ],
                     [
@@ -351,7 +329,7 @@ final class TokenizerTest extends TestCase
                         'type' => Token::T_OPEN_PARENTHESIS,
                     ],
                     [
-                        'value' => 12,
+                        'value' => '12',
                         'type' => Token::T_INTEGER,
                     ],
                     [
@@ -359,7 +337,7 @@ final class TokenizerTest extends TestCase
                         'type' => Token::T_COMMA,
                     ],
                     [
-                        'value' => true,
+                        'value' => 'true',
                         'type' => Token::T_TRUE,
                     ],
                     [
@@ -367,7 +345,7 @@ final class TokenizerTest extends TestCase
                         'type' => Token::T_COMMA,
                     ],
                     [
-                        'value' => false,
+                        'value' => 'false',
                         'type' => Token::T_FALSE,
                     ],
                     [
@@ -375,7 +353,7 @@ final class TokenizerTest extends TestCase
                         'type' => Token::T_COMMA,
                     ],
                     [
-                        'value' => 34.12,
+                        'value' => '34.12',
                         'type' => Token::T_FLOAT,
                     ],
                     [
@@ -392,7 +370,7 @@ final class TokenizerTest extends TestCase
                         'type' => Token::T_OPEN_BRACKET,
                     ],
                     [
-                        'value' => 20,
+                        'value' => '20',
                         'type' => Token::T_INTEGER,
                     ],
                     [
@@ -400,7 +378,7 @@ final class TokenizerTest extends TestCase
                         'type' => Token::T_COMMA,
                     ],
                     [
-                        'value' => 30.21,
+                        'value' => '30.21',
                         'type' => Token::T_FLOAT,
                     ],
                     [
@@ -420,7 +398,7 @@ final class TokenizerTest extends TestCase
                         'type' => Token::T_COMMA,
                     ],
                     [
-                        'value' => false,
+                        'value' => 'false',
                         'type' => Token::T_FALSE,
                     ],
                     [
@@ -445,7 +423,7 @@ final class TokenizerTest extends TestCase
                         'type' => Token::T_OPEN_PARENTHESIS,
                     ],
                     [
-                        'value' => null,
+                        'value' => 'null',
                         'type' => Token::T_NULL,
                     ],
                     [
@@ -453,7 +431,7 @@ final class TokenizerTest extends TestCase
                         'type' => Token::T_COMMA,
                     ],
                     [
-                        'value' => 34.12,
+                        'value' => '34.12',
                         'type' => Token::T_FLOAT,
                     ],
                     [
@@ -465,7 +443,7 @@ final class TokenizerTest extends TestCase
                         'type' => Token::T_OPEN_BRACKET
                     ],
                     [
-                        'value' => true,
+                        'value' => 'true',
                         'type' => Token::T_TRUE,
                     ],
                     [
@@ -473,7 +451,7 @@ final class TokenizerTest extends TestCase
                         'type' => Token::T_COMMA,
                     ],
                     [
-                        'value' => false,
+                        'value' => 'false',
                         'type' => Token::T_FALSE,
                     ],
                     [
@@ -510,7 +488,7 @@ final class TokenizerTest extends TestCase
                         'type' => Token::T_OPEN_BRACKET
                     ],
                     [
-                        'value' => true,
+                        'value' => 'true',
                         'type' => Token::T_TRUE,
                     ],
                     [
@@ -518,7 +496,7 @@ final class TokenizerTest extends TestCase
                         'type' => Token::T_COMMA,
                     ],
                     [
-                        'value' => false,
+                        'value' => 'false',
                         'type' => Token::T_FALSE,
                     ],
                     [

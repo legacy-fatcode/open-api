@@ -4,40 +4,33 @@ namespace Igni\OpenApi\Annotation\Parser;
 
 class Token
 {
+    public const T_NONE = 0;
     public const T_INTEGER = 1;
     public const T_STRING = 2;
     public const T_FLOAT = 3;
-    public const T_TRUE = 4;
-    public const T_NULL = 5;
-    public const T_FALSE = 6;
+    public const T_FALSE = 4;
+    public const T_TRUE = 5;
+    public const T_NULL = 6;
 
     public const T_AT = 10;
     public const T_IDENTIFIER = 11;
-    public const T_OPEN_CURLY_BRACES = 12;
-    public const T_CLOSE_CURLY_BRACES = 13;
-    public const T_OPEN_BRACKET = 14;
-    public const T_CLOSE_BRACKET = 15;
-    public const T_OPEN_PARENTHESIS = 16;
-    public const T_CLOSE_PARENTHESIS = 17;
-    public const T_EQUALS = 18;
-    public const T_COMMA = 19;
-    public const T_COLON = 20;
-    public const T_NAMESPACE_SEPARATOR = 21;
-    public const T_ASTERISK = 22;
-    public const T_DOT = 23;
-    public const T_EOL = 24;
-
-    public const T_DOCBLOCK_START = 100;
-    public const T_DOCBLOCK_END = 101;
-    public const T_DOC = 102;
+    public const T_OPEN_BRACKET = 12;
+    public const T_CLOSE_BRACKET = 13;
+    public const T_OPEN_PARENTHESIS = 14;
+    public const T_CLOSE_PARENTHESIS = 15;
+    public const T_COMMA = 16;
+    public const T_EQUALS = 17;
+    public const T_NAMESPACE_SEPARATOR = 18;
+    public const T_COLON = 19;
+    public const T_EOL = 20;
 
     private $type;
     private $value;
-    private $index;
+    private $position;
 
-    public function __construct(int $index, int $type, $value)
+    public function __construct(int $position, int $type, string $value)
     {
-        $this->index = $index;
+        $this->position = $position;
         $this->type = $type;
         $this->value = $value;
     }
@@ -47,18 +40,18 @@ class Token
         return $this->type;
     }
 
-    public function getValue()
+    public function getValue() : string
     {
         return $this->value;
     }
 
-    public function getIndex(): int
+    public function getPosition(): int
     {
-        return $this->index;
+        return $this->position;
     }
 
     public function __toString() : string
     {
-        return (string) $this->value;
+        return $this->value;
     }
 }

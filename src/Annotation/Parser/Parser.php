@@ -4,10 +4,10 @@ namespace Igni\OpenApi\Annotation\Parser;
 
 use Igni\OpenApi\Annotation\Parser\Annotation\Annotation;
 use Igni\OpenApi\Annotation\Parser\Annotation\Enum;
-use Igni\OpenApi\Annotation\Parser\Annotation\MetaData\MetaDataExtractor;
 use Igni\OpenApi\Annotation\Parser\Annotation\NoValidate;
 use Igni\OpenApi\Annotation\Parser\Annotation\Required;
 use Igni\OpenApi\Annotation\Parser\Annotation\Target;
+use Igni\OpenApi\Annotation\Parser\MetaData\MetaDataExtractor;
 use Igni\OpenApi\Exception\ParserException;
 use ReflectionClass;
 
@@ -150,7 +150,6 @@ class Parser
         }
 
         $tokenizer = new Tokenizer($docBlock);
-        $tokenizer->tokenize();
 
         // Lets search for fist annotation occurrence in docblock
         if (!$tokenizer->seek(Token::T_AT)) {
@@ -180,8 +179,8 @@ class Parser
 
     private function parseAnnotation(Tokenizer $tokenizer, Context $context, $nested = false)
     {
-        $identifier = $this->parseIdentifier($tokenizer);
-
+        $identifier = $tokenizer->current()->getValue();
+        $tokenizer->next();
         // Ignore one-line utility annotations
         if (in_array($identifier, self::PHP_ANNOTATIONS, true)) {
             return null;
@@ -235,24 +234,6 @@ class Parser
         }
 
         return $annotation;
-    }
-
-    private function parseIdentifier(Tokenizer $tokenizer)
-    {
-        $identifier = '';
-
-        $next = Token::T_IDENTIFIER;
-        while ($tokenizer->valid() && $this->match($tokenizer, $next)) {
-            if ($next === Token::T_IDENTIFIER) {
-                $next = Token::T_NAMESPACE_SEPARATOR;
-            } else {
-                $next = Token::T_IDENTIFIER;
-            }
-            $identifier .= $tokenizer->current()->getValue();
-            $tokenizer->next();
-        }
-
-        return $identifier;
     }
 
     private function parseArguments(Tokenizer $tokenizer, Context $context) : array

@@ -15,6 +15,6 @@ final class ParserTest extends TestCase
         $reflection = new ReflectionClass(PetSchema::class);
         $parser = new Parser();
         $annotations = $parser->parse($reflection->getDocComment(), Context::fromReflectionClass($reflection));
-
+        $a = 1;
     }
 }

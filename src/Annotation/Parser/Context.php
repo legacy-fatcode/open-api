@@ -11,11 +11,6 @@ use ReflectionProperty;
 class Context
 {
     /**
-     * @var string[]
-     */
-    private static $fileImports = [];
-
-    /**
      * @var string
      */
     private $symbol;
@@ -76,12 +71,8 @@ class Context
             $class->getNamespaceName(),
             $class->getName()
         );
-
-        $imports = self::getFileImports($class->getStartLine(), $class->getFileName(), $class->getNamespaceName());
-
-        foreach ($imports as $alias => $namespace) {
-            $instance->addImport($namespace, $alias);
-        }
+        $imports = new ReflectorImports($class);
+        $instance->imports = $imports->getImports();
 
         return $instance;
     }
@@ -93,12 +84,8 @@ class Context
             $method->getNamespaceName(),
             "{$method->getDeclaringClass()->getName()}::{$method->getName()}()"
         );
-
-        $imports = self::getFileImports($method->getDeclaringClass()->getStartLine(), $method->getFileName(), $method->getNamespaceName());
-
-        foreach ($imports as $alias => $namespace) {
-            $instance->addImport($namespace, $alias);
-        }
+        $imports = new ReflectorImports($method);
+        $instance->imports = $imports->getImports();
 
         return $instance;
     }
@@ -110,12 +97,8 @@ class Context
             $property->getDeclaringClass()->getNamespaceName(),
             "{$property->getDeclaringClass()->getName()}::\${$property->getName()}"
         );
-
-        $imports = self::getFileImports($property->getDeclaringClass()->getStartLine(), $property->getDeclaringClass()->getFileName(), $property->getDeclaringClass()->getNamespaceName());
-
-        foreach ($imports as $alias => $namespace) {
-            $instance->addImport($namespace, $alias);
-        }
+        $imports = new ReflectorImports($property);
+        $instance->imports = $imports->getImports();
 
         return $instance;
     }
@@ -127,115 +110,9 @@ class Context
             $function->getNamespaceName(),
             "{$function->getName()}()"
         );
-
-        $imports = self::getFileImports($function->getStartLine(), $function->getFileName(), $function->getNamespaceName());
-
-        foreach ($imports as $alias => $namespace) {
-            $instance->addImport($namespace, $alias);
-        }
+        $imports = new ReflectorImports($function);
+        $instance->imports = $imports->getImports();
 
         return $instance;
-    }
-
-    private static function getFileImports($startLine, $filename, $ns) : array
-    {
-        if (isset(self::$fileImports[$filename])) {
-            return self::$fileImports[$filename];
-        }
-
-        if (empty($filename) || !is_file($filename) || !is_readable($filename)) {
-            return self::$fileImports[$filename] = [];
-        }
-
-        $a = self::tokenizeSource($startLine, $filename, $ns);
-
-        return self::$fileImports[$filename] = $a;
-    }
-
-    private static function tokenizeSource($startLine, $filename, $namespace)
-    {
-        $tokens = token_get_all(file_get_contents($filename));
-        $builtNamespace = '';
-        $buildingNamespace = false;
-        $matchedNamespace = false;
-        $useStatements = [];
-        $record = false;
-        $currentUse = [
-            'class' => '',
-            'as' => ''
-        ];
-        foreach ($tokens as $token) {
-            if ($token[0] === T_NAMESPACE) {
-                $buildingNamespace = true;
-                if ($matchedNamespace) {
-                    break;
-                }
-            }
-            if ($buildingNamespace) {
-                if ($token === ';') {
-                    $buildingNamespace = false;
-                    continue;
-                }
-                switch ($token[0]) {
-                    case T_STRING:
-                    case T_NS_SEPARATOR:
-                        $builtNamespace .= $token[1];
-                        break;
-                }
-                continue;
-            }
-            if ($token === ';' || !is_array($token)) {
-                if ($record) {
-                    $useStatements[] = $currentUse;
-                    $record = false;
-                    $currentUse = [
-                        'class' => '',
-                        'as' => ''
-                    ];
-                }
-                continue;
-            }
-            if ($token[0] === T_CLASS) {
-                break;
-            }
-            if (strcasecmp($builtNamespace, $namespace) === 0) {
-                $matchedNamespace = true;
-            }
-            if ($matchedNamespace) {
-                if ($token[0] === T_USE) {
-                    $record = 'class';
-                }
-                if ($token[0] === T_AS) {
-                    $record = 'as';
-                }
-                if ($record) {
-                    switch ($token[0]) {
-                        case T_STRING:
-                        case T_NS_SEPARATOR:
-                            if ($record) {
-                                $currentUse[$record] .= $token[1];
-                            }
-                            break;
-                    }
-                }
-            }
-            if ($token[2] >= $startLine) {
-                break;
-            }
-        }
-        $result = [];
-        // Make sure the as key has the name of the class even
-        // if there is no alias in the use statement.
-        foreach ($useStatements as &$useStatement) {
-            if (empty($useStatement['as'])) {
-
-                $useStatement['as'] = $useStatement['class'];
-                $result[$useStatement['class']] = $useStatement['class'];
-            } else {
-                $result[$useStatement['as']] = $useStatement['class'];
-            }
-        }
-
-        return $result;
     }
 }

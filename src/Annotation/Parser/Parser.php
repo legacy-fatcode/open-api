@@ -357,11 +357,6 @@ class Parser
         return $tokenizer->current()->getType() === $type;
     }
 
-    private function matchAny(Tokenizer $tokenizer, int ...$types) : bool
-    {
-        return in_array($tokenizer->current()->getType(), $types, true);
-    }
-
     private function expect(int $expectedType, Tokenizer $tokenizer, Context $context) : void
     {
         if ($expectedType !== $tokenizer->current()->getType()) {
@@ -387,20 +382,5 @@ class Parser
                 return;
             }
         }
-    }
-
-    private function catch(int $length, Tokenizer $tokenizer) : string
-    {
-        $value = '';
-        for (;$length > 0; $length--) {
-            $tokenizer->next();
-            if (!$tokenizer->valid()) {
-                return $value;
-            }
-
-            $value .= $tokenizer->current()->getValue();
-        }
-
-        return $value;
     }
 }

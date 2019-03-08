@@ -238,6 +238,7 @@ class Parser
         }
 
         $this->expect(Token::T_CLOSE_PARENTHESIS, $tokenizer, $context);
+        $tokenizer->next();
 
         return $arguments;
     }
@@ -272,6 +273,11 @@ class Parser
         // Resolve annotation
         if ($token->getType() === Token::T_AT) {
             return $this->parseAnnotation($tokenizer, $context, true);
+        }
+
+        if ($token->getType() === Token::T_OPEN_BRACKET) {
+            $tokenizer->next();
+            return $this->parseArray($tokenizer, $context);
         }
 
         // Resolve primitives
@@ -309,6 +315,24 @@ class Parser
         }
 
         return constant($constant);
+    }
+
+    private function parseArray(Tokenizer $tokenizer, Context $context) : array
+    {
+        $array = [];
+        // Empty array
+        if ($tokenizer->current()->getType() === Token::T_CLOSE_BRACKET) {
+            return $array;
+        }
+        $array[] = $this->parseValue($tokenizer, $context);
+        while ($tokenizer->valid() && $this->match($tokenizer, Token::T_COMMA)) {
+            $tokenizer->next();
+            $array[] = $this->parseValue($tokenizer, $context);
+        }
+        $this->expect(Token::T_CLOSE_BRACKET, $tokenizer, $context);
+        $tokenizer->next();
+
+        return $array;
     }
 
     private function getMetaData(string $annotationClass, Context $context) : array
@@ -359,6 +383,7 @@ class Parser
 
     private function expect(int $expectedType, Tokenizer $tokenizer, Context $context) : void
     {
+        $this->ignoreEndOfLine($tokenizer);
         if ($expectedType !== $tokenizer->current()->getType()) {
             throw ParserException::forUnexpectedToken($tokenizer->current(), $context);
         }

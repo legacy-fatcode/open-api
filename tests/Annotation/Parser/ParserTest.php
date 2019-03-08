@@ -4,17 +4,18 @@ namespace IgniTest\OpenApi\Annotation\Parser;
 
 use Igni\OpenApi\Annotation\Parser\Context;
 use Igni\OpenApi\Annotation\Parser\Parser;
-use IgniTest\OpenApi\Fixtures\PetSchema;
 use PHPUnit\Framework\TestCase;
-use ReflectionClass;
+use IgniTest\OpenApi\Fixtures\PetShopApplication;
+
+use function IgniTest\OpenApi\Fixtures\getPet;
 
 final class ParserTest extends TestCase
 {
     public function testParseAnnotation() : void
     {
-        $reflection = new ReflectionClass(PetSchema::class);
+        $reflection = new \ReflectionMethod(PetShopApplication::class, 'getPet');
         $parser = new Parser();
-        $annotations = $parser->parse($reflection->getDocComment(), Context::fromReflectionClass($reflection));
+        $annotations = $parser->parse($reflection->getDocComment(), Context::fromReflectionMethod($reflection));
         $a = 1;
     }
 }

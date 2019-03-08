@@ -40,14 +40,18 @@ class MetaDataExtractor
                     $metaData['is_annotation'] = true;
                     break;
                 case Target::class:
+                    $valid = false;
                     foreach ($annotation->value as $target) {
                         if (in_array($target, Target::TARGETS)) {
-                            throw ParserException::forPropertyValidationFailure(
-                                $annotationContext,
-                                ['enum' => Target::TARGETS],
-                                $annotation->value
-                            );
+                            $valid = true;
                         }
+                    }
+                    if (!$valid) {
+                        throw ParserException::forPropertyValidationFailure(
+                            $annotationContext,
+                            ['enum' => Target::TARGETS],
+                            $annotation->value
+                        );
                     }
                     $metaData['target'] = $annotation->value;
                     break;

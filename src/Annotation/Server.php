@@ -2,14 +2,16 @@
 
 namespace FatCode\OpenApi\Annotation;
 
-use Doctrine\Common\Annotations\Annotation\Required;
+use FatCode\Annotation\Target;
 use FatCode\OpenApi\Annotation\Server\Variable;
 
 /**
- * Extended server annotation
+ * Server definition.
+ *
  * @Annotation
+ * @Target(Target::TARGET_ANNOTATION)
  */
-class Server extends Annotation
+class Server
 {
     /**
      * A URL to the target host. This URL supports Server Variables and MAY be relative,
@@ -29,7 +31,7 @@ class Server extends Annotation
     public $description;
 
     /**
-     * @var Variable[string]
+     * @var Variable[]
      */
     public $variables;
 

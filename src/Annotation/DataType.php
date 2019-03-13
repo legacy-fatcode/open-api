@@ -2,7 +2,7 @@
 
 namespace FatCode\OpenApi\Annotation;
 
-use Doctrine\Common\Annotations\Annotation\Enum;
+use FatCode\Annotation\Enum;
 
 trait DataType
 {
@@ -108,7 +108,7 @@ trait DataType
     public $uniqueItems;
 
     /**
-     * @var \FatCode\OpenApi\Annotation\Reference|\FatCode\OpenApi\Annotation\Schema
+     * @var Type
      */
     public $items;
 }

@@ -2,7 +2,7 @@
 
 namespace FatCode\OpenApi\Annotation;
 
-use Doctrine\Common\Annotations\Annotation\Target;
+use FatCode\Annotation\Target;
 
 /**
  * @Annotation

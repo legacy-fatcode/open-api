@@ -2,14 +2,12 @@
 
 namespace FatCode\OpenApi\Annotation;
 
-use Doctrine\Common\Annotations\Annotation\Required;
-use Doctrine\Common\Annotations\Annotation\Target;
+use FatCode\Annotation\Target;
 
 /**
  * @Annotation
- * @Target("ANNOTATION")
+ * @Target(Target::TARGET_ANNOTATION)
  */
-class Content extends Annotation
+class Content
 {
-
 }

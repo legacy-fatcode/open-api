@@ -2,13 +2,13 @@
 
 namespace FatCode\OpenApi\Annotation;
 
-use Doctrine\Common\Annotations\Annotation\Target;
+use FatCode\Annotation\Target;
 
 /**
  * @Annotation
  * @Target(Target::TARGET_ANNOTATION)
  */
-final class Example extends Annotation
+final class Example
 {
     /**
      * @var string

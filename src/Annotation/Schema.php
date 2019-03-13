@@ -6,7 +6,7 @@ namespace FatCode\OpenApi\Annotation;
  * @Annotation
  * @see https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.2.md#schemaObject
  */
-class Schema extends Annotation
+class Schema implements Type
 {
     use DataType;
 
@@ -29,7 +29,7 @@ class Schema extends Annotation
     public $required = [];
 
     /**
-     * @var \FatCode\OpenApi\Annotation\Property[]
+     * @var Property[]
      */
     public $properties;
 }

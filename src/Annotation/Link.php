@@ -2,7 +2,7 @@
 
 namespace FatCode\OpenApi\Annotation;
 
-use Doctrine\Common\Annotations\Annotation\Target;
+use FatCode\Annotation\Target;
 
 /**
  * @Annotation
@@ -23,7 +23,7 @@ class Link extends Parameter
     public $operationId;
 
     /**
-     * @var \FatCode\OpenApi\Annotation\Parameter[]
+     * @var Parameter[]
      */
     public $parameters;
 

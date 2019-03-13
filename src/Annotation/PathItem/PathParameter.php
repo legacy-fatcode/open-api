@@ -13,5 +13,4 @@ use FatCode\OpenApi\Annotation\Parameter;
 class PathParameter extends Parameter
 {
     public $in = 'path';
-    public $type;
 }

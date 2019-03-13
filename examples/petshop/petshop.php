@@ -21,13 +21,15 @@ require_once 'config/default.php';
  * @Api\Application(
  *   version="1.0.0",
  *   title="Pet shop application",
- *   @Api\Server(
- *      id="development",
- *      host=DEVELOPMENT_HOST,
- *      port=DEVELOPMENT_PORT,
- *      description="Development server"
- *   ),
- *   @Api\SecurityScheme\ApiKey(
+ *   servers=[
+ *     @Api\Server(
+ *       id="development",
+ *       host=DEVELOPMENT_HOST,
+ *       port=DEVELOPMENT_PORT,
+ *       description="Development server"
+ *     )
+ *   ],
+ *   security=@Api\SecurityScheme\ApiKey(
  *     name="AuthKey",
  *     in="header"
  *   )
@@ -39,11 +41,11 @@ class Application
 }
 
 
+
 /**
  * @Api\Schema(
  *   title="Tag object",
  *   description="Pet description",
- *   readOnly
  * )
  */
 class Tag
@@ -104,16 +106,12 @@ function getTag()
 
 /**
  * @Api\PathItem\GetRoute(
- *   route="/pets/{id}/twojastara/z/toba/{nie}/gada",
+ *   route="/pets/{id}",
  *   description="Retrieves pet with given id",
  *   @Api\PathItem\PathParameter(
  *     name="id",
  *     type="number"
  *   ),
- *   @Api\PathItem\PathParameter(
- *      name="nie",
- *      type="string"
- *   )
  *   @Api\Response(
  *     code="200",
  *     schema=@Api\Reference(Pet::class),

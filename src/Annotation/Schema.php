@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 
-namespace Igni\OpenApi\Annotation;
+namespace FatCode\OpenApi\Annotation;
 
 /**
  * @Annotation
@@ -29,7 +29,7 @@ class Schema extends Annotation
     public $required = [];
 
     /**
-     * @var \Igni\OpenApi\Annotation\Property[]
+     * @var \FatCode\OpenApi\Annotation\Property[]
      */
     public $properties;
 }

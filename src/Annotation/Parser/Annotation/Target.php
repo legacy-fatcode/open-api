@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 
-namespace Igni\OpenApi\Annotation\Parser\Annotation;
+namespace FatCode\OpenApi\Annotation\Parser\Annotation;
 
 /**
  * Specifies valid targets for the annotation.

@@ -1,9 +1,9 @@
 <?php declare(strict_types=1);
 
-namespace Igni\OpenApi\Annotation\Info;
+namespace FatCode\OpenApi\Annotation\Info;
 
 use Doctrine\Common\Annotations\Annotation\Target;
-use Igni\OpenApi\Annotation\Annotation;
+use FatCode\OpenApi\Annotation\Annotation;
 
 /**
  * @Annotation

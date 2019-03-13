@@ -5,7 +5,7 @@
  */
 namespace PetShop;
 
-use Igni\OpenApi\Annotation as Api;
+use FatCode\OpenApi\Annotation as Api;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
@@ -42,7 +42,8 @@ class Application
 /**
  * @Api\Schema(
  *   title="Tag object",
- *   description="Pet description"
+ *   description="Pet description",
+ *   readOnly
  * )
  */
 class Tag

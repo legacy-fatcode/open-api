@@ -1,10 +1,10 @@
 <?php declare(strict_types=1);
 
-namespace Igni\OpenApi\Annotation;
+namespace FatCode\OpenApi\Annotation;
 
-use Igni\Validation\Exception\InvalidArgumentException;
-use Igni\Validation\Assertion;
-use Igni\Validation\ValidationError;
+use FatCode\Validation\Exception\InvalidArgumentException;
+use FatCode\Validation\Assertion;
+use FatCode\Validation\ValidationError;
 use ArrayAccess;
 
 class Validator

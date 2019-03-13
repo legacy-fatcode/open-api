@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 
-namespace Igni\OpenApi\Annotation;
+namespace FatCode\OpenApi\Annotation;
 
 use Doctrine\Common\Annotations\Annotation\Enum;
 
@@ -108,7 +108,7 @@ trait DataType
     public $uniqueItems;
 
     /**
-     * @var \Igni\OpenApi\Annotation\Reference|\Igni\OpenApi\Annotation\Schema
+     * @var \FatCode\OpenApi\Annotation\Reference|\FatCode\OpenApi\Annotation\Schema
      */
     public $items;
 }

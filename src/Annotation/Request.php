@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 
-namespace Igni\OpenApi\Annotation;
+namespace FatCode\OpenApi\Annotation;
 
 use Doctrine\Common\Annotations\Annotation\Required;
 
@@ -17,18 +17,18 @@ class Request extends Annotation
     public $description;
 
     /**
-     * @var \Igni\OpenApi\Annotation\Header[]
+     * @var \FatCode\OpenApi\Annotation\Header[]
      */
     public $headers;
 
     /**
-     * @var \Igni\OpenApi\Annotation\Schema|\Igni\OpenApi\Annotation\Reference
+     * @var \FatCode\OpenApi\Annotation\Schema|\FatCode\OpenApi\Annotation\Reference
      * @Required
      */
     public $schema;
 
     /**
-     * @var \Igni\OpenApi\Annotation\Link[]|\Igni\OpenApi\Annotation\Reference[]
+     * @var \FatCode\OpenApi\Annotation\Link[]|\FatCode\OpenApi\Annotation\Reference[]
      */
     public $links = [];
 }

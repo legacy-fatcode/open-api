@@ -1,8 +1,8 @@
 <?php declare(strict_types=1);
 
-namespace Igni\OpenApi\Annotation\SecurityScheme;
+namespace FatCode\OpenApi\Annotation\SecurityScheme;
 
-use Igni\OpenApi\Annotation\Annotation;
+use FatCode\OpenApi\Annotation\Annotation;
 
 /**
  * @Annotation

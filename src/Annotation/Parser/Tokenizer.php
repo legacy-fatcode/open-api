@@ -1,8 +1,8 @@
 <?php declare(strict_types=1);
 
-namespace Igni\OpenApi\Annotation\Parser;
+namespace FatCode\OpenApi\Annotation\Parser;
 
-use Igni\OpenApi\Exception\TokenizerException;
+use FatCode\OpenApi\Exception\TokenizerException;
 use Iterator;
 
 use function count;

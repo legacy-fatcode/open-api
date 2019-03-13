@@ -1,8 +1,8 @@
 <?php declare(strict_types=1);
 
-namespace IgniTest\OpenApi\Fixtures;
+namespace FatCode\Tests\OpenApi\Fixtures;
 
-use Igni\OpenApi\Annotation as Api;
+use FatCode\OpenApi\Annotation as Api;
 
 /**
  * @Api\Schema(

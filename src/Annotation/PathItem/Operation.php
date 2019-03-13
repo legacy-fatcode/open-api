@@ -1,10 +1,10 @@
 <?php declare(strict_types=1);
 
-namespace Igni\OpenApi\Annotation\PathItem;
+namespace FatCode\OpenApi\Annotation\PathItem;
 
 use Doctrine\Common\Annotations\Annotation\Required;
 use Doctrine\Common\Annotations\Annotation\Target;
-use Igni\OpenApi\Annotation\Annotation;
+use FatCode\OpenApi\Annotation\Annotation;
 
 /**
  * @Annotation
@@ -41,7 +41,7 @@ class Operation extends Annotation
 
     /**
      * A list of parameters that are applicable for this operation.
-     * @var \Igni\OpenApi\Annotation\Parameter[]
+     * @var \FatCode\OpenApi\Annotation\Parameter[]
      */
     public $parameters;
 
@@ -53,7 +53,7 @@ class Operation extends Annotation
 
     /**
      * The list of possible responses as they are returned from executing this operation.
-     * @var \Igni\OpenApi\Annotation\Response[]
+     * @var \FatCode\OpenApi\Annotation\Response[]
      * @Required
      */
     public $responses;
@@ -65,7 +65,7 @@ class Operation extends Annotation
     public $deprecated = false;
 
     /**
-     * @var \Igni\OpenApi\Annotation\SecurityScheme\SecurityRequirement
+     * @var \FatCode\OpenApi\Annotation\SecurityScheme\SecurityRequirement
      */
     public $security;
 }

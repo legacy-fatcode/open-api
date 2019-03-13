@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 
-namespace Igni\OpenApi\Exception;
+namespace FatCode\OpenApi\Exception;
 
 /**
  * Exception thrown if an argument is not of the expected type.

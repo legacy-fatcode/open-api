@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 
-namespace Igni\OpenApi\Annotation;
+namespace FatCode\OpenApi\Annotation;
 
 use Doctrine\Common\Annotations\Annotation\Target;
 
@@ -23,7 +23,7 @@ class Link extends Parameter
     public $operationId;
 
     /**
-     * @var \Igni\OpenApi\Annotation\Parameter[]
+     * @var \FatCode\OpenApi\Annotation\Parameter[]
      */
     public $parameters;
 

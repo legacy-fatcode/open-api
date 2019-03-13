@@ -1,15 +1,15 @@
 <?php declare(strict_types=1);
 
-namespace Igni\OpenApi\Annotation\Parser\MetaData;
+namespace FatCode\OpenApi\Annotation\Parser\MetaData;
 
-use Igni\OpenApi\Annotation\Parser\Annotation\Annotation;
-use Igni\OpenApi\Annotation\Parser\Annotation\Enum;
-use Igni\OpenApi\Annotation\Parser\Annotation\NoValidate;
-use Igni\OpenApi\Annotation\Parser\Annotation\Required;
-use Igni\OpenApi\Annotation\Parser\Annotation\Target;
-use Igni\OpenApi\Annotation\Parser\Context;
-use Igni\OpenApi\Annotation\Parser\Parser;
-use Igni\OpenApi\Exception\ParserException;
+use FatCode\OpenApi\Annotation\Parser\Annotation\Annotation;
+use FatCode\OpenApi\Annotation\Parser\Annotation\Enum;
+use FatCode\OpenApi\Annotation\Parser\Annotation\NoValidate;
+use FatCode\OpenApi\Annotation\Parser\Annotation\Required;
+use FatCode\OpenApi\Annotation\Parser\Annotation\Target;
+use FatCode\OpenApi\Annotation\Parser\Context;
+use FatCode\OpenApi\Annotation\Parser\Parser;
+use FatCode\OpenApi\Exception\ParserException;
 use ReflectionClass;
 use ReflectionProperty;
 

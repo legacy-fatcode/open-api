@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 
-namespace Igni\OpenApi\Annotation;
+namespace FatCode\OpenApi\Annotation;
 
 use Doctrine\Common\Annotations\Annotation\Required;
 use Doctrine\Common\Annotations\Annotation\Target;
@@ -32,13 +32,13 @@ final class Application extends Annotation
 
     /**
      * The contact information for the exposed API.
-     * @var \Igni\OpenApi\Annotation\Info\Contact
+     * @var \FatCode\OpenApi\Annotation\Info\Contact
      */
     public $contact;
 
     /**
      * The license information for the exposed API.
-     * @var \Igni\OpenApi\Annotation\Info\License
+     * @var \FatCode\OpenApi\Annotation\Info\License
      */
     public $license;
 
@@ -50,7 +50,7 @@ final class Application extends Annotation
     public $version;
 
     /**
-     * @var \Igni\OpenApi\Annotation\Server[]
+     * @var \FatCode\OpenApi\Annotation\Server[]
      * @Required
      */
     public $servers;
@@ -59,7 +59,7 @@ final class Application extends Annotation
      * A declaration of which security mechanisms can be used across the API. The list of values includes alternative
      * security requirement objects that can be used. Only one of the security requirement objects need to be satisfied
      * to authorize a request. Individual operations can override this definition.
-     * @var \Igni\OpenApi\Annotation\SecurityScheme\SecurityScheme
+     * @var \FatCode\OpenApi\Annotation\SecurityScheme\SecurityScheme
      */
     public $security;
 }

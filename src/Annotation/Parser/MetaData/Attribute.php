@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 
-namespace Igni\OpenApi\Annotation\Parser\MetaData;
+namespace FatCode\OpenApi\Annotation\Parser\MetaData;
 
 class Attribute
 {

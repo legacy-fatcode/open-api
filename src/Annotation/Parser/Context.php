@@ -1,8 +1,8 @@
 <?php declare(strict_types=1);
 
-namespace Igni\OpenApi\Annotation\Parser;
+namespace FatCode\OpenApi\Annotation\Parser;
 
-use Igni\OpenApi\Annotation\Parser\Annotation\Target;
+use FatCode\OpenApi\Annotation\Parser\Annotation\Target;
 use ReflectionClass;
 use ReflectionFunction;
 use ReflectionMethod;

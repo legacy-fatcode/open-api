@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 
-namespace Igni\OpenApi\Annotation;
+namespace FatCode\OpenApi\Annotation;
 
 use Doctrine\Common\Annotations\Annotation\Enum;
 use Doctrine\Common\Annotations\Annotation\Required;
@@ -56,7 +56,7 @@ class Parameter extends Annotation
 
     /**
      * The schema defining the type used for the parameter.
-     * @var \Igni\OpenApi\Annotation\Schema|\Igni\OpenApi\Annotation\Reference
+     * @var \FatCode\OpenApi\Annotation\Schema|\FatCode\OpenApi\Annotation\Reference
      */
     public $schema;
 

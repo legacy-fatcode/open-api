@@ -1,10 +1,10 @@
 <?php declare(strict_types=1);
 
-namespace Igni\OpenApi\Annotation\PathItem;
+namespace FatCode\OpenApi\Annotation\PathItem;
 
 use Doctrine\Common\Annotations\Annotation\Target;
-use Igni\OpenApi\Annotation\Annotation;
-use Igni\OpenApi\Annotation\Parameter;
+use FatCode\OpenApi\Annotation\Annotation;
+use FatCode\OpenApi\Annotation\Parameter;
 
 /**
  * @Annotation

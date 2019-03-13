@@ -1,7 +1,11 @@
 <?php declare(strict_types=1);
 
-namespace Igni\OpenApi;
+namespace FatCode\OpenApi;
 
+/**
+ * Class ProjectAnalyser
+ * @package FatCode\OpenApi
+ */
 class ProjectAnalyser
 {
     private $directory;

@@ -2,13 +2,12 @@
 
 namespace FatCode\OpenApi\Annotation\PathItem;
 
-use Doctrine\Common\Annotations\Annotation\Target;
-use FatCode\OpenApi\Annotation\Annotation;
+use FatCode\Annotation\Target;
 use FatCode\OpenApi\Annotation\Parameter;
 
 /**
  * @Annotation
- * @Target("ANNOTATION")
+ * @Target(Target::TARGET_ANNOTATION)
  */
 class HeaderParameter extends Parameter
 {

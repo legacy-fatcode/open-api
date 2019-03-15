@@ -2,15 +2,14 @@
 
 namespace FatCode\OpenApi\Annotation\SecurityScheme;
 
-use Doctrine\Common\Annotations\Annotation\Target;
-use FatCode\OpenApi\Annotation\Annotation;
+use FatCode\Annotation\Target;
 
 /**
  * @Annotation
- * @Target("ANNOTATION")
+ * @Target(Target::TARGET_ANNOTATION)
  * @see https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.2.md#security-scheme-object
  */
-abstract class SecurityScheme extends Annotation
+abstract class SecurityScheme
 {
     /**
      * The type of the security scheme. Valid values are "apiKey", "http", "oauth2", "openIdConnect".

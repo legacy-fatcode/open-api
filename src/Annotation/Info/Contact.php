@@ -2,14 +2,13 @@
 
 namespace FatCode\OpenApi\Annotation\Info;
 
-use Doctrine\Common\Annotations\Annotation\Target;
-use FatCode\OpenApi\Annotation\Annotation;
+use FatCode\Annotation\Target;
 
 /**
  * @Annotation
- * @Target("ANNOTATION")
+ * @Target(Target::TARGET_ANNOTATION)
  */
-class Contact extends Annotation
+class Contact
 {
     /**
      * The identifying name of the contact person/organization.

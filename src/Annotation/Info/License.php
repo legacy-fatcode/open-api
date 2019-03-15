@@ -2,14 +2,13 @@
 
 namespace FatCode\OpenApi\Annotation\Info;
 
-use Doctrine\Common\Annotations\Annotation\Target;
-use FatCode\OpenApi\Annotation\Annotation;
+use FatCode\Annotation\Target;
 
 /**
  * @Annotation
- * @Target("ANNOTATION")
+ * @Target(Target::TARGET_ANNOTATION)
  */
-class License extends Annotation
+class License
 {
     /**
      * The license name used for the API.

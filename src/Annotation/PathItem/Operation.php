@@ -2,16 +2,17 @@
 
 namespace FatCode\OpenApi\Annotation\PathItem;
 
-use Doctrine\Common\Annotations\Annotation\Required;
-use Doctrine\Common\Annotations\Annotation\Target;
-use FatCode\OpenApi\Annotation\Annotation;
+use FatCode\Annotation\Target;
+use FatCode\OpenApi\Annotation\Parameter;
+use FatCode\OpenApi\Annotation\Response;
+use FatCode\OpenApi\Annotation\SecurityScheme\SecurityRequirement;
 
 /**
  * @Annotation
  * @see https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.2.md#operationObject
- * @Target("ALL")
+ * @Target(Target::TARGET_CLASS, Target::TARGET_METHOD, Target::TARGET_FUNCTION)
  */
-class Operation extends Annotation
+class Operation
 {
     /**
      * A list of tags for API documentation control.
@@ -41,7 +42,7 @@ class Operation extends Annotation
 
     /**
      * A list of parameters that are applicable for this operation.
-     * @var \FatCode\OpenApi\Annotation\Parameter[]
+     * @var Parameter[]
      */
     public $parameters;
 
@@ -53,7 +54,7 @@ class Operation extends Annotation
 
     /**
      * The list of possible responses as they are returned from executing this operation.
-     * @var \FatCode\OpenApi\Annotation\Response[]
+     * @var Response[]
      * @Required
      */
     public $responses;
@@ -65,7 +66,7 @@ class Operation extends Annotation
     public $deprecated = false;
 
     /**
-     * @var \FatCode\OpenApi\Annotation\SecurityScheme\SecurityRequirement
+     * @var SecurityRequirement
      */
     public $security;
 }

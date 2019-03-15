@@ -36,7 +36,7 @@ class Server
     public $variables;
 
     /**
-     * @var string
+     * @var int
      */
     public $port;
 

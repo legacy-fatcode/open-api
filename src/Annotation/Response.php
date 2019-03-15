@@ -11,6 +11,13 @@ use FatCode\Annotation\Required;
 class Response
 {
     /**
+     * The code that is valid for this response.
+     * @var int
+     * @Required
+     */
+    public $code;
+
+    /**
      * A brief description of the response object. CommonMark syntax MAY be used for rich text representation.
      * @var string
      * @Required
@@ -23,7 +30,7 @@ class Response
     public $headers;
 
     /**
-     * @var Reference[]
+     * @var Reference
      * @Required
      */
     public $schema;

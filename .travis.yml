@@ -1,0 +1,24 @@
+language: php
+
+sudo: true
+
+php:
+  - 7.2
+  - 7.3
+
+before_install:
+  - composer self-update
+
+install:
+  - composer update
+
+script:
+  - vendor/bin/phpunit
+
+after_script:
+  - wget https://scrutinizer-ci.com/ocular.phar
+  - php ocular.phar code-coverage:upload --format=php-clover coverage.clover
+
+cache:
+  directories:
+    - $HOME/.composer/cache

@@ -5,8 +5,11 @@ Open API is a framework for rapid REST applications development. It was created 
 theirs application's business domain and processes. Library takes on its shoulders handling and validating the input as 
 well as generating output in requested format (json, yml, xml). Everything is supported through meta programming with 
 usage of annotation system.
-OpenAPI project is compatible with [OpenAPI 3.0](https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.0.md) with some quirks
-to simplify development.
+OpenAPI project is compatible with [OpenAPI 3.0](https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.0.md) 
+with some quirks to simplify development.
+
+## Installation
+
 
 ## Bootstrapping application
 
@@ -44,14 +47,13 @@ class Application implements OnRequestListener
 # examples/hello_world.php
 ```
 
-The above code is simple application that always response with `Hello world` message to all requests. 
+The above code is example of simple application that always response with `Hello world` message to all requests. 
 This application can be run from terminal with following command:
 
 `open-api run development`
 
-Please take a look
-closer at `@Api\Application` annotation, it requires 3 parameters:
- - version - version of your api, its always recommended to version your api and keep it compatible with semver
+Please take a look closer at `@Api\Application` annotation, it requires 3 parameters:
+ - version - version of your api, its always recommended to version your api and keep it compatible with [semver](https://semver.org)
  - title - simply the name of your application (visible in auto-generated documentation)
  - servers - configuration of available servers
 

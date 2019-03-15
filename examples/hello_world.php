@@ -15,7 +15,7 @@ use Zend\Diactoros\Response;
  *     servers = [
  *         @Api\Server(
  *             id = "development",
- *             port = 80,
+ *             port = 8080,
  *             host = "localhost"
  *         )
  *     ]
@@ -28,3 +28,5 @@ class Application implements OnRequestListener
         return new Response('Hello world');
     }
 }
+
+# Run with `open-api run development`

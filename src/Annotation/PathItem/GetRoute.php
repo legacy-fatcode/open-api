@@ -2,12 +2,11 @@
 
 namespace FatCode\OpenApi\Annotation\PathItem;
 
-use Doctrine\Common\Annotations\Annotation\Target;
-use FatCode\OpenApi\Annotation\Annotation;
+use FatCode\Annotation\Target;
 
 /**
  * @Annotation
- * @Target("ALL")
+ * @Target(Target::TARGET_FUNCTION, Target::TARGET_CLASS, Target::TARGET_METHOD)
  */
 class Get extends Operation
 {

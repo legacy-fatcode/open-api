@@ -2,13 +2,13 @@
 
 namespace FatCode\OpenApi\Annotation;
 
-use Doctrine\Common\Annotations\Annotation\Required;
+use FatCode\Annotation\Required;
 
 /**
  * @Annotation
  * @see https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.2.md#responseObject
  */
-class Response extends Annotation
+class Response
 {
     /**
      * A brief description of the response object. CommonMark syntax MAY be used for rich text representation.
@@ -18,18 +18,18 @@ class Response extends Annotation
     public $description;
 
     /**
-     * @var \FatCode\OpenApi\Annotation\Header[]
+     * @var Header[]
      */
     public $headers;
 
     /**
-     * @var \FatCode\OpenApi\Annotation\Schema|\FatCode\OpenApi\Annotation\Reference
+     * @var Reference[]
      * @Required
      */
     public $schema;
 
     /**
-     * @var \FatCode\OpenApi\Annotation\Link[]|\FatCode\OpenApi\Annotation\Reference[]
+     * @var Reference[]
      */
     public $links = [];
 }

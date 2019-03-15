@@ -2,13 +2,11 @@
 
 namespace FatCode\OpenApi\Annotation;
 
-use Doctrine\Common\Annotations\Annotation\Required;
-
 /**
  * @Annotation
  * @see https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.2.md#request-body-object
  */
-class Request extends Annotation
+class Request
 {
     /**
      * A brief description of the request body. This could contain examples of use. CommonMark syntax MAY be used for rich text representation.
@@ -17,18 +15,22 @@ class Request extends Annotation
     public $description;
 
     /**
-     * @var \FatCode\OpenApi\Annotation\Header[]
+     * Recognized http headers.
+     *
+     * @var Header[]
      */
     public $headers;
 
     /**
-     * @var \FatCode\OpenApi\Annotation\Schema|\FatCode\OpenApi\Annotation\Reference
+     * Reference pointing to input object.
+     *
+     * @var Reference
      * @Required
      */
     public $schema;
 
     /**
-     * @var \FatCode\OpenApi\Annotation\Link[]|\FatCode\OpenApi\Annotation\Reference[]
+     * @var Type[]
      */
     public $links = [];
 }

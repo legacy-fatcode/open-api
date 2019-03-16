@@ -14,14 +14,20 @@ use FatCode\OpenApi\Annotation\Server\Variable;
 class Server
 {
     /**
-     * A URL to the target host. This URL supports Server Variables and MAY be relative,
-     * to indicate that the host location is relative to the location where the OpenAPI
-     * document is being served. Variable substitutions will be made when a variable
-     * is named in {brackets}.
-     *
+     * @Required
      * @var string
      */
-    public $url = 'http://{host}:{port}/';
+    public $id;
+
+    /**
+     * @var string
+     */
+    public $port = '80';
+
+    /**
+     * @var string
+     */
+    public $host = 'localhost';
 
     /**
      * An optional string describing the host designated by the URL.
@@ -36,20 +42,14 @@ class Server
     public $variables;
 
     /**
-     * @var int
-     */
-    public $port;
-
-    /**
+     * A URL to the target host. This URL supports Server Variables and MAY be relative,
+     * to indicate that the host location is relative to the location where the OpenAPI
+     * document is being served. Variable substitutions will be made when a variable
+     * is named in {brackets}.
+     *
      * @var string
      */
-    public $host;
-
-    /**
-     * @Required
-     * @var string
-     */
-    public $id;
+    public $url = 'http://{host}:{port}/';
 
     public function getUrl() : string
     {

@@ -5,6 +5,9 @@ namespace FatCode\OpenApi\Annotation;
 use FatCode\Annotation\Target;
 
 /**
+ * Merged open api and info object.
+ * @see https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.2.md#openapi-object
+ * @see https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.2.md#info-object
  * @Annotation
  * @Target(Target::TARGET_CLASS)
  */
@@ -30,7 +33,7 @@ final class Application
      * An array of Server Objects, which provide connectivity information to a target server.
      *
      * @Required
-     * @var \FatCode\OpenApi\Annotation\Server[]
+     * @var Server[]
      */
     public $servers;
 

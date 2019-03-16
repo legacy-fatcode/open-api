@@ -2,18 +2,32 @@
 
 namespace FatCode\OpenApi\Annotation\PathItem;
 
-use FatCode\Annotation\Target;
 use FatCode\OpenApi\Annotation\Parameter;
+use FatCode\OpenApi\Annotation\Request;
 use FatCode\OpenApi\Annotation\Response;
 use FatCode\OpenApi\Annotation\SecurityScheme\SecurityRequirement;
 
 /**
  * @Annotation
  * @see https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.2.md#operationObject
- * @Target(Target::TARGET_CLASS, Target::TARGET_METHOD, Target::TARGET_FUNCTION)
  */
-class Operation
+abstract class Operation
 {
+    /**
+     * Route that points the the resource.
+     *
+     * @var string
+     * @Required
+     */
+    public $route;
+
+    /**
+     * The list of possible responses as they are returned from executing this operation.
+     * @var Response[]
+     * @Required
+     */
+    public $responses;
+
     /**
      * A list of tags for API documentation control.
      * Tags can be used for logical grouping of operations by resources or any other qualifier.
@@ -48,16 +62,9 @@ class Operation
 
     /**
      * The request body applicable for this operation.
-     * @var
+     * @var Request
      */
     public $requestBody;
-
-    /**
-     * The list of possible responses as they are returned from executing this operation.
-     * @var Response[]
-     * @Required
-     */
-    public $responses;
 
     /**
      * Declares this operation to be deprecated. Consumers SHOULD refrain from usage of the declared operation.

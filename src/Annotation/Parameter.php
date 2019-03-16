@@ -55,9 +55,12 @@ class Parameter
     public $in;
 
     /**
-     * @var
+     * @var Schema
      */
     public $schema;
 
+    /**
+     * @var string
+     */
     public $examples;
 }

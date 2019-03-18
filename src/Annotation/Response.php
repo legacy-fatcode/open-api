@@ -11,18 +11,18 @@ use FatCode\Annotation\Required;
 class Response
 {
     /**
-     * The code that is valid for this response.
-     * @var int
-     * @Required
-     */
-    public $code;
-
-    /**
      * A brief description of the response object. CommonMark syntax MAY be used for rich text representation.
      * @var string
      * @Required
      */
     public $description;
+
+    /**
+     * The code that is valid for this response.
+     * @var int
+     * @Required
+     */
+    public $code = 200;
 
     /**
      * @var Header[]

@@ -17,26 +17,20 @@ use Psr\Http\Message\ServerRequestInterface;
  */
 class Application
 {
+    /**
+     * @Api\PathItem\Get(
+     *     route="/hello/{name<\w>}",
+     *     responses=[
+     *         @Api\Response(code=200, schema=@Api\Reference(TextPlain::class))
+     *     ]
+     * )
+     *
+     * @param ServerRequestInterface $request
+     * @return ResponseInterface
+     */
+    public function sayHello(ServerRequestInterface $request) : ResponseInterface
+    {
+        // Return text/plain response
+        return new Response(200, "Hello: {$request->getAttribute('name')}");
+    }
 }
-
-/**
- * @Api\PathItem\Get(
- *     route="/something/{id}",
- *     parameters=[
- *         @Api\Parameter(name="id", in="path", schema=@Api\Schema(type="int"))
- *     ],
- *     responses=[
- *         @Api\Response(code=200, schema=@Api\Reference(TextPlain::class))
- *     ]
- * )
- *
- * @param ServerRequestInterface $request
- * @return ResponseInterface
- */
-function getSomething(ServerRequestInterface $request) : ResponseInterface
-{
-    return new Response(200, "Hello world");
-}
-
-
-//open-api build ./src

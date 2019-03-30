@@ -22,11 +22,14 @@
     "ext-mbstring" : "*",
     "psr/http-message": ">=1.0",
     "fatcode/annotations": ">=1.0",
-    "zendframework/zend-diactoros": "^2.1"
+    "zendframework/zend-diactoros": ">=2.1",
+    "nikic/php-parser": ">=4.2"
   },
   "require-dev": {
     "phpunit/phpunit": ">=8.0",
-    "mockery/mockery": ">=1.2"
+    "mockery/mockery": ">=1.2",
+    "vimeo/psalm": ">=3.2",
+    "squizlabs/php_codesniffer": ">=3.0"
   },
   "autoload": {
     "psr-4": {
@@ -38,10 +41,10 @@
       "FatCode\\Tests\\OpenApi\\": "tests/"
     }
   },
-  "repositories": [
-    {
-      "type": "vcs",
-      "url": "https://github.com/fat-code/annotations"
-    }
-  ]
+  "scripts": {
+    "phpunit": "vendor/bin/phpunit --coverage-text",
+    "phpcs": "vendor/bin/phpcs --standard=PSR12 --warning-severity=0 src",
+    "phpcsf": "vendor/bin/phpcbf --standard=PSR12 --warning-severity=0 src",
+    "psalm": "vendor/bin/psalm --show-info=false"
+  }
 }

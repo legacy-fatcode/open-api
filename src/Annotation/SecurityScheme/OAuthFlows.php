@@ -2,12 +2,10 @@
 
 namespace FatCode\OpenApi\Annotation\SecurityScheme;
 
-use FatCode\OpenApi\Annotation\Annotation;
-
 /**
  * @Annotation
  */
-class OAuthFlows extends Annotation
+class OAuthFlows
 {
     /**
      * @var OAuthFlow

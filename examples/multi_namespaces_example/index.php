@@ -25,18 +25,14 @@ namespace App {
      */
     class Application implements OnRequestListener
     {
-        public function onRequest(ServerRequestInterface $request) : ResponseInterface
+        public function onRequest(ServerRequestInterface $request): ResponseInterface
         {
             return new Response('Hello world');
         }
     }
-
-    function dupa() {
-
-    }
-
-    function dupa2() {
-
-    }
 # Run with `open-api run development`
+}
+
+namespace App\Routes {
+
 }

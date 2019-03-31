@@ -2,12 +2,10 @@
 
 namespace FatCode\OpenApi\Annotation\SecurityScheme;
 
-use FatCode\OpenApi\Annotation\Annotation;
-
 /**
  * @Annotation
  */
-class OAuthFlow extends Annotation
+class OAuthFlow
 {
     /**
      * The authorization URL to be used for this flow. This MUST be in the form of a URL.

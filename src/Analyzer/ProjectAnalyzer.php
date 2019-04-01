@@ -2,6 +2,7 @@
 
 namespace FatCode\OpenApi\Analyzer;
 
+use function App\HelloWorld\dupa;
 use FatCode\OpenApi\Exception\ProjectAnalyzerException;
 use RecursiveDirectoryIterator;
 use RecursiveIteratorIterator;

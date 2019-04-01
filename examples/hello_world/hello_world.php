@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 
-namespace App {
+namespace App\HelloWorld {
 
     use FatCode\OpenApi\Annotation as Api;
     use Psr\Http\Message\ServerRequestInterface;
@@ -23,7 +23,7 @@ namespace App {
      *     ]
      * )
      */
-    class Application implements OnRequestListener
+    class Application extends Response implements OnRequestListener
     {
         public function onRequest(ServerRequestInterface $request) : ResponseInterface
         {

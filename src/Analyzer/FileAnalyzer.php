@@ -56,6 +56,9 @@ class FileAnalyzer
                 case T_FUNCTION:
                     $this->parseFunction();
                     break;
+                case T_USE:
+                    $this->parseUse();
+                    break;
             }
         }
 
@@ -91,6 +94,11 @@ class FileAnalyzer
         $this->seekEndOfBlock();
 
         $this->declaredClasses[] = $className;
+    }
+
+    private function parseUse() : void
+    {
+
     }
 
     private function parseFunction() : void

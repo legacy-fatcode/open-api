@@ -2,83 +2,62 @@
 
 namespace FatCode\OpenApi\Http;
 
+use FatCode\OpenApi\Exception\Http\HttpException;
 use Psr\Http\Message\ResponseInterface;
-use Psr\Http\Message\StreamInterface;
+use Zend\Diactoros\MessageTrait;
 
 class Response implements ResponseInterface
 {
-    public function __construct(int $code, $body)
+    use MessageTrait;
+
+    private $reasonPhrase;
+    private $statusCode;
+    private $complete = false;
+
+    public function __construct($body = '', HttpStatusCode $status = null, array $headers = [])
     {
+        $status = $status ?? HttpStatusCode::OK();
+        $this->stream = Stream::create($body, 'wb+');
+        $this->statusCode = $status->getValue();
+        $this->reasonPhrase = $status->getPhrase();
+        $this->setHeaders($headers);
     }
 
-    public function getProtocolVersion()
+    public function write(string $body) : void
     {
-        // TODO: Implement getProtocolVersion() method.
+        if ($this->complete) {
+            throw new HttpException('Cannot write to the response, response is already completed.');
+        }
+
+        $this->getBody()->write($body);
     }
 
-    public function withProtocolVersion($version)
+    public function end() : void
     {
-        // TODO: Implement withProtocolVersion() method.
+        $this->complete = true;
     }
 
-    public function getHeaders()
+    public function isComplete() : bool
     {
-        // TODO: Implement getHeaders() method.
+        return $this->complete;
     }
 
-    public function hasHeader($name)
+    public function getStatusCode() : int
     {
-        // TODO: Implement hasHeader() method.
+        return $this->statusCode;
     }
 
-    public function getHeader($name)
+    public function getReasonPhrase() : string
     {
-        // TODO: Implement getHeader() method.
-    }
-
-    public function getHeaderLine($name)
-    {
-        // TODO: Implement getHeaderLine() method.
-    }
-
-    public function withHeader($name, $value)
-    {
-        // TODO: Implement withHeader() method.
-    }
-
-    public function withAddedHeader($name, $value)
-    {
-        // TODO: Implement withAddedHeader() method.
-    }
-
-    public function withoutHeader($name)
-    {
-        // TODO: Implement withoutHeader() method.
-    }
-
-    public function getBody()
-    {
-        // TODO: Implement getBody() method.
-    }
-
-    public function withBody(StreamInterface $body)
-    {
-        // TODO: Implement withBody() method.
-    }
-
-    public function getStatusCode()
-    {
-        // TODO: Implement getStatusCode() method.
+        return $this->reasonPhrase;
     }
 
     public function withStatus($code, $reasonPhrase = '')
     {
-        // TODO: Implement withStatus() method.
-    }
-
-    public function getReasonPhrase()
-    {
-        // TODO: Implement getReasonPhrase() method.
+        $new = clone $this;
+        $new->statusCode = $code;
+        $new->reasonPhrase = $reasonPhrase;
+        return $new;
     }
 
 }

@@ -45,7 +45,7 @@ class HttpServer
             $middleware = new CallableMiddleware($middleware);
         }
 
-        $this->middleware->enqueue($middleware);
+        $this->middleware[] = $middleware;
     }
 
     public function onError(callable $handler) : void

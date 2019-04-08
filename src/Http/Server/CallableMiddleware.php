@@ -2,6 +2,7 @@
 
 namespace FatCode\OpenApi\Http\Server;
 
+use FatCode\OpenApi\Exception\Http\ServerException;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
@@ -20,7 +21,7 @@ final class CallableMiddleware implements MiddlewareInterface
     {
         $response = ($this->middleware)($request, $handler);
         if (!$response instanceof ResponseInterface) {
-
+            throw ServerException::forInvalidResponseFromCallableMiddleware($this->middleware);
         }
 
         return $response;

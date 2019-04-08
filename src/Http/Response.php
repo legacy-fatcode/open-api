@@ -2,7 +2,7 @@
 
 namespace FatCode\OpenApi\Http;
 
-use FatCode\OpenApi\Exception\Http\HttpException;
+use FatCode\OpenApi\Exception\Http\ServerException;
 use Psr\Http\Message\ResponseInterface;
 use Zend\Diactoros\MessageTrait;
 
@@ -26,7 +26,7 @@ class Response implements ResponseInterface
     public function write(string $body) : void
     {
         if ($this->complete) {
-            throw new HttpException('Cannot write to the response, response is already completed.');
+            throw ServerException::forWritingToCompleteResponse();
         }
 
         $this->getBody()->write($body);
@@ -59,5 +59,4 @@ class Response implements ResponseInterface
         $new->reasonPhrase = $reasonPhrase;
         return $new;
     }
-
 }

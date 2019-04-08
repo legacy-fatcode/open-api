@@ -2,7 +2,7 @@
 
 namespace FatCode\OpenApi\Http;
 
-use FatCode\OpenApi\Exception\Http\HttpException;
+use InvalidArgumentException;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\StreamInterface;
 use Psr\Http\Message\UriInterface;
@@ -38,7 +38,7 @@ class Request implements RequestInterface
     private function validateUri($uri) : void
     {
         if (!$uri instanceof UriInterface && !is_string($uri) && null !== $uri) {
-            throw new HttpException(
+            throw new InvalidArgumentException(
                 'Invalid URI provided; must be null, a string, or a Psr\Http\Message\UriInterface instance'
             );
         }

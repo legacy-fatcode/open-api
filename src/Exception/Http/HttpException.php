@@ -3,8 +3,10 @@
 namespace FatCode\OpenApi\Exception\Http;
 
 use FatCode\OpenApi\Exception\RuntimeException as FatCodeRuntimeException;
+use Psr\Http\Message\ResponseInterface;
 use RuntimeException;
 
-class HttpException extends RuntimeException implements FatCodeRuntimeException
+abstract class HttpException extends RuntimeException implements FatCodeRuntimeException
 {
+    abstract public function toResponse() : ResponseInterface;
 }

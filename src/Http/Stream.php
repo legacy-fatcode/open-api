@@ -2,13 +2,13 @@
 
 namespace FatCode\OpenApi\Http;
 
-use FatCode\OpenApi\Exception\Http\HttpException;
+use InvalidArgumentException;
 use Psr\Http\Message\StreamInterface;
 use Zend\Diactoros\Stream as BaseStream;
 
-use function strpos;
-use function is_string;
 use function is_resource;
+use function is_string;
+use function strpos;
 
 class Stream extends BaseStream
 {
@@ -33,7 +33,7 @@ class Stream extends BaseStream
     public static function create($stream, string $mode = 'r'): self
     {
         if (!is_string($stream) && !is_resource($stream) && !$stream instanceof StreamInterface) {
-            throw new HttpException(
+            throw new InvalidArgumentException(
                 'Stream must be a string stream resource identifier, an actual stream resource, '
                 . 'or a Psr\Http\Message\StreamInterface implementation'
             );

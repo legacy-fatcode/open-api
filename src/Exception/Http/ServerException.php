@@ -4,6 +4,7 @@ namespace FatCode\OpenApi\Exception\Http;
 
 use FatCode\OpenApi\Exception\RuntimeException as FatCodeRuntimeException;
 use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Server\MiddlewareInterface;
 use RuntimeException;
 
 class ServerException extends RuntimeException implements FatCodeRuntimeException
@@ -26,7 +27,7 @@ class ServerException extends RuntimeException implements FatCodeRuntimeExceptio
     {
         return new self(sprintf(
             'Expected middleware to be callable or instance of `%s`, but `%s` was given',
-            ResponseInterface::class,
+            MiddlewareInterface::class,
             is_object($middleware) ? 'instance of ' . get_class($middleware) : gettype($middleware)
         ));
     }

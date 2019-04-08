@@ -4,7 +4,6 @@ namespace FatCode\OpenApi\Http;
 
 use InvalidArgumentException;
 use Psr\Http\Message\RequestInterface;
-use Psr\Http\Message\StreamInterface;
 use Psr\Http\Message\UriInterface;
 use Zend\Diactoros\RequestTrait;
 use Zend\Diactoros\Uri;
@@ -12,9 +11,6 @@ use Zend\Diactoros\Uri;
 class Request implements RequestInterface
 {
     use RequestTrait;
-
-    /** @var StreamInterface */
-    protected $stream;
 
     public function __construct(
         $uri = null,

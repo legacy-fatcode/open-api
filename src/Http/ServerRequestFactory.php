@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 
-namespace FatCode\OpenApi\Http\RequestFactory;
+namespace FatCode\OpenApi\Http;
 
 use Psr\Http\Message\ServerRequestInterface;
 

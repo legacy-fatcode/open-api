@@ -4,6 +4,7 @@ namespace FatCode\OpenApi\Http\Server;
 
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
+use Psr\Http\Server\MiddlewareInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 use SplQueue;
 
@@ -40,9 +41,9 @@ final class MiddlewareCursor implements RequestHandlerInterface
             return $this->parent->handle($request);
         }
 
-        /** @var OnRequestListener $middleware */
-        $requestListener = $this->queue->dequeue();
+        /** @var MiddlewareInterface $middleware */
+        $middleware = $this->queue->dequeue();
 
-        return $requestListener->onRequest($request, $this);
+        return $middleware->process($request, $this);
     }
 }

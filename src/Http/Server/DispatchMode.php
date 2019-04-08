@@ -4,6 +4,12 @@ namespace FatCode\OpenApi\Http\Server;
 
 use FatCode\Enum;
 
+/**
+ * @method static DispatchMode POLLING
+ * @method static DispatchMode FIXED
+ * @method static DispatchMode PREEMPTIVE
+ * @method static DispatchMode IP
+ */
 final class DispatchMode extends Enum
 {
     /**

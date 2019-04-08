@@ -8,7 +8,7 @@ use FatCode\OpenApi\Http\Server\ErrorMiddleware;
 use FatCode\OpenApi\Http\Server\HttpServerHandler;
 use FatCode\OpenApi\Http\Server\HttpServerSettings;
 use FatCode\OpenApi\Http\Server\MiddlewarePipeline;
-use FatCode\OpenApi\Http\Server\SwooleServerHandler;
+use FatCode\OpenApi\Http\Server\Swoole\SwooleServerHandler;
 use Psr\Http\Server\MiddlewareInterface;
 use SplQueue;
 
@@ -38,7 +38,7 @@ class HttpServer
      */
     public function use($middleware) : void
     {
-        if ($middleware instanceof MiddlewareInterface) {
+        if (!$middleware instanceof MiddlewareInterface) {
             if (!is_callable($middleware)) {
                 throw ServerException::forInvalidMiddleware($middleware);
             }

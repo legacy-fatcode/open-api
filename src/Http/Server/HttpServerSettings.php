@@ -3,6 +3,7 @@
 namespace FatCode\OpenApi\Http\Server;
 
 use FatCode\OpenApi\Exception\Http\ServerException;
+use function sys_get_temp_dir;
 
 class HttpServerSettings
 {
@@ -21,6 +22,9 @@ class HttpServerSettings
     {
         $this->address = $address;
         $this->port = $port;
+        $this->pidFile = sys_get_temp_dir() . '/open-api-server.pid';
+        $this->compressionLevel = 0;
+        $this->dispatchMode = DispatchMode::POLLING();
     }
 
     /**

@@ -3,8 +3,8 @@
 namespace FatCode\OpenApi\Http;
 
 use FatCode\OpenApi\Exception\Http\HttpException;
+use InvalidArgumentException;
 use Psr\Http\Message\ServerRequestInterface;
-use Psr\Http\Message\StreamInterface;
 use Psr\Http\Message\UploadedFileInterface;
 
 class ServerRequest extends Request implements ServerRequestInterface
@@ -39,21 +39,9 @@ class ServerRequest extends Request implements ServerRequestInterface
      */
     private $uploadedFiles;
 
-
-    /**
-     * Server request constructor.
-     *
-     * @param array $serverParams Server parameters, typically from $_SERVER
-     * @param array $uploadedFiles Upload file information, a tree of UploadedFiles
-     * @param null|string $uri URI for the request, if any.
-     * @param null|string $method HTTP method for the request, if any.
-     * @param string|resource|StreamInterface $body Messages body, if any.
-     * @param array $headers Headers for the message, if any.
-     * @throws HttpException for any invalid value.
-     */
     public function __construct(
-        string $uri = null,
-        string $method = self::METHOD_GET,
+        $uri = null,
+        HttpMethod $method = null,
         $body = 'php://input',
         array $headers = [],
         array $uploadedFiles = [],
@@ -67,7 +55,7 @@ class ServerRequest extends Request implements ServerRequestInterface
         $this->parseBody();
     }
 
-    private function parseBody(): void
+    private function parseBody() : void
     {
         $contentType = $this->getHeader('Content-Type')[0] ?? '';
 
@@ -92,7 +80,7 @@ class ServerRequest extends Request implements ServerRequestInterface
     /**
      * {@inheritdoc}
      */
-    public function getServerParams(): array
+    public function getServerParams() : array
     {
         return $this->serverParams;
     }
@@ -100,7 +88,7 @@ class ServerRequest extends Request implements ServerRequestInterface
     /**
      * {@inheritdoc}
      */
-    public function getUploadedFiles(): array
+    public function getUploadedFiles() : array
     {
         return $this->uploadedFiles;
     }
@@ -108,7 +96,7 @@ class ServerRequest extends Request implements ServerRequestInterface
     /**
      * {@inheritdoc}
      */
-    public function withUploadedFiles(array $uploadedFiles)
+    public function withUploadedFiles(array $uploadedFiles) : self
     {
         $this->validateUploadedFiles($uploadedFiles);
         $new = clone $this;
@@ -120,7 +108,7 @@ class ServerRequest extends Request implements ServerRequestInterface
     /**
      * {@inheritdoc}
      */
-    public function getCookieParams(): array
+    public function getCookieParams() : array
     {
         return $this->cookieParams;
     }
@@ -128,7 +116,7 @@ class ServerRequest extends Request implements ServerRequestInterface
     /**
      * {@inheritdoc}
      */
-    public function withCookieParams(array $cookies)
+    public function withCookieParams(array $cookies) : self
     {
         $new = clone $this;
         $new->cookieParams = $cookies;
@@ -138,7 +126,7 @@ class ServerRequest extends Request implements ServerRequestInterface
     /**
      * {@inheritdoc}
      */
-    public function getQueryParams(): array
+    public function getQueryParams() : array
     {
         return $this->queryParams;
     }
@@ -146,7 +134,7 @@ class ServerRequest extends Request implements ServerRequestInterface
     /**
      * {@inheritdoc}
      */
-    public function withQueryParams(array $query)
+    public function withQueryParams(array $query) : self
     {
         $new = clone $this;
         $new->queryParams = $query;
@@ -165,7 +153,7 @@ class ServerRequest extends Request implements ServerRequestInterface
     /**
      * {@inheritdoc}
      */
-    public function withParsedBody($data)
+    public function withParsedBody($data) : self
     {
         $new = clone $this;
         $new->parsedBody = $data;
@@ -175,7 +163,7 @@ class ServerRequest extends Request implements ServerRequestInterface
     /**
      * {@inheritdoc}
      */
-    public function getAttributes(): array
+    public function getAttributes() : array
     {
         return $this->attributes;
     }
@@ -195,17 +183,18 @@ class ServerRequest extends Request implements ServerRequestInterface
     /**
      * {@inheritdoc}
      */
-    public function withAttribute($attribute, $value)
+    public function withAttribute($attribute, $value) : self
     {
         $new = clone $this;
         $new->attributes[$attribute] = $value;
+
         return $new;
     }
 
     /**
      * {@inheritdoc}
      */
-    public function withoutAttribute($attribute)
+    public function withoutAttribute($attribute) : self
     {
         if (!isset($this->attributes[$attribute])) {
             return clone $this;
@@ -224,7 +213,7 @@ class ServerRequest extends Request implements ServerRequestInterface
      * @param array $attributes
      * @return self
      */
-    public function withAttributes(array $attributes): ServerRequest
+    public function withAttributes(array $attributes) : self
     {
         $new = clone $this;
         $new->attributes = $attributes;
@@ -237,7 +226,7 @@ class ServerRequest extends Request implements ServerRequestInterface
      * @param array $uploadedFiles
      * @throws HttpException if any leaf is not an UploadedFileInterface instance.
      */
-    private function validateUploadedFiles(array $uploadedFiles): void
+    private function validateUploadedFiles(array $uploadedFiles) : void
     {
         foreach ($uploadedFiles as $file) {
             if (is_array($file)) {
@@ -245,8 +234,8 @@ class ServerRequest extends Request implements ServerRequestInterface
                 continue;
             }
 
-            if (! $file instanceof UploadedFileInterface) {
-                throw new HttpException('Invalid leaf in uploaded files structure');
+            if (!$file instanceof UploadedFileInterface) {
+                throw new InvalidArgumentException('Invalid leaf in uploaded files structure');
             }
         }
     }

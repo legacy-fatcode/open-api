@@ -1,7 +1,7 @@
 <?php
 require_once '../../vendor/autoload.php';
 
-use FatCode\OpenApi\Http\Server;
+use FatCode\OpenApi\Http\HttpServer;
 use FatCode\OpenApi\Http\Router;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\ResponseInterface;
@@ -15,6 +15,6 @@ $router->post('/{hello}', function (ServerRequestInterface $request) : ResponseI
     return new Response(201, 'New Jakub!');
 });
 
-$server = new Server();
+$server = new HttpServer();
 $server->use($router);
 $server->start('0.0.0.0', 8080);

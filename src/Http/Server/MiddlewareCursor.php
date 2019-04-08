@@ -1,8 +1,7 @@
 <?php declare(strict_types=1);
 
-namespace Igni\Network\Http\Middleware;
+namespace FatCode\OpenApi\Http\Server;
 
-use FatCode\OpenApi\Http\Server\OnRequestListener;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
@@ -11,7 +10,7 @@ use SplQueue;
 /**
  * Iterates a queue of middleware and executes them.
  */
-final class RequestPipelineCursor implements RequestHandlerInterface
+final class MiddlewareCursor implements RequestHandlerInterface
 {
     /**
      * @var RequestHandlerInterface

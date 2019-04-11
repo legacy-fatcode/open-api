@@ -24,7 +24,7 @@ class PhpFile
         return $this->getTokens()[$cursor];
     }
 
-    public function endsAt(): int
+    public function countTokens(): int
     {
         return count($this->getTokens());
     }

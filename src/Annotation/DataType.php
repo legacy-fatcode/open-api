@@ -7,7 +7,8 @@ use FatCode\Annotation\Enum;
 trait DataType
 {
     /**
-     * Property type, can be one of: array, integer, number, string, boolean. If none provided docblock will be read to retrieve possible map.
+     * Property type, can be one of: array, integer, number, string, boolean.
+     * If none provided docblock will be read to retrieve possible map.
      * @var string
      * @Enum("integer", "number", "string", "boolean", "object")
      * @see https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.2.md#data-types
@@ -111,4 +112,10 @@ trait DataType
      * @var Type
      */
     public $items;
+
+    /**
+     * @var array
+     * @see https://json-schema.org/understanding-json-schema/reference/generic.html#enumerated-values
+     */
+    public $enum;
 }

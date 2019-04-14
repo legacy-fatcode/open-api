@@ -14,14 +14,15 @@ class Property
     use DataType;
 
     /**
-     * The name of the parameter. Parameter names are case sensitive. If none provided, annotated field name will get assigned.
+     * The name of the parameter. Parameter names are case sensitive.
+     * If none provided, annotated field name will get assigned.
      * @var string
-     * @Required
      */
     public $name;
 
     /**
-     * A brief description of the parameter. This could contain examples of use. CommonMark syntax MAY be used for rich text representation.
+     * A brief description of the parameter. This could contain examples of use.
+     * CommonMark syntax MAY be used for rich text representation.
      * @var string
      */
     public $description;

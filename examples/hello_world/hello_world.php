@@ -30,13 +30,5 @@ namespace App\HelloWorld {
             return new Response('Hello world');
         }
     }
-
-    function dupa() {
-
-    }
-
-    function dupa2() {
-
-    }
 # Run with `open-api run development`
 }

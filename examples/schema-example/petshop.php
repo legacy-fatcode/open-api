@@ -69,6 +69,31 @@ class PetSchema
     {
         return true;
     }
+
+    public function getName()
+    {
+        return $this->name;
+    }
+}
+
+class Pet
+{
+    protected $name;
+    protected $type;
+    protected $age;
+    protected $weight;
+}
+
+class DogPet extends Pet
+{
+    private $id;
+
+    public function __construct(string $id, string $name)
+    {
+        $this->type = 'doggo';
+        $this->id = $id;
+        $this->name = $name;
+    }
 }
 
 /**
@@ -84,5 +109,5 @@ class PetSchema
  */
 function createPet(ServerRequestInterface $request, PetSchema $petSchema) : ResponseInterface
 {
-    return new Response(HttpStatusCode::OK, $petSchema);
+    return new Response(HttpStatusCode::OK, new DogPet($petSchema->getName()));
 }

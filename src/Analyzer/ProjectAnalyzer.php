@@ -3,6 +3,7 @@
 namespace FatCode\OpenApi\Analyzer;
 
 use FatCode\OpenApi\Exception\ProjectAnalyzerException;
+use FatCode\OpenApi\File\PhpFile;
 use RecursiveDirectoryIterator;
 use RecursiveIteratorIterator;
 use RegexIterator;
@@ -30,8 +31,8 @@ class ProjectAnalyzer
         $phpFiles = new RegexIterator($allFiles, '/.*\.php$/i');
         /** @var \SplFileInfo $file */
         foreach ($phpFiles as $file) {
-            $fileAnalyzer = new FileAnalyzer($file->getRealPath());
-            $fileAnalyzer->analyze();
+            $fileAnalyzer = new FileAnalyzer();
+            $fileAnalyzer->analyze(new PhpFile($file->getRealPath()));
         }
     }
 

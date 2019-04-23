@@ -4,45 +4,40 @@ namespace FatCode\OpenApi\Analyzer\Parser;
 
 use FatCode\OpenApi\File\PhpFile;
 
+use function is_array;
+
 class ClassParser implements PhpFileParser
 {
+    use NamespaceParser;
+
+    private $currentNamespace = '';
+
     public function parse(PhpFile $file) : array
     {
         $classes = [];
 
-        for ($cursor = 0; $cursor < $file->countTokens(); $cursor++) {
-            $token = $file->getTokenAt($cursor);
+        foreach ($file as $index => $token) {
+            if (is_array($token) && $token[0] === T_NAMESPACE) {
+                $this->currentNamespace = $this->parseNamespaceAt($file);
+            }
 
             if (!is_array($token) || $token[0] !== T_CLASS) {
                 continue;
             }
 
-            $classes[] = $this->parseClassAt($cursor, $file);
+            $classes[] = $this->currentNamespace . '\\' . $this->parseClassAt($file);
         }
 
         return $classes;
     }
 
-    private function parseClassAt(int $cursor, PhpFile $file): string
+    private function parseClassAt(PhpFile $file) : string
     {
-        $cursor = $this->seekCursorForToken(T_STRING, $cursor, $file);
-        return $file->getTokenAt($cursor)[1];
-    }
+        $file->seekToken(T_STRING);
+        $className = $file->current()[1];
+        $file->seekStartOfScope();
+        $file->skipScope();
 
-    private function seekCursorForToken(int $seekedToken, int $cursor, PhpFile $file) : int
-    {
-        while ($cursor++ < $file->countTokens()) {
-            $token = $file->getTokenAt($cursor);
-
-            if (!is_array($token)) {
-                continue;
-            }
-
-            if ($token[0] === $seekedToken) {
-                break;
-            }
-        }
-
-        return $cursor;
+        return $className;
     }
 }

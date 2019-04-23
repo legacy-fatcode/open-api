@@ -21,4 +21,9 @@ class ProjectAnalyzerException extends RuntimeException implements FatCodeRuntim
     {
         return new self("Passed file `{$filename}` is not valid php file.");
     }
+
+    public static function forInvalidNamespace() : self
+    {
+        return new self('Could not parse namespace.');
+    }
 }

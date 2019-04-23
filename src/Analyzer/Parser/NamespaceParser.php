@@ -2,33 +2,19 @@
 
 namespace FatCode\OpenApi\Analyzer\Parser;
 
+use FatCode\OpenApi\Exception\ProjectAnalyzerException;
 use FatCode\OpenApi\File\PhpFile;
 
-class NamespaceParser implements PhpFileParser
+use function is_array;
+
+trait NamespaceParser
 {
-    public function parse(PhpFile $file) : array
-    {
-        $namespaces = [];
-
-        for ($cursor = 0; $cursor < $file->countTokens(); $cursor++) {
-            $token = $file->getTokenAt($cursor);
-
-            if (!is_array($token) || $token[0] !== T_NAMESPACE) {
-                continue;
-            }
-
-            $namespaces[] = $this->parseNamespaceAt($cursor, $file);
-        }
-
-        return $namespaces;
-    }
-
-    private function parseNamespaceAt(int $cursor, PhpFile $file): string
+    protected function parseNamespaceAt(PhpFile $file) : string
     {
         $namespace = '';
-
-        while ($cursor++ < $file->countTokens()) {
-            $token = $file->getTokenAt($cursor);
+        while ($file->valid()) {
+            $file->next();
+            $token = $file->current();
 
             if (is_array($token) && ($token[0] === T_STRING || $token[0] === T_NS_SEPARATOR)) {
                 $namespace .= $token[1];
@@ -38,5 +24,7 @@ class NamespaceParser implements PhpFileParser
                 return $namespace;
             }
         }
+
+        throw ProjectAnalyzerException::forInvalidNamespace();
     }
 }

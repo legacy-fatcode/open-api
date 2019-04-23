@@ -2,6 +2,9 @@
 
 namespace FatCode\OpenApi\Analyzer;
 
+use FatCode\OpenApi\Analyzer\Parser\ClassParser;
+use FatCode\OpenApi\Analyzer\Parser\FunctionParser;
+use FatCode\OpenApi\Analyzer\Parser\NamespaceParser;
 use FatCode\OpenApi\Exception\ProjectAnalyzerException;
 use FatCode\OpenApi\File\PhpFile;
 use RecursiveDirectoryIterator;
@@ -15,14 +18,20 @@ use RegexIterator;
 class ProjectAnalyzer
 {
     private $directory;
+    private $fileAnalyzer;
 
-    public function __construct(string $directory)
+    public function __construct(string $directory, FileAnalyzer $fileAnalyzer)
     {
         if (!is_dir($directory)) {
             throw ProjectAnalyzerException::forInvalidDirectory($directory);
         }
 
         $this->directory = new RecursiveDirectoryIterator($directory);
+        $this->fileAnalyzer = $fileAnalyzer ?? new FileAnalyzer(
+            new NamespaceParser(),
+            new ClassParser(),
+            new FunctionParser()
+        );
     }
 
     public function analyze() : void
@@ -31,12 +40,7 @@ class ProjectAnalyzer
         $phpFiles = new RegexIterator($allFiles, '/.*\.php$/i');
         /** @var \SplFileInfo $file */
         foreach ($phpFiles as $file) {
-            $fileAnalyzer = new FileAnalyzer();
-            $fileAnalyzer->analyze(new PhpFile($file->getRealPath()));
+            $this->fileAnalyzer->analyze(new PhpFile($file->getRealPath()));
         }
-    }
-
-    public function readFromFile(string $filename) : void
-    {
     }
 }

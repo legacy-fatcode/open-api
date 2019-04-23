@@ -15,8 +15,11 @@ class FileAnalyzer
 
     private $functionParser;
 
-    public function __construct(NamespaceParser $namespaceParser, ClassParser $classParser, FunctionParser $functionParser)
-    {
+    public function __construct(
+        NamespaceParser $namespaceParser,
+        ClassParser $classParser,
+        FunctionParser $functionParser
+    ) {
         $this->namespaceParser = $namespaceParser;
         $this->classParser = $classParser;
         $this->functionParser = $functionParser;

@@ -8,16 +8,13 @@ class PhpFileInfo
 {
     private $file;
 
-    private $namespaces;
-
     private $classes;
 
     private $functions;
 
-    public function __construct(PhpFile $file, array $namespaces, array $classes, array $functions)
+    public function __construct(PhpFile $file, array $classes, array $functions)
     {
         $this->file = $file;
-        $this->namespaces = $namespaces;
         $this->classes = $classes;
         $this->functions = $functions;
     }
@@ -25,11 +22,6 @@ class PhpFileInfo
     public function getFile(): PhpFile
     {
         return $this->file;
-    }
-
-    public function getNamespaces() : array
-    {
-        return $this->namespaces;
     }
 
     public function getClasses() : array

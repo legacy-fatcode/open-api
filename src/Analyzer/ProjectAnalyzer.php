@@ -4,7 +4,6 @@ namespace FatCode\OpenApi\Analyzer;
 
 use FatCode\OpenApi\Analyzer\Parser\ClassParser;
 use FatCode\OpenApi\Analyzer\Parser\FunctionParser;
-use FatCode\OpenApi\Analyzer\Parser\NamespaceParser;
 use FatCode\OpenApi\Exception\ProjectAnalyzerException;
 use FatCode\OpenApi\File\PhpFile;
 use RecursiveDirectoryIterator;
@@ -20,7 +19,7 @@ class ProjectAnalyzer
     private $directory;
     private $fileAnalyzer;
 
-    public function __construct(string $directory, FileAnalyzer $fileAnalyzer)
+    public function __construct(string $directory, FileAnalyzer $fileAnalyzer = null)
     {
         if (!is_dir($directory)) {
             throw ProjectAnalyzerException::forInvalidDirectory($directory);
@@ -28,7 +27,6 @@ class ProjectAnalyzer
 
         $this->directory = new RecursiveDirectoryIterator($directory);
         $this->fileAnalyzer = $fileAnalyzer ?? new FileAnalyzer(
-            new NamespaceParser(),
             new ClassParser(),
             new FunctionParser()
         );

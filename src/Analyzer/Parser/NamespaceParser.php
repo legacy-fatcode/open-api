@@ -9,7 +9,7 @@ use function is_array;
 
 trait NamespaceParser
 {
-    protected function parseNamespaceAt(PhpFile $file) : string
+    protected function parseNamespace(PhpFile $file) : string
     {
         $namespace = '';
         while ($file->valid()) {

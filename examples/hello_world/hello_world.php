@@ -31,12 +31,27 @@ namespace App\HelloWorld {
         }
     }
 
-    function dupa() {
+    /**
+     * @Api\Schema(
+     *     type="object"
+     * )
+     */
+    class Greeter
+    {
 
     }
 
-    function dupa2() {
+    /**
+     * @Api\Operation\Get(
+     *     description="List all pets",
+     *     route="/pets",
+     *     responses=[
+     *         @Api\Response(schema=@Api\Reference(Greeter::class))
+     *     ]
+     * )
+     */
+    function sayHello() {
 
     }
-# Run with `open-api run development`
+    # Run with `open-api run development`
 }

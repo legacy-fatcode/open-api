@@ -13,11 +13,11 @@ class FileAnalyzer
     private $functionParser;
 
     public function __construct(
-        ClassParser $classParser,
-        FunctionParser $functionParser
+        ClassParser $classParser = null,
+        FunctionParser $functionParser = null
     ) {
-        $this->classParser = $classParser;
-        $this->functionParser = $functionParser;
+        $this->classParser = $classParser ?? new ClassParser();
+        $this->functionParser = $functionParser ?? new FunctionParser();
     }
 
     public function analyze(PhpFile $file) : PhpFileInfo

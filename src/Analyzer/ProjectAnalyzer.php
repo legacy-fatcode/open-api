@@ -9,6 +9,7 @@ use FatCode\OpenApi\File\PhpFile;
 use RecursiveDirectoryIterator;
 use RecursiveIteratorIterator;
 use RegexIterator;
+use SplFileInfo;
 
 /**
  * Class ProjectAnalyser
@@ -36,7 +37,7 @@ class ProjectAnalyzer
     {
         $allFiles = new RecursiveIteratorIterator($this->directory);
         $phpFiles = new RegexIterator($allFiles, '/.*\.php$/i');
-        /** @var \SplFileInfo $file */
+        /** @var SplFileInfo $file */
         foreach ($phpFiles as $file) {
             $this->fileAnalyzer->analyze(new PhpFile($file->getRealPath()));
         }

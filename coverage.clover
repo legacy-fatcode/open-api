@@ -1,0 +1,546 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<coverage generated="1556440679">
+  <project timestamp="1556440679">
+    <package name="FatCode\OpenApi\Analyzer">
+      <file name="/Users/krac/Projects/fat-code/open-api/src/Analyzer/FileAnalyzer.php">
+        <class name="FatCode\OpenApi\Analyzer\FileAnalyzer" namespace="FatCode\OpenApi\Analyzer">
+          <metrics complexity="2" methods="2" coveredmethods="0" conditionals="0" coveredconditionals="0" statements="7" coveredstatements="0" elements="9" coveredelements="0"/>
+        </class>
+        <line num="15" type="method" name="__construct" visibility="public" complexity="1" crap="2.00" count="0"/>
+        <line num="19" type="stmt" count="0"/>
+        <line num="20" type="stmt" count="0"/>
+        <line num="21" type="stmt" count="0"/>
+        <line num="23" type="method" name="analyze" visibility="public" complexity="1" crap="2.00" count="0"/>
+        <line num="25" type="stmt" count="0"/>
+        <line num="26" type="stmt" count="0"/>
+        <line num="27" type="stmt" count="0"/>
+        <line num="28" type="stmt" count="0"/>
+        <metrics loc="31" ncloc="31" classes="1" methods="2" coveredmethods="0" conditionals="0" coveredconditionals="0" statements="7" coveredstatements="0" elements="9" coveredelements="0"/>
+      </file>
+      <file name="/Users/krac/Projects/fat-code/open-api/src/Analyzer/PhpFileInfo.php">
+        <class name="FatCode\OpenApi\Analyzer\PhpFileInfo" namespace="FatCode\OpenApi\Analyzer">
+          <metrics complexity="4" methods="4" coveredmethods="0" conditionals="0" coveredconditionals="0" statements="7" coveredstatements="0" elements="11" coveredelements="0"/>
+        </class>
+        <line num="15" type="method" name="__construct" visibility="public" complexity="1" crap="2.00" count="0"/>
+        <line num="17" type="stmt" count="0"/>
+        <line num="18" type="stmt" count="0"/>
+        <line num="19" type="stmt" count="0"/>
+        <line num="20" type="stmt" count="0"/>
+        <line num="22" type="method" name="getFile" visibility="public" complexity="1" crap="2.00" count="0"/>
+        <line num="24" type="stmt" count="0"/>
+        <line num="27" type="method" name="getClasses" visibility="public" complexity="1" crap="2.00" count="0"/>
+        <line num="29" type="stmt" count="0"/>
+        <line num="32" type="method" name="getFunctions" visibility="public" complexity="1" crap="2.00" count="0"/>
+        <line num="34" type="stmt" count="0"/>
+        <metrics loc="36" ncloc="36" classes="1" methods="4" coveredmethods="0" conditionals="0" coveredconditionals="0" statements="7" coveredstatements="0" elements="11" coveredelements="0"/>
+      </file>
+      <file name="/Users/krac/Projects/fat-code/open-api/src/Analyzer/ProjectAnalyzer.php">
+        <class name="FatCode\OpenApi\Analyzer\ProjectAnalyzer" namespace="FatCode\OpenApi\Analyzer" fullPackage="FatCode" package="FatCode">
+          <metrics complexity="4" methods="2" coveredmethods="0" conditionals="0" coveredconditionals="0" statements="12" coveredstatements="0" elements="14" coveredelements="0"/>
+        </class>
+        <line num="23" type="method" name="__construct" visibility="public" complexity="2" crap="6.00" count="0"/>
+        <line num="25" type="stmt" count="0"/>
+        <line num="26" type="stmt" count="0"/>
+        <line num="29" type="stmt" count="0"/>
+        <line num="30" type="stmt" count="0"/>
+        <line num="31" type="stmt" count="0"/>
+        <line num="32" type="stmt" count="0"/>
+        <line num="34" type="stmt" count="0"/>
+        <line num="36" type="method" name="analyze" visibility="public" complexity="2" crap="6.00" count="0"/>
+        <line num="38" type="stmt" count="0"/>
+        <line num="39" type="stmt" count="0"/>
+        <line num="41" type="stmt" count="0"/>
+        <line num="42" type="stmt" count="0"/>
+        <line num="44" type="stmt" count="0"/>
+        <metrics loc="45" ncloc="40" classes="1" methods="2" coveredmethods="0" conditionals="0" coveredconditionals="0" statements="12" coveredstatements="0" elements="14" coveredelements="0"/>
+      </file>
+    </package>
+    <package name="FatCode\OpenApi\Analyzer\Parser">
+      <file name="/Users/krac/Projects/fat-code/open-api/src/Analyzer/Parser/ClassParser.php">
+        <class name="FatCode\OpenApi\Analyzer\Parser\ClassParser" namespace="FatCode\OpenApi\Analyzer\Parser">
+          <metrics complexity="7" methods="2" coveredmethods="0" conditionals="0" coveredconditionals="0" statements="13" coveredstatements="0" elements="15" coveredelements="0"/>
+        </class>
+        <line num="19" type="method" name="parse" visibility="public" complexity="6" crap="42.00" count="0"/>
+        <line num="21" type="stmt" count="0"/>
+        <line num="23" type="stmt" count="0"/>
+        <line num="24" type="stmt" count="0"/>
+        <line num="25" type="stmt" count="0"/>
+        <line num="28" type="stmt" count="0"/>
+        <line num="29" type="stmt" count="0"/>
+        <line num="32" type="stmt" count="0"/>
+        <line num="35" type="stmt" count="0"/>
+        <line num="38" type="method" name="parseClass" visibility="private" complexity="1" crap="2.00" count="0"/>
+        <line num="40" type="stmt" count="0"/>
+        <line num="41" type="stmt" count="0"/>
+        <line num="42" type="stmt" count="0"/>
+        <line num="43" type="stmt" count="0"/>
+        <line num="45" type="stmt" count="0"/>
+        <metrics loc="47" ncloc="47" classes="1" methods="2" coveredmethods="0" conditionals="0" coveredconditionals="0" statements="13" coveredstatements="0" elements="15" coveredelements="0"/>
+      </file>
+      <file name="/Users/krac/Projects/fat-code/open-api/src/Analyzer/Parser/FunctionParser.php">
+        <class name="FatCode\OpenApi\Analyzer\Parser\FunctionParser" namespace="FatCode\OpenApi\Analyzer\Parser">
+          <metrics complexity="9" methods="2" coveredmethods="0" conditionals="0" coveredconditionals="0" statements="17" coveredstatements="0" elements="19" coveredelements="0"/>
+        </class>
+        <line num="19" type="method" name="parse" visibility="public" complexity="8" crap="72.00" count="0"/>
+        <line num="21" type="stmt" count="0"/>
+        <line num="23" type="stmt" count="0"/>
+        <line num="24" type="stmt" count="0"/>
+        <line num="25" type="stmt" count="0"/>
+        <line num="28" type="stmt" count="0"/>
+        <line num="29" type="stmt" count="0"/>
+        <line num="30" type="stmt" count="0"/>
+        <line num="31" type="stmt" count="0"/>
+        <line num="34" type="stmt" count="0"/>
+        <line num="35" type="stmt" count="0"/>
+        <line num="38" type="stmt" count="0"/>
+        <line num="41" type="stmt" count="0"/>
+        <line num="44" type="method" name="parseFunction" visibility="private" complexity="1" crap="2.00" count="0"/>
+        <line num="46" type="stmt" count="0"/>
+        <line num="47" type="stmt" count="0"/>
+        <line num="48" type="stmt" count="0"/>
+        <line num="49" type="stmt" count="0"/>
+        <line num="51" type="stmt" count="0"/>
+        <metrics loc="53" ncloc="53" classes="1" methods="2" coveredmethods="0" conditionals="0" coveredconditionals="0" statements="17" coveredstatements="0" elements="19" coveredelements="0"/>
+      </file>
+      <file name="/Users/krac/Projects/fat-code/open-api/src/Analyzer/Parser/NamespaceParser.php">
+        <class name="NamespaceParser" namespace="FatCode\OpenApi\Analyzer\Parser">
+          <metrics complexity="7" methods="1" coveredmethods="0" conditionals="0" coveredconditionals="0" statements="9" coveredstatements="0" elements="10" coveredelements="0"/>
+        </class>
+        <line num="12" type="method" name="parseNamespace" visibility="protected" complexity="7" crap="56.00" count="0"/>
+        <line num="14" type="stmt" count="0"/>
+        <line num="15" type="stmt" count="0"/>
+        <line num="16" type="stmt" count="0"/>
+        <line num="17" type="stmt" count="0"/>
+        <line num="19" type="stmt" count="0"/>
+        <line num="20" type="stmt" count="0"/>
+        <line num="23" type="stmt" count="0"/>
+        <line num="24" type="stmt" count="0"/>
+        <line num="28" type="stmt" count="0"/>
+        <metrics loc="30" ncloc="28" classes="1" methods="1" coveredmethods="0" conditionals="0" coveredconditionals="0" statements="9" coveredstatements="0" elements="10" coveredelements="0"/>
+      </file>
+    </package>
+    <file name="/Users/krac/Projects/fat-code/open-api/src/Analyzer/Parser/PhpFileParser.php">
+      <metrics loc="9" ncloc="9" classes="0" methods="0" coveredmethods="0" conditionals="0" coveredconditionals="0" statements="0" coveredstatements="0" elements="0" coveredelements="0"/>
+    </file>
+    <package name="FatCode\OpenApi\Annotation">
+      <file name="/Users/krac/Projects/fat-code/open-api/src/Annotation/Application.php">
+        <class name="FatCode\OpenApi\Annotation\Application" namespace="FatCode\OpenApi\Annotation">
+          <metrics complexity="0" methods="0" coveredmethods="0" conditionals="0" coveredconditionals="0" statements="0" coveredstatements="0" elements="0" coveredelements="0"/>
+        </class>
+        <metrics loc="76" ncloc="24" classes="0" methods="0" coveredmethods="0" conditionals="0" coveredconditionals="0" statements="0" coveredstatements="0" elements="0" coveredelements="0"/>
+      </file>
+      <file name="/Users/krac/Projects/fat-code/open-api/src/Annotation/Content.php">
+        <class name="FatCode\OpenApi\Annotation\Content" namespace="FatCode\OpenApi\Annotation">
+          <metrics complexity="0" methods="0" coveredmethods="0" conditionals="0" coveredconditionals="0" statements="0" coveredstatements="0" elements="0" coveredelements="0"/>
+        </class>
+        <metrics loc="13" ncloc="9" classes="0" methods="0" coveredmethods="0" conditionals="0" coveredconditionals="0" statements="0" coveredstatements="0" elements="0" coveredelements="0"/>
+      </file>
+      <file name="/Users/krac/Projects/fat-code/open-api/src/Annotation/DataType.php">
+        <class name="DataType" namespace="FatCode\OpenApi\Annotation">
+          <metrics complexity="0" methods="0" coveredmethods="0" conditionals="0" coveredconditionals="0" statements="0" coveredstatements="0" elements="0" coveredelements="0"/>
+        </class>
+        <metrics loc="114" ncloc="36" classes="0" methods="0" coveredmethods="0" conditionals="0" coveredconditionals="0" statements="0" coveredstatements="0" elements="0" coveredelements="0"/>
+      </file>
+      <file name="/Users/krac/Projects/fat-code/open-api/src/Annotation/Example.php">
+        <class name="FatCode\OpenApi\Annotation\Example" namespace="FatCode\OpenApi\Annotation">
+          <metrics complexity="0" methods="0" coveredmethods="0" conditionals="0" coveredconditionals="0" statements="0" coveredstatements="0" elements="0" coveredelements="0"/>
+        </class>
+        <metrics loc="41" ncloc="18" classes="0" methods="0" coveredmethods="0" conditionals="0" coveredconditionals="0" statements="0" coveredstatements="0" elements="0" coveredelements="0"/>
+      </file>
+      <file name="/Users/krac/Projects/fat-code/open-api/src/Annotation/Header.php">
+        <class name="FatCode\OpenApi\Annotation\Header" namespace="FatCode\OpenApi\Annotation">
+          <metrics complexity="0" methods="0" coveredmethods="0" conditionals="0" coveredconditionals="0" statements="0" coveredstatements="0" elements="0" coveredelements="0"/>
+        </class>
+        <metrics loc="14" ncloc="10" classes="0" methods="0" coveredmethods="0" conditionals="0" coveredconditionals="0" statements="0" coveredstatements="0" elements="0" coveredelements="0"/>
+      </file>
+      <file name="/Users/krac/Projects/fat-code/open-api/src/Annotation/Link.php">
+        <class name="FatCode\OpenApi\Annotation\Link" namespace="FatCode\OpenApi\Annotation">
+          <metrics complexity="0" methods="0" coveredmethods="0" conditionals="0" coveredconditionals="0" statements="0" coveredstatements="0" elements="0" coveredelements="0"/>
+        </class>
+        <metrics loc="35" ncloc="16" classes="0" methods="0" coveredmethods="0" conditionals="0" coveredconditionals="0" statements="0" coveredstatements="0" elements="0" coveredelements="0"/>
+      </file>
+      <file name="/Users/krac/Projects/fat-code/open-api/src/Annotation/Parameter.php">
+        <class name="FatCode\OpenApi\Annotation\Parameter" namespace="FatCode\OpenApi\Annotation">
+          <metrics complexity="0" methods="0" coveredmethods="0" conditionals="0" coveredconditionals="0" statements="0" coveredstatements="0" elements="0" coveredelements="0"/>
+        </class>
+        <metrics loc="67" ncloc="26" classes="0" methods="0" coveredmethods="0" conditionals="0" coveredconditionals="0" statements="0" coveredstatements="0" elements="0" coveredelements="0"/>
+      </file>
+      <file name="/Users/krac/Projects/fat-code/open-api/src/Annotation/PathItem.php">
+        <class name="FatCode\OpenApi\Annotation\PathItem" namespace="FatCode\OpenApi\Annotation">
+          <metrics complexity="0" methods="0" coveredmethods="0" conditionals="0" coveredconditionals="0" statements="0" coveredstatements="0" elements="0" coveredelements="0"/>
+        </class>
+        <metrics loc="84" ncloc="33" classes="0" methods="0" coveredmethods="0" conditionals="0" coveredconditionals="0" statements="0" coveredstatements="0" elements="0" coveredelements="0"/>
+      </file>
+      <file name="/Users/krac/Projects/fat-code/open-api/src/Annotation/Property.php">
+        <class name="FatCode\OpenApi\Annotation\Property" namespace="FatCode\OpenApi\Annotation">
+          <metrics complexity="0" methods="0" coveredmethods="0" conditionals="0" coveredconditionals="0" statements="0" coveredstatements="0" elements="0" coveredelements="0"/>
+        </class>
+        <metrics loc="35" ncloc="16" classes="0" methods="0" coveredmethods="0" conditionals="0" coveredconditionals="0" statements="0" coveredstatements="0" elements="0" coveredelements="0"/>
+      </file>
+      <file name="/Users/krac/Projects/fat-code/open-api/src/Annotation/Reference.php">
+        <class name="FatCode\OpenApi\Annotation\Reference" namespace="FatCode\OpenApi\Annotation">
+          <metrics complexity="0" methods="0" coveredmethods="0" conditionals="0" coveredconditionals="0" statements="0" coveredstatements="0" elements="0" coveredelements="0"/>
+        </class>
+        <metrics loc="18" ncloc="10" classes="0" methods="0" coveredmethods="0" conditionals="0" coveredconditionals="0" statements="0" coveredstatements="0" elements="0" coveredelements="0"/>
+      </file>
+      <file name="/Users/krac/Projects/fat-code/open-api/src/Annotation/Request.php">
+        <class name="FatCode\OpenApi\Annotation\Request" namespace="FatCode\OpenApi\Annotation">
+          <metrics complexity="0" methods="0" coveredmethods="0" conditionals="0" coveredconditionals="0" statements="0" coveredstatements="0" elements="0" coveredelements="0"/>
+        </class>
+        <metrics loc="36" ncloc="14" classes="0" methods="0" coveredmethods="0" conditionals="0" coveredconditionals="0" statements="0" coveredstatements="0" elements="0" coveredelements="0"/>
+      </file>
+      <file name="/Users/krac/Projects/fat-code/open-api/src/Annotation/Response.php">
+        <class name="FatCode\OpenApi\Annotation\Response" namespace="FatCode\OpenApi\Annotation">
+          <metrics complexity="0" methods="0" coveredmethods="0" conditionals="0" coveredconditionals="0" statements="0" coveredstatements="0" elements="0" coveredelements="0"/>
+        </class>
+        <metrics loc="42" ncloc="18" classes="0" methods="0" coveredmethods="0" conditionals="0" coveredconditionals="0" statements="0" coveredstatements="0" elements="0" coveredelements="0"/>
+      </file>
+      <file name="/Users/krac/Projects/fat-code/open-api/src/Annotation/Schema.php">
+        <class name="FatCode\OpenApi\Annotation\Schema" namespace="FatCode\OpenApi\Annotation">
+          <metrics complexity="0" methods="0" coveredmethods="0" conditionals="0" coveredconditionals="0" statements="0" coveredstatements="0" elements="0" coveredelements="0"/>
+        </class>
+        <metrics loc="35" ncloc="16" classes="0" methods="0" coveredmethods="0" conditionals="0" coveredconditionals="0" statements="0" coveredstatements="0" elements="0" coveredelements="0"/>
+      </file>
+      <file name="/Users/krac/Projects/fat-code/open-api/src/Annotation/Server.php">
+        <class name="FatCode\OpenApi\Annotation\Server" namespace="FatCode\OpenApi\Annotation">
+          <metrics complexity="1" methods="1" coveredmethods="0" conditionals="0" coveredconditionals="0" statements="1" coveredstatements="0" elements="2" coveredelements="0"/>
+        </class>
+        <line num="54" type="method" name="getUrl" visibility="public" complexity="1" crap="2.00" count="0"/>
+        <line num="56" type="stmt" count="0"/>
+        <metrics loc="58" ncloc="26" classes="1" methods="1" coveredmethods="0" conditionals="0" coveredconditionals="0" statements="1" coveredstatements="0" elements="2" coveredelements="0"/>
+      </file>
+    </package>
+    <package name="FatCode\OpenApi\Annotation\Info">
+      <file name="/Users/krac/Projects/fat-code/open-api/src/Annotation/Info/Contact.php">
+        <class name="FatCode\OpenApi\Annotation\Info\Contact" namespace="FatCode\OpenApi\Annotation\Info">
+          <metrics complexity="1" methods="1" coveredmethods="0" conditionals="0" coveredconditionals="0" statements="1" coveredstatements="0" elements="2" coveredelements="0"/>
+        </class>
+        <line num="31" type="method" name="getRequiredParameters" visibility="protected" complexity="1" crap="2.00" count="0"/>
+        <line num="33" type="stmt" count="0"/>
+        <metrics loc="35" ncloc="19" classes="1" methods="1" coveredmethods="0" conditionals="0" coveredconditionals="0" statements="1" coveredstatements="0" elements="2" coveredelements="0"/>
+      </file>
+      <file name="/Users/krac/Projects/fat-code/open-api/src/Annotation/Info/License.php">
+        <class name="FatCode\OpenApi\Annotation\Info\License" namespace="FatCode\OpenApi\Annotation\Info">
+          <metrics complexity="1" methods="1" coveredmethods="0" conditionals="0" coveredconditionals="0" statements="1" coveredstatements="0" elements="2" coveredelements="0"/>
+        </class>
+        <line num="25" type="method" name="getRequiredParameters" visibility="protected" complexity="1" crap="2.00" count="0"/>
+        <line num="27" type="stmt" count="0"/>
+        <metrics loc="29" ncloc="17" classes="1" methods="1" coveredmethods="0" conditionals="0" coveredconditionals="0" statements="1" coveredstatements="0" elements="2" coveredelements="0"/>
+      </file>
+    </package>
+    <package name="FatCode\OpenApi\Annotation\PathItem">
+      <file name="/Users/krac/Projects/fat-code/open-api/src/Annotation/PathItem/CookieParameter.php">
+        <class name="FatCode\OpenApi\Annotation\PathItem\CookieParameter" namespace="FatCode\OpenApi\Annotation\PathItem">
+          <metrics complexity="0" methods="0" coveredmethods="0" conditionals="0" coveredconditionals="0" statements="0" coveredstatements="0" elements="0" coveredelements="0"/>
+        </class>
+        <metrics loc="15" ncloc="11" classes="0" methods="0" coveredmethods="0" conditionals="0" coveredconditionals="0" statements="0" coveredstatements="0" elements="0" coveredelements="0"/>
+      </file>
+      <file name="/Users/krac/Projects/fat-code/open-api/src/Annotation/PathItem/Delete.php">
+        <class name="FatCode\OpenApi\Annotation\PathItem\Delete" namespace="FatCode\OpenApi\Annotation\PathItem">
+          <metrics complexity="0" methods="0" coveredmethods="0" conditionals="0" coveredconditionals="0" statements="0" coveredstatements="0" elements="0" coveredelements="0"/>
+        </class>
+        <metrics loc="14" ncloc="9" classes="0" methods="0" coveredmethods="0" conditionals="0" coveredconditionals="0" statements="0" coveredstatements="0" elements="0" coveredelements="0"/>
+      </file>
+      <file name="/Users/krac/Projects/fat-code/open-api/src/Annotation/PathItem/Get.php">
+        <class name="FatCode\OpenApi\Annotation\PathItem\Get" namespace="FatCode\OpenApi\Annotation\PathItem">
+          <metrics complexity="0" methods="0" coveredmethods="0" conditionals="0" coveredconditionals="0" statements="0" coveredstatements="0" elements="0" coveredelements="0"/>
+        </class>
+        <metrics loc="14" ncloc="9" classes="0" methods="0" coveredmethods="0" conditionals="0" coveredconditionals="0" statements="0" coveredstatements="0" elements="0" coveredelements="0"/>
+      </file>
+      <file name="/Users/krac/Projects/fat-code/open-api/src/Annotation/PathItem/Head.php">
+        <class name="FatCode\OpenApi\Annotation\PathItem\Head" namespace="FatCode\OpenApi\Annotation\PathItem">
+          <metrics complexity="0" methods="0" coveredmethods="0" conditionals="0" coveredconditionals="0" statements="0" coveredstatements="0" elements="0" coveredelements="0"/>
+        </class>
+        <metrics loc="14" ncloc="9" classes="0" methods="0" coveredmethods="0" conditionals="0" coveredconditionals="0" statements="0" coveredstatements="0" elements="0" coveredelements="0"/>
+      </file>
+      <file name="/Users/krac/Projects/fat-code/open-api/src/Annotation/PathItem/HeaderParameter.php">
+        <class name="FatCode\OpenApi\Annotation\PathItem\HeaderParameter" namespace="FatCode\OpenApi\Annotation\PathItem">
+          <metrics complexity="0" methods="0" coveredmethods="0" conditionals="0" coveredconditionals="0" statements="0" coveredstatements="0" elements="0" coveredelements="0"/>
+        </class>
+        <metrics loc="15" ncloc="11" classes="0" methods="0" coveredmethods="0" conditionals="0" coveredconditionals="0" statements="0" coveredstatements="0" elements="0" coveredelements="0"/>
+      </file>
+      <file name="/Users/krac/Projects/fat-code/open-api/src/Annotation/PathItem/Operation.php">
+        <class name="FatCode\OpenApi\Annotation\PathItem\Operation" namespace="FatCode\OpenApi\Annotation\PathItem">
+          <metrics complexity="0" methods="0" coveredmethods="0" conditionals="0" coveredconditionals="0" statements="0" coveredstatements="0" elements="0" coveredelements="0"/>
+        </class>
+        <metrics loc="79" ncloc="31" classes="0" methods="0" coveredmethods="0" conditionals="0" coveredconditionals="0" statements="0" coveredstatements="0" elements="0" coveredelements="0"/>
+      </file>
+      <file name="/Users/krac/Projects/fat-code/open-api/src/Annotation/PathItem/Options.php">
+        <class name="FatCode\OpenApi\Annotation\PathItem\Options" namespace="FatCode\OpenApi\Annotation\PathItem">
+          <metrics complexity="0" methods="0" coveredmethods="0" conditionals="0" coveredconditionals="0" statements="0" coveredstatements="0" elements="0" coveredelements="0"/>
+        </class>
+        <metrics loc="14" ncloc="9" classes="0" methods="0" coveredmethods="0" conditionals="0" coveredconditionals="0" statements="0" coveredstatements="0" elements="0" coveredelements="0"/>
+      </file>
+      <file name="/Users/krac/Projects/fat-code/open-api/src/Annotation/PathItem/Patch.php">
+        <class name="FatCode\OpenApi\Annotation\PathItem\Patch" namespace="FatCode\OpenApi\Annotation\PathItem">
+          <metrics complexity="0" methods="0" coveredmethods="0" conditionals="0" coveredconditionals="0" statements="0" coveredstatements="0" elements="0" coveredelements="0"/>
+        </class>
+        <metrics loc="14" ncloc="9" classes="0" methods="0" coveredmethods="0" conditionals="0" coveredconditionals="0" statements="0" coveredstatements="0" elements="0" coveredelements="0"/>
+      </file>
+      <file name="/Users/krac/Projects/fat-code/open-api/src/Annotation/PathItem/PathParameter.php">
+        <class name="FatCode\OpenApi\Annotation\PathItem\PathParameter" namespace="FatCode\OpenApi\Annotation\PathItem">
+          <metrics complexity="0" methods="0" coveredmethods="0" conditionals="0" coveredconditionals="0" statements="0" coveredstatements="0" elements="0" coveredelements="0"/>
+        </class>
+        <metrics loc="15" ncloc="11" classes="0" methods="0" coveredmethods="0" conditionals="0" coveredconditionals="0" statements="0" coveredstatements="0" elements="0" coveredelements="0"/>
+      </file>
+      <file name="/Users/krac/Projects/fat-code/open-api/src/Annotation/PathItem/Post.php">
+        <class name="FatCode\OpenApi\Annotation\PathItem\Post" namespace="FatCode\OpenApi\Annotation\PathItem">
+          <metrics complexity="0" methods="0" coveredmethods="0" conditionals="0" coveredconditionals="0" statements="0" coveredstatements="0" elements="0" coveredelements="0"/>
+        </class>
+        <metrics loc="14" ncloc="9" classes="0" methods="0" coveredmethods="0" conditionals="0" coveredconditionals="0" statements="0" coveredstatements="0" elements="0" coveredelements="0"/>
+      </file>
+      <file name="/Users/krac/Projects/fat-code/open-api/src/Annotation/PathItem/Put.php">
+        <class name="FatCode\OpenApi\Annotation\PathItem\Put" namespace="FatCode\OpenApi\Annotation\PathItem">
+          <metrics complexity="0" methods="0" coveredmethods="0" conditionals="0" coveredconditionals="0" statements="0" coveredstatements="0" elements="0" coveredelements="0"/>
+        </class>
+        <metrics loc="14" ncloc="9" classes="0" methods="0" coveredmethods="0" conditionals="0" coveredconditionals="0" statements="0" coveredstatements="0" elements="0" coveredelements="0"/>
+      </file>
+      <file name="/Users/krac/Projects/fat-code/open-api/src/Annotation/PathItem/QueryParameter.php">
+        <class name="FatCode\OpenApi\Annotation\PathItem\QueryParameter" namespace="FatCode\OpenApi\Annotation\PathItem">
+          <metrics complexity="0" methods="0" coveredmethods="0" conditionals="0" coveredconditionals="0" statements="0" coveredstatements="0" elements="0" coveredelements="0"/>
+        </class>
+        <metrics loc="15" ncloc="11" classes="0" methods="0" coveredmethods="0" conditionals="0" coveredconditionals="0" statements="0" coveredstatements="0" elements="0" coveredelements="0"/>
+      </file>
+      <file name="/Users/krac/Projects/fat-code/open-api/src/Annotation/PathItem/Trace.php">
+        <class name="FatCode\OpenApi\Annotation\PathItem\Trace" namespace="FatCode\OpenApi\Annotation\PathItem">
+          <metrics complexity="0" methods="0" coveredmethods="0" conditionals="0" coveredconditionals="0" statements="0" coveredstatements="0" elements="0" coveredelements="0"/>
+        </class>
+        <metrics loc="14" ncloc="9" classes="0" methods="0" coveredmethods="0" conditionals="0" coveredconditionals="0" statements="0" coveredstatements="0" elements="0" coveredelements="0"/>
+      </file>
+    </package>
+    <package name="FatCode\OpenApi\Annotation\SecurityScheme">
+      <file name="/Users/krac/Projects/fat-code/open-api/src/Annotation/SecurityScheme/ApiKey.php">
+        <class name="FatCode\OpenApi\Annotation\SecurityScheme\ApiKey" namespace="FatCode\OpenApi\Annotation\SecurityScheme">
+          <metrics complexity="2" methods="2" coveredmethods="0" conditionals="0" coveredconditionals="0" statements="3" coveredstatements="0" elements="5" coveredelements="0"/>
+        </class>
+        <line num="25" type="method" name="__construct" visibility="public" complexity="1" crap="2.00" count="0"/>
+        <line num="27" type="stmt" count="0"/>
+        <line num="28" type="stmt" count="0"/>
+        <line num="30" type="method" name="getRequiredParameters" visibility="protected" complexity="1" crap="2.00" count="0"/>
+        <line num="32" type="stmt" count="0"/>
+        <metrics loc="34" ncloc="22" classes="1" methods="2" coveredmethods="0" conditionals="0" coveredconditionals="0" statements="3" coveredstatements="0" elements="5" coveredelements="0"/>
+      </file>
+      <file name="/Users/krac/Projects/fat-code/open-api/src/Annotation/SecurityScheme/Http.php">
+        <class name="FatCode\OpenApi\Annotation\SecurityScheme\Http" namespace="FatCode\OpenApi\Annotation\SecurityScheme">
+          <metrics complexity="2" methods="2" coveredmethods="0" conditionals="0" coveredconditionals="0" statements="3" coveredstatements="0" elements="5" coveredelements="0"/>
+        </class>
+        <line num="28" type="method" name="__construct" visibility="public" complexity="1" crap="2.00" count="0"/>
+        <line num="30" type="stmt" count="0"/>
+        <line num="31" type="stmt" count="0"/>
+        <line num="33" type="method" name="getRequiredParameters" visibility="protected" complexity="1" crap="2.00" count="0"/>
+        <line num="35" type="stmt" count="0"/>
+        <metrics loc="37" ncloc="22" classes="1" methods="2" coveredmethods="0" conditionals="0" coveredconditionals="0" statements="3" coveredstatements="0" elements="5" coveredelements="0"/>
+      </file>
+      <file name="/Users/krac/Projects/fat-code/open-api/src/Annotation/SecurityScheme/OAuth2.php">
+        <class name="FatCode\OpenApi\Annotation\SecurityScheme\OAuth2" namespace="FatCode\OpenApi\Annotation\SecurityScheme">
+          <metrics complexity="2" methods="2" coveredmethods="0" conditionals="0" coveredconditionals="0" statements="3" coveredstatements="0" elements="5" coveredelements="0"/>
+        </class>
+        <line num="20" type="method" name="__construct" visibility="public" complexity="1" crap="2.00" count="0"/>
+        <line num="22" type="stmt" count="0"/>
+        <line num="23" type="stmt" count="0"/>
+        <line num="25" type="method" name="getRequiredParameters" visibility="protected" complexity="1" crap="2.00" count="0"/>
+        <line num="27" type="stmt" count="0"/>
+        <metrics loc="29" ncloc="20" classes="1" methods="2" coveredmethods="0" conditionals="0" coveredconditionals="0" statements="3" coveredstatements="0" elements="5" coveredelements="0"/>
+      </file>
+      <file name="/Users/krac/Projects/fat-code/open-api/src/Annotation/SecurityScheme/OAuthFlow.php">
+        <class name="FatCode\OpenApi\Annotation\SecurityScheme\OAuthFlow" namespace="FatCode\OpenApi\Annotation\SecurityScheme">
+          <metrics complexity="1" methods="1" coveredmethods="0" conditionals="0" coveredconditionals="0" statements="1" coveredstatements="0" elements="2" coveredelements="0"/>
+        </class>
+        <line num="34" type="method" name="getRequiredParameters" visibility="protected" complexity="1" crap="2.00" count="0"/>
+        <line num="36" type="stmt" count="0"/>
+        <metrics loc="38" ncloc="19" classes="1" methods="1" coveredmethods="0" conditionals="0" coveredconditionals="0" statements="1" coveredstatements="0" elements="2" coveredelements="0"/>
+      </file>
+      <file name="/Users/krac/Projects/fat-code/open-api/src/Annotation/SecurityScheme/OAuthFlows.php">
+        <class name="FatCode\OpenApi\Annotation\SecurityScheme\OAuthFlows" namespace="FatCode\OpenApi\Annotation\SecurityScheme">
+          <metrics complexity="1" methods="1" coveredmethods="0" conditionals="0" coveredconditionals="0" statements="1" coveredstatements="0" elements="2" coveredelements="0"/>
+        </class>
+        <line num="30" type="method" name="getRequiredParameters" visibility="protected" complexity="1" crap="2.00" count="0"/>
+        <line num="32" type="stmt" count="0"/>
+        <metrics loc="34" ncloc="19" classes="1" methods="1" coveredmethods="0" conditionals="0" coveredconditionals="0" statements="1" coveredstatements="0" elements="2" coveredelements="0"/>
+      </file>
+      <file name="/Users/krac/Projects/fat-code/open-api/src/Annotation/SecurityScheme/SecurityRequirement.php">
+        <class name="FatCode\OpenApi\Annotation\SecurityScheme\SecurityRequirement" namespace="FatCode\OpenApi\Annotation\SecurityScheme">
+          <metrics complexity="1" methods="1" coveredmethods="0" conditionals="0" coveredconditionals="0" statements="2" coveredstatements="0" elements="3" coveredelements="0"/>
+        </class>
+        <line num="14" type="method" name="__construct" visibility="public" complexity="1" crap="2.00" count="0"/>
+        <line num="16" type="stmt" count="0"/>
+        <line num="17" type="stmt" count="0"/>
+        <metrics loc="18" ncloc="13" classes="1" methods="1" coveredmethods="0" conditionals="0" coveredconditionals="0" statements="2" coveredstatements="0" elements="3" coveredelements="0"/>
+      </file>
+      <file name="/Users/krac/Projects/fat-code/open-api/src/Annotation/SecurityScheme/SecurityScheme.php">
+        <class name="FatCode\OpenApi\Annotation\SecurityScheme\SecurityScheme" namespace="FatCode\OpenApi\Annotation\SecurityScheme">
+          <metrics complexity="0" methods="0" coveredmethods="0" conditionals="0" coveredconditionals="0" statements="0" coveredstatements="0" elements="0" coveredelements="0"/>
+        </class>
+        <metrics loc="25" ncloc="12" classes="0" methods="0" coveredmethods="0" conditionals="0" coveredconditionals="0" statements="0" coveredstatements="0" elements="0" coveredelements="0"/>
+      </file>
+    </package>
+    <package name="FatCode\OpenApi\Annotation\Server">
+      <file name="/Users/krac/Projects/fat-code/open-api/src/Annotation/Server/Variable.php">
+        <class name="FatCode\OpenApi\Annotation\Server\Variable" namespace="FatCode\OpenApi\Annotation\Server">
+          <metrics complexity="0" methods="0" coveredmethods="0" conditionals="0" coveredconditionals="0" statements="0" coveredstatements="0" elements="0" coveredelements="0"/>
+        </class>
+        <metrics loc="42" ncloc="16" classes="0" methods="0" coveredmethods="0" conditionals="0" coveredconditionals="0" statements="0" coveredstatements="0" elements="0" coveredelements="0"/>
+      </file>
+    </package>
+    <file name="/Users/krac/Projects/fat-code/open-api/src/Annotation/Type.php">
+      <metrics loc="7" ncloc="7" classes="0" methods="0" coveredmethods="0" conditionals="0" coveredconditionals="0" statements="0" coveredstatements="0" elements="0" coveredelements="0"/>
+    </file>
+    <file name="/Users/krac/Projects/fat-code/open-api/src/Application/OnRequestListener.php">
+      <metrics loc="11" ncloc="11" classes="0" methods="0" coveredmethods="0" conditionals="0" coveredconditionals="0" statements="0" coveredstatements="0" elements="0" coveredelements="0"/>
+    </file>
+    <package name="FatCode\OpenApi\File">
+      <file name="/Users/krac/Projects/fat-code/open-api/src/File/FileException.php">
+        <class name="FatCode\OpenApi\File\FileException" namespace="FatCode\OpenApi\File">
+          <metrics complexity="2" methods="2" coveredmethods="0" conditionals="0" coveredconditionals="0" statements="2" coveredstatements="0" elements="4" coveredelements="0"/>
+        </class>
+        <line num="9" type="method" name="notReadable" visibility="public" complexity="1" crap="2.00" count="0"/>
+        <line num="11" type="stmt" count="0"/>
+        <line num="14" type="method" name="invalidFile" visibility="public" complexity="1" crap="2.00" count="0"/>
+        <line num="16" type="stmt" count="0"/>
+        <metrics loc="17" ncloc="17" classes="1" methods="2" coveredmethods="0" conditionals="0" coveredconditionals="0" statements="2" coveredstatements="0" elements="4" coveredelements="0"/>
+      </file>
+      <file name="/Users/krac/Projects/fat-code/open-api/src/File/PhpFile.php">
+        <class name="FatCode\OpenApi\File\PhpFile" namespace="FatCode\OpenApi\File">
+          <metrics complexity="32" methods="16" coveredmethods="0" conditionals="0" coveredconditionals="0" statements="60" coveredstatements="0" elements="76" coveredelements="0"/>
+        </class>
+        <line num="21" type="method" name="__construct" visibility="public" complexity="1" crap="2.00" count="0"/>
+        <line num="23" type="stmt" count="0"/>
+        <line num="24" type="stmt" count="0"/>
+        <line num="25" type="stmt" count="0"/>
+        <line num="27" type="method" name="current" visibility="public" complexity="1" crap="2.00" count="0"/>
+        <line num="29" type="stmt" count="0"/>
+        <line num="32" type="method" name="prev" visibility="public" complexity="1" crap="2.00" count="0"/>
+        <line num="34" type="stmt" count="0"/>
+        <line num="35" type="stmt" count="0"/>
+        <line num="37" type="method" name="next" visibility="public" complexity="1" crap="2.00" count="0"/>
+        <line num="39" type="stmt" count="0"/>
+        <line num="40" type="stmt" count="0"/>
+        <line num="42" type="method" name="key" visibility="public" complexity="1" crap="2.00" count="0"/>
+        <line num="44" type="stmt" count="0"/>
+        <line num="47" type="method" name="valid" visibility="public" complexity="2" crap="6.00" count="0"/>
+        <line num="49" type="stmt" count="0"/>
+        <line num="52" type="method" name="rewind" visibility="public" complexity="1" crap="2.00" count="0"/>
+        <line num="54" type="stmt" count="0"/>
+        <line num="55" type="stmt" count="0"/>
+        <line num="57" type="method" name="getCursor" visibility="public" complexity="1" crap="2.00" count="0"/>
+        <line num="59" type="stmt" count="0"/>
+        <line num="62" type="method" name="getTokens" visibility="public" complexity="1" crap="2.00" count="0"/>
+        <line num="64" type="stmt" count="0"/>
+        <line num="67" type="method" name="getTokenAt" visibility="public" complexity="1" crap="2.00" count="0"/>
+        <line num="69" type="stmt" count="0"/>
+        <line num="72" type="method" name="seekToken" visibility="public" complexity="4" crap="20.00" count="0"/>
+        <line num="74" type="stmt" count="0"/>
+        <line num="75" type="stmt" count="0"/>
+        <line num="77" type="stmt" count="0"/>
+        <line num="78" type="stmt" count="0"/>
+        <line num="81" type="stmt" count="0"/>
+        <line num="82" type="stmt" count="0"/>
+        <line num="84" type="stmt" count="0"/>
+        <line num="87" type="stmt" count="0"/>
+        <line num="90" type="method" name="seekStartOfScope" visibility="public" complexity="4" crap="20.00" count="0"/>
+        <line num="92" type="stmt" count="0"/>
+        <line num="93" type="stmt" count="0"/>
+        <line num="95" type="stmt" count="0"/>
+        <line num="96" type="stmt" count="0"/>
+        <line num="97" type="stmt" count="0"/>
+        <line num="100" type="stmt" count="0"/>
+        <line num="101" type="stmt" count="0"/>
+        <line num="103" type="stmt" count="0"/>
+        <line num="106" type="stmt" count="0"/>
+        <line num="109" type="method" name="skipScope" visibility="public" complexity="7" crap="56.00" count="0"/>
+        <line num="111" type="stmt" count="0"/>
+        <line num="112" type="stmt" count="0"/>
+        <line num="114" type="stmt" count="0"/>
+        <line num="115" type="stmt" count="0"/>
+        <line num="116" type="stmt" count="0"/>
+        <line num="118" type="stmt" count="0"/>
+        <line num="119" type="stmt" count="0"/>
+        <line num="120" type="stmt" count="0"/>
+        <line num="123" type="stmt" count="0"/>
+        <line num="124" type="stmt" count="0"/>
+        <line num="125" type="stmt" count="0"/>
+        <line num="126" type="stmt" count="0"/>
+        <line num="129" type="stmt" count="0"/>
+        <line num="130" type="stmt" count="0"/>
+        <line num="131" type="stmt" count="0"/>
+        <line num="132" type="stmt" count="0"/>
+        <line num="135" type="stmt" count="0"/>
+        <line num="138" type="stmt" count="0"/>
+        <line num="141" type="method" name="countTokens" visibility="public" complexity="1" crap="2.00" count="0"/>
+        <line num="143" type="stmt" count="0"/>
+        <line num="146" type="method" name="__toString" visibility="public" complexity="1" crap="2.00" count="0"/>
+        <line num="148" type="stmt" count="0"/>
+        <line num="151" type="method" name="validateFile" visibility="private" complexity="4" crap="20.00" count="0"/>
+        <line num="153" type="stmt" count="0"/>
+        <line num="154" type="stmt" count="0"/>
+        <line num="158" type="stmt" count="0"/>
+        <line num="159" type="stmt" count="0"/>
+        <line num="160" type="stmt" count="0"/>
+        <line num="161" type="stmt" count="0"/>
+        <line num="162" type="stmt" count="0"/>
+        <line num="164" type="stmt" count="0"/>
+        <metrics loc="165" ncloc="165" classes="1" methods="16" coveredmethods="0" conditionals="0" coveredconditionals="0" statements="60" coveredstatements="0" elements="76" coveredelements="0"/>
+      </file>
+    </package>
+    <package name="FatCode\OpenApi\Http">
+      <file name="/Users/krac/Projects/fat-code/open-api/src/Http/Response.php">
+        <class name="FatCode\OpenApi\Http\Response" namespace="FatCode\OpenApi\Http">
+          <metrics complexity="15" methods="15" coveredmethods="0" conditionals="0" coveredconditionals="0" statements="15" coveredstatements="0" elements="30" coveredelements="0"/>
+        </class>
+        <line num="10" type="method" name="__construct" visibility="public" complexity="1" crap="2.00" count="0"/>
+        <line num="12" type="stmt" count="0"/>
+        <line num="14" type="method" name="getProtocolVersion" visibility="public" complexity="1" crap="2.00" count="0"/>
+        <line num="17" type="stmt" count="0"/>
+        <line num="19" type="method" name="withProtocolVersion" visibility="public" complexity="1" crap="2.00" count="0"/>
+        <line num="22" type="stmt" count="0"/>
+        <line num="24" type="method" name="getHeaders" visibility="public" complexity="1" crap="2.00" count="0"/>
+        <line num="27" type="stmt" count="0"/>
+        <line num="29" type="method" name="hasHeader" visibility="public" complexity="1" crap="2.00" count="0"/>
+        <line num="32" type="stmt" count="0"/>
+        <line num="34" type="method" name="getHeader" visibility="public" complexity="1" crap="2.00" count="0"/>
+        <line num="37" type="stmt" count="0"/>
+        <line num="39" type="method" name="getHeaderLine" visibility="public" complexity="1" crap="2.00" count="0"/>
+        <line num="42" type="stmt" count="0"/>
+        <line num="44" type="method" name="withHeader" visibility="public" complexity="1" crap="2.00" count="0"/>
+        <line num="47" type="stmt" count="0"/>
+        <line num="49" type="method" name="withAddedHeader" visibility="public" complexity="1" crap="2.00" count="0"/>
+        <line num="52" type="stmt" count="0"/>
+        <line num="54" type="method" name="withoutHeader" visibility="public" complexity="1" crap="2.00" count="0"/>
+        <line num="57" type="stmt" count="0"/>
+        <line num="59" type="method" name="getBody" visibility="public" complexity="1" crap="2.00" count="0"/>
+        <line num="62" type="stmt" count="0"/>
+        <line num="64" type="method" name="withBody" visibility="public" complexity="1" crap="2.00" count="0"/>
+        <line num="67" type="stmt" count="0"/>
+        <line num="69" type="method" name="getStatusCode" visibility="public" complexity="1" crap="2.00" count="0"/>
+        <line num="72" type="stmt" count="0"/>
+        <line num="74" type="method" name="withStatus" visibility="public" complexity="1" crap="2.00" count="0"/>
+        <line num="77" type="stmt" count="0"/>
+        <line num="79" type="method" name="getReasonPhrase" visibility="public" complexity="1" crap="2.00" count="0"/>
+        <line num="82" type="stmt" count="0"/>
+        <metrics loc="83" ncloc="55" classes="1" methods="15" coveredmethods="0" conditionals="0" coveredconditionals="0" statements="15" coveredstatements="0" elements="30" coveredelements="0"/>
+      </file>
+    </package>
+    <package name="FatCode\OpenApi">
+      <file name="/Users/krac/Projects/fat-code/open-api/src/OpenApi.php">
+        <class name="FatCode\OpenApi\OpenApi" namespace="FatCode\OpenApi">
+          <metrics complexity="0" methods="0" coveredmethods="0" conditionals="0" coveredconditionals="0" statements="0" coveredstatements="0" elements="0" coveredelements="0"/>
+        </class>
+        <metrics loc="16" ncloc="8" classes="0" methods="0" coveredmethods="0" conditionals="0" coveredconditionals="0" statements="0" coveredstatements="0" elements="0" coveredelements="0"/>
+      </file>
+    </package>
+    <package name="FatCode\OpenApi\Schema">
+      <file name="/Users/krac/Projects/fat-code/open-api/src/Schema/TextPlain.php">
+        <class name="FatCode\OpenApi\Schema\TextPlain" namespace="FatCode\OpenApi\Schema">
+          <metrics complexity="2" methods="2" coveredmethods="0" conditionals="0" coveredconditionals="0" statements="3" coveredstatements="0" elements="5" coveredelements="0"/>
+        </class>
+        <line num="9" type="method" name="__construct" visibility="public" complexity="1" crap="2.00" count="0"/>
+        <line num="11" type="stmt" count="0"/>
+        <line num="12" type="stmt" count="0"/>
+        <line num="14" type="method" name="__toString" visibility="public" complexity="1" crap="2.00" count="0"/>
+        <line num="16" type="stmt" count="0"/>
+        <metrics loc="18" ncloc="18" classes="1" methods="2" coveredmethods="0" conditionals="0" coveredconditionals="0" statements="3" coveredstatements="0" elements="5" coveredelements="0"/>
+      </file>
+    </package>
+    <metrics files="51" loc="1808" ncloc="1123" classes="19" methods="60" coveredmethods="0" conditionals="0" coveredconditionals="0" statements="161" coveredstatements="0" elements="221" coveredelements="0"/>
+  </project>
+</coverage>

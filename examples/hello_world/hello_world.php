@@ -5,8 +5,7 @@ namespace App\HelloWorld {
     use FatCode\OpenApi\Annotation as Api;
     use Psr\Http\Message\ServerRequestInterface;
     use Psr\Http\Message\ResponseInterface;
-    use FatCode\OpenApi\Application\OnRequestListener;
-    use Zend\Diactoros\Response;
+    use FatCode\OpenApi\Http\Response;
 
     /**
      * Your entry point/front controller.
@@ -23,35 +22,41 @@ namespace App\HelloWorld {
      *     ]
      * )
      */
-    class Application extends Response implements OnRequestListener
+    class Application
     {
-        public function onRequest(ServerRequestInterface $request) : ResponseInterface
-        {
-            return new Response('Hello world');
-        }
     }
 
     /**
      * @Api\Schema(
+     *     title="Greeter schema",
      *     type="object"
      * )
      */
     class Greeter
     {
+        /**
+         * @Api\Property(type="string")
+         */
+        public $name;
 
+        public function __construct(string $name)
+        {
+            $this->name = $name;
+        }
     }
 
     /**
      * @Api\Operation\Get(
      *     description="List all pets",
-     *     route="/pets",
+     *     route="/welcome/{name}",
      *     responses=[
-     *         @Api\Response(schema=@Api\Reference(Greeter::class))
+     *         @Api\Response(code=200, schema=@Api\Reference(Greeter::class))
      *     ]
      * )
      */
-    function sayHello() {
-
+    function sayHello(ServerRequestInterface $request) : ResponseInterface
+    {
+        return new Response(200, new Greeter($request->getAttribute('name')));
     }
     # Run with `open-api run development`
 }

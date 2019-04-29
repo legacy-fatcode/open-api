@@ -2,10 +2,11 @@
 
 namespace FatCode\Tests\OpenApi\Analyzer;
 
-use const EXAMPLES_DIR;
 use FatCode\OpenApi\Analyzer\FileAnalyzer;
 use FatCode\OpenApi\File\PhpFile;
 use PHPUnit\Framework\TestCase;
+
+use const EXAMPLES_DIR;
 
 class FileAnalyzerTests extends TestCase
 {
@@ -14,7 +15,7 @@ class FileAnalyzerTests extends TestCase
         $analyzer = new FileAnalyzer();
         $fileInfo = $analyzer->analyze(new PhpFile(EXAMPLES_DIR . '/hello_world/hello_world.php'));
 
-        $a = 1;
-
+        self::assertSame(['App\HelloWorld\Application', 'App\HelloWorld\Greeter'], $fileInfo->getClasses());
+        self::assertSame(['App\HelloWorld\sayHello'], $fileInfo->getFunctions());
     }
 }

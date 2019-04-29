@@ -2,6 +2,7 @@
 
 namespace FatCode\OpenApi\File;
 
+use FatCode\OpenApi\Exception\FileException;
 use Iterator;
 use Throwable;
 

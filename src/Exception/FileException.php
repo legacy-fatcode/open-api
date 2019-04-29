@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 
-namespace FatCode\OpenApi\File;
+namespace FatCode\OpenApi\Exception;
 
 use InvalidArgumentException;
 

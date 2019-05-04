@@ -18,8 +18,8 @@ use Psr\Http\Message\ServerRequestInterface;
 class Application
 {
     /**
-     * @Api\PathItem\Get(
-     *     route="/hello/{name<\w>}",
+     * @Api\Operation\Get(
+     *     route="/hello/{name:\w}",
      *     responses=[
      *         @Api\Response(code=200, schema=@Api\Reference(TextPlain::class))
      *     ]

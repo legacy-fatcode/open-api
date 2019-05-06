@@ -24,6 +24,19 @@ namespace App\HelloWorld {
      */
     class Application
     {
+        /**
+         * @Api\Operation\Get(
+         *     description="Farewell user",
+         *     route="/goodbye/{name}",
+         *     responses=[
+         *         @Api\Response(code=200, schema=@Api\Reference(Greeter::class))
+         *     ]
+         * )
+         */
+        public function sayGoodbye(ServerRequestInterface $request) : ResponseInterface
+        {
+            return new Response(200, new Greeter($request->getAttribute('name')));
+        }
     }
 
     /**
@@ -47,7 +60,7 @@ namespace App\HelloWorld {
 
     /**
      * @Api\Operation\Get(
-     *     description="List all pets",
+     *     description="Greet user",
      *     route="/welcome/{name}",
      *     responses=[
      *         @Api\Response(code=200, schema=@Api\Reference(Greeter::class))

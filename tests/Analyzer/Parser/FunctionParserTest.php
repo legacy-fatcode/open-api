@@ -3,7 +3,7 @@
 namespace FatCode\Tests\OpenApi\Analyzer\Parser;
 
 use FatCode\OpenApi\Analyzer\Parser\FunctionParser;
-use FatCode\OpenApi\File\PhpFile;
+use FatCode\OpenApi\Analyzer\PhpStream;
 use PHPUnit\Framework\TestCase;
 
 final class FunctionParserTest extends TestCase
@@ -16,7 +16,7 @@ final class FunctionParserTest extends TestCase
     public function testParse() : void
     {
         $parser = new FunctionParser();
-        $info = $parser->parse(new PhpFile(__FILE__));
+        $info = $parser->analyze(PhpStream::fromFile(__FILE__));
 
         self::assertCount(2, $info);
         self::assertSame(__NAMESPACE__ . '\test_a', $info[0]);

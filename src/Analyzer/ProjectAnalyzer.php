@@ -2,10 +2,11 @@
 
 namespace FatCode\OpenApi\Analyzer;
 
+use function array_merge;
 use FatCode\OpenApi\Analyzer\Parser\ClassParser;
 use FatCode\OpenApi\Analyzer\Parser\FunctionParser;
+use FatCode\OpenApi\Analyzer\Parser\StreamAnalyzer;
 use FatCode\OpenApi\Exception\ProjectAnalyzerException;
-use FatCode\OpenApi\File\PhpFile;
 use RecursiveDirectoryIterator;
 use RecursiveIteratorIterator;
 use RegexIterator;
@@ -17,29 +18,45 @@ use SplFileInfo;
  */
 class ProjectAnalyzer
 {
+    /**
+     * @var string
+     */
     private $directory;
-    private $fileAnalyzer;
+    /**
+     * @var StreamAnalyzer
+     */
+    private $analyzers;
 
-    public function __construct(string $directory, FileAnalyzer $fileAnalyzer = null)
-    {
+    public function __construct(
+        string $directory
+    ) {
         if (!is_dir($directory)) {
             throw ProjectAnalyzerException::forInvalidDirectory($directory);
         }
 
         $this->directory = new RecursiveDirectoryIterator($directory);
-        $this->fileAnalyzer = $fileAnalyzer ?? new FileAnalyzer(
-            new ClassParser(),
-            new FunctionParser()
-        );
+        $this->analyzers = [
+            'classes' => new ClassParser(),
+            'functions' => new FunctionParser(),
+        ];
     }
 
-    public function analyze() : void
+    public function analyze() : array
     {
         $allFiles = new RecursiveIteratorIterator($this->directory);
         $phpFiles = new RegexIterator($allFiles, '/.*\.php$/i');
+        $result = [];
         /** @var SplFileInfo $file */
         foreach ($phpFiles as $file) {
-            $this->fileAnalyzer->analyze(new PhpFile($file->getRealPath()));
+            /** @var StreamAnalyzer $analyzer */
+            foreach ($this->analyzers as $type => $analyzer) {
+                $result[$type] = array_merge(
+                    $result[$type] ?? [],
+                    $analyzer->analyze(PhpStream::fromFile($file->getRealPath()))
+                );
+            }
         }
+
+        return $result;
     }
 }

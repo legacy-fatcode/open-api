@@ -2,7 +2,7 @@
 
 namespace FatCode\OpenApi\Analyzer\Parser;
 
-use FatCode\OpenApi\File\PhpFile;
+use FatCode\OpenApi\Analyzer\PhpStream;
 
 use function is_array;
 
@@ -10,24 +10,24 @@ use const T_FUNCTION;
 use const T_NAMESPACE;
 use const T_STRING;
 
-class FunctionParser implements PhpFileParser
+class FunctionParser implements StreamAnalyzer
 {
     use NamespaceParser;
 
     private $currentNamespace = '';
 
-    public function parse(PhpFile $file) : array
+    public function analyze(PhpStream $stream) : array
     {
         $functions = [];
 
-        foreach ($file as $index => $token) {
+        foreach ($stream as $index => $token) {
             if (is_array($token) && $token[0] === T_NAMESPACE) {
-                $this->currentNamespace = $this->parseNamespace($file);
+                $this->currentNamespace = $this->parseNamespace($stream);
             }
 
             if (is_array($token) && $token[0] === T_CLASS) {
-                $file->seekStartOfScope();
-                $file->skipScope();
+                $stream->seekStartOfScope();
+                $stream->skipScope();
                 continue;
             }
 
@@ -35,13 +35,13 @@ class FunctionParser implements PhpFileParser
                 continue;
             }
 
-            $functions[] = $this->currentNamespace . '\\' . $this->parseFunction($file);
+            $functions[] = $this->currentNamespace . '\\' . $this->parseFunction($stream);
         }
 
         return $functions;
     }
 
-    private function parseFunction(PhpFile $file) : string
+    private function parseFunction(PhpStream $file) : string
     {
         $file->seekToken(T_STRING);
         $className = $file->current()[1];

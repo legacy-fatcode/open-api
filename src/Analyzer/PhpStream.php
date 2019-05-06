@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 
-namespace FatCode\OpenApi\File;
+namespace FatCode\OpenApi\Analyzer;
 
 use FatCode\OpenApi\Exception\FileException;
 use Iterator;
@@ -12,17 +12,24 @@ use function is_file;
 use function is_readable;
 use function token_get_all;
 
-class PhpFile implements Iterator
+class PhpStream implements Iterator
 {
-    private $name;
     private $cursor;
     private $tokens;
     private $length;
+    private $stream;
 
-    public function __construct(string $name)
+    private function __construct(string $stream)
     {
-        $this->validateFile($name);
-        $this->name = $name;
+        $this->stream = $stream;
+        $this->tokens = token_get_all($stream);
+        $this->length = count($this->tokens);
+    }
+
+    public static function fromFile(string $fileName) : PhpStream
+    {
+        self::validateFile($fileName);
+        return new self(file_get_contents($fileName));
     }
 
     public function current()
@@ -146,21 +153,19 @@ class PhpFile implements Iterator
 
     public function __toString() : string
     {
-        return $this->name;
+        return $this->stream;
     }
 
-    private function validateFile(string $name) : void
+    private static function validateFile(string $fileName) : void
     {
-        if (!is_file($name) || !is_readable($name)) {
-            throw FileException::notReadable($name);
+        if (!is_file($fileName) || !is_readable($fileName)) {
+            throw FileException::notReadable($fileName);
         }
 
         try {
-            require_once $name;
-            $this->tokens = token_get_all(file_get_contents($name));
-            $this->length = count($this->tokens);
+            require_once $fileName;
         } catch (Throwable $throwable) {
-            throw FileException::invalidFile($name);
+            throw FileException::invalidFile($fileName);
         }
     }
 }

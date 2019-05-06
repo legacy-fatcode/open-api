@@ -3,18 +3,18 @@
 namespace FatCode\OpenApi\Analyzer\Parser;
 
 use FatCode\OpenApi\Exception\ProjectAnalyzerException;
-use FatCode\OpenApi\File\PhpFile;
+use FatCode\OpenApi\Analyzer\PhpStream;
 
 use function is_array;
 
 trait NamespaceParser
 {
-    protected function parseNamespace(PhpFile $file) : string
+    protected function parseNamespace(PhpStream $stream) : string
     {
         $namespace = '';
-        while ($file->valid()) {
-            $file->next();
-            $token = $file->current();
+        while ($stream->valid()) {
+            $stream->next();
+            $token = $stream->current();
 
             if (is_array($token) && ($token[0] === T_STRING || $token[0] === T_NS_SEPARATOR)) {
                 $namespace .= $token[1];

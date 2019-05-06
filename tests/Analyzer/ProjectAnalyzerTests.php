@@ -10,6 +10,8 @@ class ProjectAnalyzerTests extends TestCase
     public function testAnalyze() : void
     {
         $projectAnalyzer = new ProjectAnalyzer(__DIR__ . '/../../examples/hello_world');
-        $projectAnalyzer->analyze();
+        $analyze = $projectAnalyzer->analyze();
+
+        self::assertCount(1, $analyze);
     }
 }

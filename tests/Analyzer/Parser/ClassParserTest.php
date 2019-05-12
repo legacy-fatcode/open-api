@@ -3,6 +3,7 @@
 namespace FatCode\Tests\OpenApi\Analyzer\Parser;
 
 use FatCode\OpenApi\Analyzer\Parser\ClassParser;
+use FatCode\OpenApi\Analyzer\Parser\Symbol;
 use FatCode\OpenApi\Analyzer\PhpStream;
 use PHPUnit\Framework\TestCase;
 
@@ -19,6 +20,6 @@ final class ClassParserTest extends TestCase
         $info = $parser->analyze(PhpStream::fromFile(__FILE__));
 
         self::assertCount(1, $info);
-        self::assertSame(ClassParserTest::class, $info[0]);
+        self::assertSame(__CLASS__, $info[0]->getName());
     }
 }

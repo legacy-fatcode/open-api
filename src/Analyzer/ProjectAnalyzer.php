@@ -49,9 +49,9 @@ class ProjectAnalyzer
         /** @var SplFileInfo $file */
         foreach ($phpFiles as $file) {
             /** @var StreamAnalyzer $analyzer */
-            foreach ($this->analyzers as $type => $analyzer) {
-                $result[$type] = array_merge(
-                    $result[$type] ?? [],
+            foreach ($this->analyzers as $analyzer) {
+                $result = array_merge(
+                    $result ?? [],
                     $analyzer->analyze(PhpStream::fromFile($file->getRealPath()))
                 );
             }

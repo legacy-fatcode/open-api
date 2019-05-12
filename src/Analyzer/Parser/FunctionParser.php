@@ -16,9 +16,13 @@ class FunctionParser implements StreamAnalyzer
 
     private $currentNamespace = '';
 
+    /**
+     * @param PhpStream $stream
+     * @return Symbol[]
+     */
     public function analyze(PhpStream $stream) : array
     {
-        $functions = [];
+        $results = [];
 
         foreach ($stream as $index => $token) {
             if (is_array($token) && $token[0] === T_NAMESPACE) {
@@ -35,10 +39,13 @@ class FunctionParser implements StreamAnalyzer
                 continue;
             }
 
-            $functions[] = $this->currentNamespace . '\\' . $this->parseFunction($stream);
+            $results[] = new Symbol(
+                $this->currentNamespace . '\\' . $this->parseFunction($stream),
+                SymbolType::TYPE_FUNCTION()
+            );
         }
 
-        return $functions;
+        return $results;
     }
 
     private function parseFunction(PhpStream $file) : string

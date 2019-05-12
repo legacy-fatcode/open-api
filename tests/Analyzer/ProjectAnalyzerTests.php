@@ -12,6 +12,6 @@ class ProjectAnalyzerTests extends TestCase
         $projectAnalyzer = new ProjectAnalyzer(__DIR__ . '/../../examples/hello_world');
         $analyze = $projectAnalyzer->analyze();
 
-        self::assertCount(1, $analyze);
+        self::assertCount(3, $analyze);
     }
 }

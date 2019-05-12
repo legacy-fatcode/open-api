@@ -12,7 +12,7 @@ class AnnotationCollector
     {
     }
 
-    public function collect(PhpStreamMeta ...$files) : void
+    public function collect(Project $project) : void
     {
 
     }

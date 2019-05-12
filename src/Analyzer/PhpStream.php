@@ -18,18 +18,25 @@ class PhpStream implements Iterator
     private $tokens;
     private $length;
     private $stream;
+    private $context;
 
-    private function __construct(string $stream)
+    private function __construct(string $stream, string $context = '')
     {
         $this->stream = $stream;
         $this->tokens = token_get_all($stream);
         $this->length = count($this->tokens);
+        $this->context = $context;
     }
 
     public static function fromFile(string $fileName) : PhpStream
     {
         self::validateFile($fileName);
-        return new self(file_get_contents($fileName));
+        return new self(file_get_contents($fileName), $fileName);
+    }
+
+    public function getContext() : string
+    {
+        return $this->context;
     }
 
     public function current()

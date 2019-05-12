@@ -19,8 +19,8 @@ final class FunctionParserTest extends TestCase
         $info = $parser->analyze(PhpStream::fromFile(__FILE__));
 
         self::assertCount(2, $info);
-        self::assertSame(__NAMESPACE__ . '\test_a', $info[0]);
-        self::assertSame(__NAMESPACE__ . '\test_b', $info[1]);
+        self::assertSame(__NAMESPACE__ . '\test_a', $info[0]->getName());
+        self::assertSame(__NAMESPACE__ . '\test_b', $info[1]->getName());
     }
 }
 

@@ -6,5 +6,9 @@ use FatCode\OpenApi\Analyzer\PhpStream;
 
 interface StreamAnalyzer
 {
+    /**
+     * @param PhpStream $stream
+     * @return Symbol[]
+     */
     public function analyze(PhpStream $stream) : array;
 }

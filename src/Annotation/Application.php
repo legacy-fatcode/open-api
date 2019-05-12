@@ -74,4 +74,3 @@ final class Application
      */
     public $security;
 }
-

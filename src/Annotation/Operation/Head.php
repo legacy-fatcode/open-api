@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 
-namespace FatCode\OpenApi\Annotation\PathItem;
+namespace FatCode\OpenApi\Annotation\Operation;
 
 use FatCode\Annotation\Target;
 

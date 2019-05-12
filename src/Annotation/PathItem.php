@@ -3,7 +3,7 @@
 namespace FatCode\OpenApi\Annotation;
 
 use FatCode\Annotation\Target;
-use FatCode\OpenApi\Annotation\PathItem\Operation;
+use FatCode\OpenApi\Annotation\Operation\Operation;
 
 /**
  * @Annotation

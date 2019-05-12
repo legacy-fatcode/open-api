@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 
-namespace FatCode\OpenApi\Annotation\PathItem;
+namespace FatCode\OpenApi\Annotation\Operation;
 
 use FatCode\Annotation\Target;
 
@@ -9,6 +9,6 @@ use FatCode\Annotation\Target;
  * @Target(Target::TARGET_FUNCTION, Target::TARGET_CLASS, Target::TARGET_METHOD)
  * @see https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.2.md#operationObject
  */
-final class Options extends Operation
+final class Put extends Operation
 {
 }

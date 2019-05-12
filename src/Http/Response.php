@@ -80,5 +80,4 @@ class Response implements ResponseInterface
     {
         // TODO: Implement getReasonPhrase() method.
     }
-
 }

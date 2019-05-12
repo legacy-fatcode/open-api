@@ -3,7 +3,6 @@
 namespace FatCode\Tests\OpenApi\Analyzer\Parser;
 
 use FatCode\OpenApi\Analyzer\Parser\ClassParser;
-use FatCode\OpenApi\Analyzer\Parser\Symbol;
 use FatCode\OpenApi\Analyzer\PhpStream;
 use PHPUnit\Framework\TestCase;
 

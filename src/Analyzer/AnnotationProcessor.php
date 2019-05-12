@@ -6,13 +6,13 @@ namespace FatCode\OpenApi\Analyzer;
  * Class ProjectAnalyser
  * @package FatCode\OpenApi
  */
-class AnnotationCollector
+class AnnotationProcessor
 {
     public function __construct()
     {
     }
 
-    public function collect(Project $project) : void
+    public function process(Project $project) : void
     {
 
     }

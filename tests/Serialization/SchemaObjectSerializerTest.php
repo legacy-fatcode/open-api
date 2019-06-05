@@ -2,7 +2,7 @@
 
 namespace FatCode\OpenApiTest\Serialization;
 
-use FatCode\OpenApi\SchemaObject\SchemaObject;
+use FatCode\OpenApi\Schema\SchemaObject\SchemaObject;
 
 class SchemaObjectSerializer extends TestCase
 {

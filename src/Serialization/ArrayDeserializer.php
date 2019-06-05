@@ -7,11 +7,16 @@ use FatCode\OpenApi\Schema\SchemaObject\SchemaObject;
 use FatCode\OpenApi\Schema\SchemaPrimitive\SchemaPrimitive;
 use ReflectionClass;
 
-final class ArraySerializer implements SchemaObjectSerializer
+final class ArrayDeserializer
 {
-    public function __invoke(SchemaObject $schemaObject) : array
+    public function __invoke(array $serializedSchemaObject, string $schemaObjectClass) : SchemaObject
     {
-        $serializedSchema = [];
+        foreach ($serializedSchemaObject as $parameter) {
+
+            if (is_array($parameter)) {
+                $this($pa);
+            }
+        }
 
         $constructor = (new ReflectionClass($schemaObject))->getConstructor();
 

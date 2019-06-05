@@ -2,9 +2,9 @@
 
 namespace FatCode\OpenApi\Serialization;
 
-use FatCode\OpenApi\Schema\SchemaObject\Schema;
+use FatCode\OpenApi\Schema\SchemaObject\SchemaObject;
 
-final class JsonSerializer
+final class JsonSerializer implements SchemaObjectSerializer
 {
     /** @var ArraySerializer */
     private $arraySerializer;
@@ -14,8 +14,8 @@ final class JsonSerializer
         $this->arraySerializer = $arraySerializer;
     }
 
-    public function __invoke(Schema $schema) : string
+    public function __invoke(SchemaObject $schemaObject) : string
     {
-        return json_encode(($this->arraySerializer)($schema));
+        return json_encode(($this->arraySerializer)($schemaObject));
     }
 }

@@ -18,9 +18,6 @@ final class ArraySerializer implements SchemaObjectSerializer
         foreach ($constructor->getParameters() as $parameter) {
             $parameterName = $parameter->getName();
             $parameterValue = $this->callGetterForParameter($parameterName, $schemaObject);
-//            $parameterType = $parameter->getClass()
-//                ? $parameter->getClass()->getName()
-//                : $parameter->getType();
 
             if ($parameterValue instanceof SchemaObject) {
                 $parameterValue = $this($parameterValue);

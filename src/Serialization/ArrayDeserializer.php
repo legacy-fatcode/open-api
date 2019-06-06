@@ -18,6 +18,10 @@ final class ArrayDeserializer
             }
         }
 
+//            $parameterType = $parameter->getClass()
+//                ? $parameter->getClass()->getName()
+//                : $parameter->getType();
+
         $constructor = (new ReflectionClass($schemaObject))->getConstructor();
 
         foreach ($constructor->getParameters() as $parameter) {
